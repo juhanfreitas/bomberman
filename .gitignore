@@ -30,3 +30,19 @@
 *.exe
 *.out
 *.app
+
+## Visual Studio temporary files and build results
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Cache Directory
+.vs/
+
+# Build Directory
+x64/
+x86/
