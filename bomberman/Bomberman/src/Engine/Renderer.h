@@ -62,6 +62,8 @@ private:
     int  ClipLine(int& x1, int& y1, int& x2, int& y2);          // recorta linha para desenhar na viewport
     // ----------------------------------------
 
+    SpriteData * storage;                                       // armazém de sprites (vetor dinâmico)
+    uint storageIndex;                                          // índice para posições do armazém
     vector<SpriteData*> spriteVector;                           // vetor de ponteiros para sprites
     
     // renderiza um grupo de sprites de mesma textura
@@ -86,7 +88,7 @@ public:
     // ----------------------------------------
 
     bool Initialize(Window * window, Graphics * graphics);      // inicializa o renderizador
-    void Draw(SpriteData * sprite);                             // adiciona sprite na lista
+    void Draw(SpriteData & sprite);                             // adiciona sprite para desenho
     void Render();                                              // envia sprites para desenho    
 };
 

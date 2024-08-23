@@ -2,7 +2,7 @@
 // Window (Arquivo de Cabeçalho)
 // 
 // Criação:     19 Mai 2007
-// Atualização: 08 Fev 2023
+// Atualização: 23 Ago 2023
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   A classe abstrai todos os detalhes de configuração de
@@ -59,7 +59,7 @@ public:
     int  Width();                                           // retorna a largura atual da janela
     int  Height();                                          // retorna a altura atual da janela
 
-    void Icon(const uint icon);	                            // define o ícone da janela
+    void Icon(const uint icon);                             // define o ícone da janela
     void Cursor(const uint cursor);                         // define o cursor da janela
     void Title(const string title);                         // define o título da janela 
     void Size(int width, int height);                       // define o tamanho (largura e altura) da janela
@@ -110,7 +110,7 @@ inline int Window::Height()
 // ----------------------------------------------------------
 
 // define o ícone da janela
-inline void Window::Icon(const uint icon)	
+inline void Window::Icon(const uint icon)
 { windowIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(icon)); }
 
 // define o cursor da janela
@@ -168,11 +168,11 @@ inline int Window::MouseY()
 // -----------------------------------------------------------
 
 // retorna a cor de fundo da janela
-inline COLORREF Window::Color()	
+inline COLORREF Window::Color()
 { return windowColor; }
 
 // define a cor de fundo da janela
-inline void Window::Color(int r, int g, int b)	
+inline void Window::Color(int r, int g, int b)
 { windowColor = RGB(r,g,b); }
 
 // ---------------------------------------------------------------------------------

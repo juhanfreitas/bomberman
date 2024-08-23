@@ -15,7 +15,7 @@
 
 // ---------------------------------------------------------------------------------
 
-Animation::Animation(TileSet * tiles, float delay, bool repeat) : 
+Animation::Animation(TileSet * tiles, float delay, bool repeat, float scale = 1.0f) : 
     tileSet(tiles), 
     animDelay(delay), 
     animLoop(repeat)
@@ -27,6 +27,8 @@ Animation::Animation(TileSet * tiles, float delay, bool repeat) :
     endFrame = tileSet->Size() - 1;
 
     // configura sprite
+    sprite.scale     = scale;
+    sprite.rotation  = 0.0f;
     sprite.width     = tileSet->TileWidth();
     sprite.height    = tileSet->TileHeight();
     sprite.texSize.x = float(tileSet->TileWidth())  / tileSet->Width();
@@ -133,19 +135,25 @@ void Animation::NextFrame()
 
 // ---------------------------------------------------------------------------------
 
-void Animation::Draw(uint aFrame, float x, float y, float z)
+void Animation::Draw(uint aFrame, float x, float y, float z, Color color)
 {
     // configura dados básicos
     sprite.x = x;
     sprite.y = y;
     sprite.depth = z;
+    sprite.color = color;
 
     // configura coordenadas da textura do sprite
     sprite.texCoord.x = (aFrame % tileSet->Columns()) * sprite.texSize.x;
     sprite.texCoord.y = (aFrame / tileSet->Columns()) * sprite.texSize.y;
 
     // adiciona o sprite na lista de desenho
-    Engine::renderer->Draw(&sprite);
+    Engine::renderer->Draw(sprite);
 }
 
 // --------------------------------------------------------------------------------
+
+void Animation::ChangeLoop(bool loopState)
+{
+    animLoop = loopState;
+}

@@ -47,12 +47,19 @@ Renderer::Renderer()
     ZeroMemory(&pixelPlotSprite, sizeof(pixelPlotSprite));
     videoMemoryPitch = 0;
     videoMemory = nullptr;
+    // ----------------------------------------
+
+    storage = new SpriteData[MaxBatchSize];
+    storageIndex = 0;
 }
 
 // ---------------------------------------------------------------------------------
 
 Renderer::~Renderer()
 {
+    // libera armazém de sprites
+    delete [] storage;
+
     // ----------------------------------------
     // Pixel Ploting
     // ----------------------------------------
@@ -121,6 +128,8 @@ Renderer::~Renderer()
         inputLayout = nullptr;
     }
 }
+
+// -----------------------------------------------------------------------------
 
 void Renderer::BeginPixels()
 {
@@ -775,11 +784,10 @@ void Renderer::EndPixels()
     graphics->context->Unmap(pixelPlotTexture, 0);
 
     // adiciona o sprite na lista de desenho
-    Draw(&pixelPlotSprite);
+    Draw(pixelPlotSprite);
 }
 
 // ---------------------------------------------------------------------------------
-
 
 bool Renderer::Initialize(Window * window, Graphics * graphics)
 {
@@ -960,15 +968,15 @@ bool Renderer::Initialize(Window * window, Graphics * graphics)
     D3D11_TEXTURE2D_DESC desc;
     ZeroMemory(&desc, sizeof(desc));
 
-    desc.Width = int(window->Width());                // largura da textura
+    desc.Width = int(window->Width());              // largura da textura
     desc.Height = int(window->Height());            // altura da textura
-    desc.MipLevels = 1;                                // usa apenas um nível
-    desc.ArraySize = 1;                                // cria apenas uma textura
-    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;        // formato RGBA de 32 bits
-    desc.SampleDesc.Count = 1;                        // uma amostra por pixel (sem antialiasing)
-    desc.Usage = D3D11_USAGE_DYNAMIC;                // alocada em RAM para acesso rápido via CPU
+    desc.MipLevels = 1;                             // usa apenas um nível
+    desc.ArraySize = 1;                             // cria apenas uma textura
+    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;       // formato RGBA de 32 bits
+    desc.SampleDesc.Count = 1;                      // uma amostra por pixel (sem antialiasing)
+    desc.Usage = D3D11_USAGE_DYNAMIC;               // alocada em RAM para acesso rápido via CPU
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;    // será acessada por um shader
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // CPU pode escrever na textura
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;   // CPU pode escrever na textura
 
     // cria textura a ser preenchida com pixels
     if FAILED(graphics->device->CreateTexture2D(&desc, nullptr, &pixelPlotTexture))
@@ -991,16 +999,19 @@ bool Renderer::Initialize(Window * window, Graphics * graphics)
     // Sprite 
     // ---------------------------------------------
 
-    pixelPlotSprite.x = float(window->CenterX());
-    pixelPlotSprite.y = float(window->CenterY());
+    pixelPlotSprite.x = window->CenterX();
+    pixelPlotSprite.y = window->CenterY();
+    pixelPlotSprite.scale = 1.0f;
     pixelPlotSprite.depth = 0.0f;
+    pixelPlotSprite.rotation = 0.0f;
     pixelPlotSprite.width = window->Width();
     pixelPlotSprite.height = window->Height();
     pixelPlotSprite.texture = pixelPlotView;
-    pixelPlotSprite.texCoord.x = 0;
-    pixelPlotSprite.texCoord.y = 0;
-    pixelPlotSprite.texSize.x = 1;
-    pixelPlotSprite.texSize.y = 1;
+    pixelPlotSprite.texCoord.x = 0.0f;
+    pixelPlotSprite.texCoord.y = 0.0f;
+    pixelPlotSprite.texSize.x = 1.0f;
+    pixelPlotSprite.texSize.y = 1.0f;
+    pixelPlotSprite.color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     // inicialização bem sucedida
     return true;
@@ -1008,15 +1019,15 @@ bool Renderer::Initialize(Window * window, Graphics * graphics)
 
 // ---------------------------------------------------------------------------------
 
-void Renderer::RenderBatch(ID3D11ShaderResourceView * texture, SpriteData ** sprites, uint cont)
+void Renderer::RenderBatch(ID3D11ShaderResourceView * texture, SpriteData ** sprites, uint count)
 {
     // desenhe usando a seguinte textura
     graphics->context->PSSetShaderResources(0, 1, &texture);
 
-    while (cont > 0)
+    while (count > 0)
     {
         // quantos sprites vamos desenhar
-        uint batchSize = cont;
+        uint batchSize = count;
 
         // quantos sprites cabem no vertex buffer
         uint remainingSpace = MaxBatchSize - vertexBufferPosition;
@@ -1029,7 +1040,7 @@ void Renderer::RenderBatch(ID3D11ShaderResourceView * texture, SpriteData ** spr
             {
                 // volte ao ínicio do buffer
                 vertexBufferPosition = 0;
-                batchSize = (cont < MaxBatchSize) ? cont : MaxBatchSize;
+                batchSize = (count < MaxBatchSize) ? count : MaxBatchSize;
             }
             else
             {
@@ -1056,15 +1067,15 @@ void Renderer::RenderBatch(ID3D11ShaderResourceView * texture, SpriteData ** spr
 
             // organiza informações do sprite
             XMFLOAT2 positionxy(sprites[i]->x, sprites[i]->y);
-            float scale = 1.0f;
+            float scale = sprites[i]->scale;
             XMFLOAT2 center(sprites[i]->width * sprites[i]->texSize.x / 2.0f, sprites[i]->height * sprites[i]->texSize.y / 2.0f);
-            float rotation = 0.0f;
+            float rotation = sprites[i]->rotation;
             float layerDepth = sprites[i]->depth;
 
             // carrega informações do sprite em registros SIMD
             XMVECTOR source = XMVectorSet(sprites[i]->texCoord.x, sprites[i]->texCoord.y, sprites[i]->texSize.x, sprites[i]->texSize.y);
             XMVECTOR destination = XMVectorPermute<0, 1, 4, 4>(XMLoadFloat2(&positionxy), XMLoadFloat(&scale));
-            XMVECTOR color = XMVectorSet(1, 1, 1, 1);
+            XMVECTOR color = XMVectorSet(sprites[i]->color.r, sprites[i]->color.g, sprites[i]->color.b, sprites[i]->color.a);
             XMVECTOR originRotationDepth = XMVectorSet(center.x, center.y, rotation, layerDepth);
 
             // extrai os tamanhos de origem e destino em vetores separados
@@ -1161,7 +1172,7 @@ void Renderer::RenderBatch(ID3D11ShaderResourceView * texture, SpriteData ** spr
         sprites += batchSize;
 
         // foram desenhados batchSize sprites nessa passagem
-        cont -= batchSize;
+        count -= batchSize;
     }
 }
 
@@ -1207,13 +1218,19 @@ void Renderer::Render()
 
     // limpa a lista de desenho (atualizada a cada frame)
     spriteVector.clear();
+    storageIndex = 0;
 }
 
 // ---------------------------------------------------------------------------------
 
-void Renderer::Draw(SpriteData * sprite)
+void Renderer::Draw(SpriteData & sprite)
 {
-    spriteVector.push_back(sprite);
+    if (storageIndex < MaxBatchSize)
+{
+        storage[storageIndex] = sprite;
+        spriteVector.push_back(&storage[storageIndex]);
+        ++storageIndex;
+    }
 }
 
 // ---------------------------------------------------------------------------------

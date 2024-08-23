@@ -2,7 +2,7 @@
 // Sprite (Código Fonte)
 // 
 // Criação:     11 Jul 2007
-// Atualização: 07 Mar 2023
+// Atualização: 23 Ago 2023
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   Define uma classe para representar um sprite
@@ -24,20 +24,6 @@ const float Layer::BACK   = 0.99f;
 
 // ---------------------------------------------------------------------------------
 
-void Sprite::InitSpriteData()
-{
-    sprite.width = image->Width();
-    sprite.height = image->Height();
-    sprite.texture = image->View();
-    sprite.texCoord.x = 0;
-    sprite.texCoord.y = 0;
-    sprite.texSize.x = 1;
-    sprite.texSize.y = 1;
-}
-
-// ---------------------------------------------------------------------------------
-
-
 Sprite::Sprite(string filename)
 {
     // carrega imagem
@@ -45,7 +31,9 @@ Sprite::Sprite(string filename)
     localImage = true;
     
     // configura sprite
-    InitSpriteData();
+    sprite.width = image->Width();
+    sprite.height = image->Height();
+    sprite.texture = image->View();
 }
 
 // ---------------------------------------------------------------------------------
@@ -57,7 +45,9 @@ Sprite::Sprite(const Image * img)
     localImage = false;
 
     // configura sprite
-    InitSpriteData();
+    sprite.width = image->Width();
+    sprite.height = image->Height();
+    sprite.texture = image->View();
 }
 
 // ---------------------------------------------------------------------------------
@@ -70,14 +60,17 @@ Sprite::~Sprite()
 
 // ---------------------------------------------------------------------------------
 
-void Sprite::Draw(float x, float y, float z)
+void Sprite::Draw(float x, float y, float z, float scale, float rotation, Color color)
 {
     sprite.x = x;
     sprite.y = y;
     sprite.depth = z;
+    sprite.scale = scale;
+    sprite.rotation = rotation;
+    sprite.color = color;
 
     // adiciona o sprite na lista de desenho
-    Engine::renderer->Draw(&sprite);
+    Engine::renderer->Draw(sprite);
 }
 
 // ---------------------------------------------------------------------------------
