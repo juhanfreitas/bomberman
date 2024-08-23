@@ -16,15 +16,15 @@
 
 // -----------------------------------------------------------------------------
 
-void AnimaWalk::Init()
+void Bomberman::Init()
 {
-    backg = new Sprite("Resources/Background.jpg");
+    backg = new Sprite("Resources/BgStage.png");
     player  = new Player();
 }
 
 // ------------------------------------------------------------------------------
 
-void AnimaWalk::Update()
+void Bomberman::Update()
 {
     // sai com o pressionar do ESC
     if (window->KeyDown(VK_ESCAPE))
@@ -36,15 +36,15 @@ void AnimaWalk::Update()
 
 // ------------------------------------------------------------------------------
 
-void AnimaWalk::Draw()
+void Bomberman::Draw()
 {
-    backg->Draw(window->CenterX(), window->CenterY(), Layer::BACK);
+    backg->Draw(window->CenterX(), window->CenterY(), Layer::BACK, 2.0f);
     player->Draw();
 } 
 
 // ------------------------------------------------------------------------------
 
-void AnimaWalk::Finalize()
+void Bomberman::Finalize()
 {
     delete player;
     delete backg;
@@ -63,15 +63,15 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     // configura a engine
     engine->window->Mode(WINDOWED);
-    engine->window->Size(960, 540);
+    engine->window->Size(544, 416);
     engine->window->Color(0, 0, 0);
-    engine->window->Title("AnimaWalk");
+    engine->window->Title("Bomberman");
     engine->window->Icon(IDI_ICON);
     //engine->window->Cursor(IDC_CURSOR);
     //engine->graphics->VSync(true);
     
     // inicia o jogo
-    engine->Start(new AnimaWalk());
+    engine->Start(new Bomberman());
 
     // destrói engine e jogo
     delete engine;

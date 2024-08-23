@@ -18,10 +18,11 @@
 #include "../Engine/Types.h"                      // tipos específicos da engine
 #include "../Engine/Object.h"                     // interface de Object
 #include "../Engine/Animation.h"                  // animação de sprites
+#include "../Engine/Timer.h"                  // animação de sprites
 
 // ------------------------------------------------------------------------------
 
-enum PlayerState { STILL, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT };
+enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING, DYING };
 
 // ---------------------------------------------------------------------------------
 
@@ -30,7 +31,9 @@ class Player : public Object
 private:
     TileSet   * walking;                // folha de sprites do personagem
     Animation * anim;                   // animação do personagem
+    Timer timer;                        // medidor de tempo entre quadros da animação
     float       speed;                  // velocidade do personagem
+    float       bored_timing;           // tempo para ficar entediado
 
 public:
     uint state;                         // estado atual do personagem

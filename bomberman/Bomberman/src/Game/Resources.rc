@@ -2,7 +2,7 @@
 
 // ---------------------------------------------------------------------
 
-IDI_ICON        ICON        "Resources\\Icon.ico"
+IDI_ICON        ICON        "Resources\\game_icon.ico"
 IDC_CURSOR      CURSOR      "Resources\\Cursor.cur"
 
 // ---------------------------------------------------------------------

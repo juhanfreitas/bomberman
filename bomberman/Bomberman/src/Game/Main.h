@@ -15,17 +15,20 @@
 // ---------------------------------------------------------------------------------
 // Inclusões
 
+
+#include "../Engine/Audio.h"
+#include "../Engine/Font.h"
 #include "../Engine/Game.h"
 #include "../Engine/Sprite.h"
 #include "Player.h"
 
 // ------------------------------------------------------------------------------
 
-class AnimaWalk : public Game
+class Bomberman : public Game
 {
 private:
     Sprite * backg = nullptr;       // sprite de fundo
-    Player * player = nullptr;          // objeto com animação    
+    Player * player = nullptr;          // objeto com animação
 
 public:
     void Init();                    // inicialização

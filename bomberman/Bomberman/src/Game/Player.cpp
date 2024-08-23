@@ -15,23 +15,32 @@
 
 Player::Player()
 {
-    walking = new TileSet("Resources/Walking.png", 55, 95, 8, 40);
-    anim = new Animation(walking, 0.060f, true);
+    walking = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
+    anim = new Animation(walking, 0.120f, true, 2.0f);
 
-    uint SeqUp[8] = { 16, 17, 18, 19, 20, 21, 22, 23 };
-    uint SeqDown[8] = { 24, 25, 26, 27, 28, 29, 30, 31 };
-    uint SeqLeft[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-    uint SeqRight[8] = { 15, 14, 13, 12, 11, 10, 9, 8 };
-    uint SeqStill[1] = { 32 };
+    uint SeqStill[1] = { 0 };
+    uint SeqUp[4] = { 9, 10, 9, 11 };
+    uint SeqDown[4] = { 0, 1, 0, 2 };
+    uint SeqLeft[4] = { 6, 7, 6, 8};
+    uint SeqRight[4] = { 3, 4, 3, 5 };
+    uint SeqBored[7] = { 66, 60, 61, 62, 63, 64, 65 };
+    uint SeqWinning[8] = { 48, 49, 50, 51, 52, 53, 54, 55 };
+    uint SeqDying[11] = { 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34 };
 
-    anim->Add(WALKUP, SeqUp, 8);
-    anim->Add(WALKDOWN, SeqDown, 8);
-    anim->Add(WALKLEFT, SeqLeft, 8);
-    anim->Add(WALKRIGHT, SeqRight, 8);
     anim->Add(STILL, SeqStill, 1);
+    anim->Add(WALKUP, SeqUp, 4);
+    anim->Add(WALKDOWN, SeqDown, 4);
+    anim->Add(WALKLEFT, SeqLeft, 4);
+    anim->Add(WALKRIGHT, SeqRight, 4);
+    anim->Add(BORED, SeqBored, 7);
+    anim->Add(DYING, SeqDying, 11);
+    anim->Add(WINNING, SeqWinning, 8);
 
     state = STILL;
-    speed = 150.0f;
+    speed = 100.0f;
+    bored_timing = 10.0f;
+    timer.Start();
+
     MoveTo(window->CenterX(), window->CenterY());
 }
 
@@ -47,16 +56,20 @@ Player::~Player()
 
 void Player::Update()
 {
+    anim->ChangeLoop(TRUE);
+
     // anda para cima
     if (window->KeyDown(VK_UP))
     {
-        Translate(0, -speed * gameTime);
+        timer.Reset();
         state = WALKUP;
+        Translate(0, -speed * gameTime);
     }
 
     // anda para baixo
     if (window->KeyDown(VK_DOWN))
     {
+        timer.Reset();
         state = WALKDOWN;
         Translate(0, speed * gameTime);
     }
@@ -64,6 +77,7 @@ void Player::Update()
     // anda para esquerda
     if (window->KeyDown(VK_LEFT))
     {
+        timer.Reset();
         state = WALKLEFT;
         Translate(-speed * gameTime, 0);
     }
@@ -71,14 +85,38 @@ void Player::Update()
     // anda para direita
     if (window->KeyDown(VK_RIGHT))
     {
+        timer.Reset();
         state = WALKRIGHT;
         Translate(speed * gameTime, 0);
     }
 
+    if (window->KeyDown(VK_SPACE))
+    {
+        timer.Reset();
+        state = DYING;
+        anim->ChangeLoop(FALSE);
+    }
+
+    if (window->KeyDown('N'))
+    {
+        timer.Reset();
+        state = WINNING;
+    }
+
     // se todas as teclas estão liberadas, mude para o estado parado
-    if (window->KeyUp(VK_UP) && window->KeyUp(VK_DOWN) && window->KeyUp(VK_LEFT) && window->KeyUp(VK_RIGHT))
+    if (window->KeyUp(VK_UP)
+        && window->KeyUp(VK_DOWN)
+        && window->KeyUp(VK_LEFT)
+        && window->KeyUp(VK_RIGHT)
+        && window->KeyUp(VK_SPACE)
+        && window->KeyUp('N'))
     {
         state = STILL;
+    }
+
+    // se o bomberman estiver parado a tempo demais, mude para o estado entediado
+    if (state == STILL && timer.Elapsed(bored_timing)) {
+        state = BORED;
     }
 
     // atualiza animação
