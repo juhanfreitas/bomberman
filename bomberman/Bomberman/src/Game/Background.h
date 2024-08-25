@@ -8,9 +8,9 @@
 // Descrição:   Plano de fundo do jogo
 //
 **********************************************************************************/
-
-#ifndef _BOMBERMAN_BACKGROUND_H_
-#define _BOMBERMAN_BACKGROUND_H_
+#pragma once
+#ifndef _BACKGROUND_H_
+#define _BACKGROUND_H_
 
 // ---------------------------------------------------------------------------------
 
@@ -25,23 +25,43 @@ class Background : public Object
 {
 private: 
 
-    list<Sprite*> backgs;                 // lista contendo todos os planos de fundo
-    Sprite * activeSprite;                // plano de fundo atual
-    list<Sprite*>::iterator it;           // iterador dos planos de fundo
-
+    list<Sprite*> backgs;                         // lista contendo todos os planos de fundo
+    Sprite * activeSprite;                        // plano de fundo atual
+    list<Sprite*>::iterator it;                   // iterador dos planos de fundo
 
 public:
 
+    bool backGrid[13][17];
     bool stagePassed = false;
 
     Background();                       // construtor
     ~Background();                      // destrutor
 
+    void Draw();                        // desenho do objeto
     void Update();                      // atualização do plano de fundo ativo
     void ChangeTo(uint value);          // muda o plano de fundo para o endereço passado
-    void Draw();                        // desenho do objeto
+    void CreateMatrix();                // cria matriz de blocos do cenário
 }; 
+
+// --------------------------------------------------------------------------------
+
+inline void Background::Draw()
+{
+    // desenha plano de fundo ativo
+    activeSprite->Draw(window->CenterX(), window->CenterY(), Layer::BACK, 2.0f, 0.0f);
+}
+
+inline void Background::Update()
+{
+    // se o jogador passar de fase muda para o próximo plano de fundo
+    if (stagePassed)
+    {
+        std::advance(it, 1);
+        activeSprite = *it;
+    }
+}
+
 
 // ---------------------------------------------------------------------------------
 
-#endif
+#endif _BACKGROUND_H_

@@ -8,9 +8,9 @@
 // Descrição:   Objeto animado
 //
 **********************************************************************************/
-
-#ifndef _BOMBERMAN_SCOREBOARD_H_
-#define _BOMBERMAN_SCOREBOARD_H_
+#pragma once
+#ifndef _SCOREBOARD_H_
+#define _SCOREBOARD_H_
 
 // ---------------------------------------------------------------------------------
 // Inclusões
@@ -114,4 +114,4 @@ inline void Scoreboard::UpdatePower(uint power) {
 
 // ---------------------------------------------------------------------------------
 
-#endif
+#endif _SCOREBOARD_H_

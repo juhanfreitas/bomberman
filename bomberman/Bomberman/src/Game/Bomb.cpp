@@ -1,12 +1,9 @@
 #include "Bomb.h"
 
-
-
-Bomb::Bomb(Player * playerOwner, BombType bombType)
+Bomb::Bomb(BombType bombType, float x, float y)
 {
-	MoveTo(window->CenterX(), window->CenterY(), Layer::FRONT);
+	MoveTo(x, y, Layer::FRONT);
 	
-	player = playerOwner;
 	bombs = new TileSet("Resources/bombs.png", 16, 16, 8, 8);
 	anim = new Animation(bombs, 120.0f, true, 2.0f);
 	type = bombType;
@@ -25,15 +22,4 @@ Bomb::~Bomb()
 	delete bombs;
 }
 
-void Bomb::Update()
-{
-	playerX = player->X();
-	playerY = player->Y();
-}
 
-void Bomb::ChangeType(BombType bombType)
-{
-	type = bombType;
-	anim->Select(type);
-	anim->NextFrame();
-}

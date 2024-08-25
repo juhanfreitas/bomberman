@@ -93,6 +93,9 @@
     <ClCompile Include="src\Game\Background.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Block.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
     <ClCompile Include="src\Game\Bomb.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
@@ -155,12 +158,6 @@
     <ClInclude Include="src\Game\Scoreboard.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Background.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Bomb.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Audio.h">
       <Filter>Engine\Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -169,6 +166,15 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Sound.h">
       <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Background.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Block.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Bomb.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

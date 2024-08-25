@@ -17,6 +17,7 @@ Player::Player()
 {
     playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
     anim = new Animation(playerTiles, 0.120f, true, 2.0f);
+    bombs = new list<Bomb>;
     
     Player::CreateBBox();
 

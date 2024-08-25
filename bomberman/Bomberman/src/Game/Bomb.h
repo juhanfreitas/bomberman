@@ -1,7 +1,7 @@
 // ---------------------------------------------------------
-
-#ifndef _BOMBERMAN_BOMB_H_
-#define _BOMBERMAN_BOMB_H_
+#pragma once
+#ifndef _BOMB_H_
+#define _BOMB_H_
 
 // ---------------------------------------------------------
 
@@ -9,7 +9,6 @@
 #include "../Engine/Sprite.h"
 #include "../Engine/TileSet.h"
 #include "../Engine/Animation.h"
-#include "Player.h"
 
 // ---------------------------------------------------------
 
@@ -20,24 +19,24 @@ class Bomb : public Object
 private:
 	TileSet * bombs = nullptr;
 	Animation * anim = nullptr;
-	Player *player = nullptr;
 
 public:
 
 	BombType type;
-	float playerX = 10.0f;
-	float playerY = 10.0f;
 
-	Bomb(Player * playerOwner, BombType Bombtype);
+	Bomb(BombType Bombtype, float x, float y);
 	~Bomb();
 
-	void ChangeType(BombType bombType);
 	void Update();
 	void Draw();
 };
 
+inline void Bomb::Update()
+{
+	anim->NextFrame();
+}
 
 inline void Bomb::Draw() 
-{anim->Draw(playerX, playerY, Layer::FRONT); }
+{anim->Draw(x, y);}
 
-#endif
+#endif _BOMB_H_

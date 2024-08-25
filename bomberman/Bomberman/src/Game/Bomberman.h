@@ -8,7 +8,7 @@
 // Descrição:   Usando a classe Animation para animar um personagem
 //
 **********************************************************************************/
-
+#pragma once
 #ifndef _BOMBERMAN_H_
 #define _BOMBERMAN_H_
 
@@ -28,21 +28,24 @@
 class Bomberman : public Game
 {
 private:
-    Background* backg = nullptr;       // plano de fundo do jogo
-    Player* player = nullptr;          // objeto com animação
+    Background* backg = nullptr;        // plano de fundo do jogo
+    Player* player = nullptr;           // objeto com animação
 
-    bool viewBBox = false;          // visualiza as bounding box na cena
-    bool viewScene = true;          // visualiza os sprites em cena
+    bool viewBBox = false;              // visualiza as bounding box na cena
+    bool viewScene = true;              // visualiza os sprites em cena
+
+    friend class Player;
 
 public:
-    static Scene* scene;           // cena do jogo
+    static Scene* scene;                // cena do jogo
 
-    void Init();                    // inicialização
-    void Update();                  // atualização
-    void Draw();                    // desenho
-    void Finalize();                // finalização
+
+    void Init();                        // inicialização
+    void Update();                      // atualização
+    void Draw();                        // desenho
+    void Finalize();                    // finalização
 };
 
 // ---------------------------------------------------------------------------------
 
-#endif
+#endif _BOMBERMAN_H_
