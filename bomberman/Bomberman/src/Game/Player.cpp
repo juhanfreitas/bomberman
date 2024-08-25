@@ -17,6 +17,8 @@ Player::Player()
 {
     playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
     anim = new Animation(playerTiles, 0.120f, true, 2.0f);
+    
+    Player::CreateBBox();
 
     uint SeqStill[1] = { 0 };
     uint SeqUp[4] = { 9, 10, 9, 11 };
@@ -135,6 +137,18 @@ void Player::Update()
 
     if (y - playerTiles->TileHeight() / 2.0f < 0)
         MoveTo(x, playerTiles->TileHeight() / 2.0f);
+}
+
+void Player::CreateBBox()
+{
+    float l, r, t, b;
+
+    l = -1.0f * playerTiles->TileWidth() + 8;
+    r = 1.0f * playerTiles->TileWidth() - 8;
+    t = 1.0f * playerTiles->TileHeight() - 32;
+    b = 1.0f * playerTiles->TileHeight() - 2;
+
+    BBox(new Rect(l, t, r, b));
 }
 
 // ---------------------------------------------------------------------------------

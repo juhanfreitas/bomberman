@@ -43,6 +43,7 @@ public:
 
     void Update();                      // atualização do objeto
     void Draw();                        // desenho do objeto
+    void CreateBBox();
 };
 
 // ---------------------------------------------------------------------------------
