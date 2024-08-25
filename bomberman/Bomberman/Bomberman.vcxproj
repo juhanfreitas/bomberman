@@ -186,6 +186,7 @@
     <ClCompile Include="src\Engine\TileSet.cpp" />
     <ClCompile Include="src\Engine\Timer.cpp" />
     <ClCompile Include="src\Engine\Window.cpp" />
+    <ClCompile Include="src\Game\Scoreboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Animation.h" />
@@ -206,6 +207,7 @@
     <ClInclude Include="src\Engine\Timer.h" />
     <ClInclude Include="src\Engine\Types.h" />
     <ClInclude Include="src\Engine\Window.h" />
+    <ClInclude Include="src\Game\Scoreboard.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Engine\Pixel.hlsl">
