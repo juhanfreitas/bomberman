@@ -14,40 +14,64 @@
 #include "Resources.h"
 #include "Player.h"
 
+
+Scene * Bomberman::scene = nullptr;
+
 // -----------------------------------------------------------------------------
 
-void AnimaWalk::Init()
+void Bomberman::Init()
 {
-    backg = new Sprite("Resources/Background.jpg");
+    scene = new Scene();
+
+    //backg = new Sprite("Resources/BgStage.png");
+    backg = new Background();
     player  = new Player();
+
+    scene->Add(backg, STATIC);
+    scene->Add(player, MOVING);
 }
 
 // ------------------------------------------------------------------------------
 
-void AnimaWalk::Update()
+void Bomberman::Update()
 {
     // sai com o pressionar do ESC
     if (window->KeyDown(VK_ESCAPE))
         window->Close();
 
-    // atualiza objeto
-    player->Update();
+    if (window->KeyPress(VK_F1))
+        viewBBox = !viewBBox;
+
+    if (window->KeyPress(VK_F2))
+        viewScene = !viewScene;
+
+    // atualiza a cena do jogo;
+    scene->Update();
+
+    // detecta as colisões na cena
+    //scene->CollisionDetection();
+
 } 
 
 // ------------------------------------------------------------------------------
 
-void AnimaWalk::Draw()
+void Bomberman::Draw()
 {
-    backg->Draw(window->CenterX(), window->CenterY(), Layer::BACK);
-    player->Draw();
+    //backg->Draw(window->CenterX(), window->CenterY(), Layer::BACK, 2.0f);
+    
+    if (Bomberman::viewScene)
+        scene->Draw();
+    if (Bomberman::viewBBox)
+        scene->DrawBBox();
+
 } 
 
 // ------------------------------------------------------------------------------
 
-void AnimaWalk::Finalize()
+void Bomberman::Finalize()
 {
-    delete player;
-    delete backg;
+    delete scene;
+    //delete backg;
 }
 
 
@@ -63,15 +87,15 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     // configura a engine
     engine->window->Mode(WINDOWED);
-    engine->window->Size(960, 540);
+    engine->window->Size(544, 416);
     engine->window->Color(0, 0, 0);
-    engine->window->Title("AnimaWalk");
+    engine->window->Title("Bomberman");
     engine->window->Icon(IDI_ICON);
     //engine->window->Cursor(IDC_CURSOR);
     //engine->graphics->VSync(true);
     
     // inicia o jogo
-    engine->Start(new AnimaWalk());
+    engine->Start(new Bomberman());
 
     // destrói engine e jogo
     delete engine;

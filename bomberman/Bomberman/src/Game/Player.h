@@ -9,8 +9,8 @@
 //
 **********************************************************************************/
 
-#ifndef _ANIMAWALK_PLAYER_H_
-#define _ANIMAWALK_PLAYER_H_
+#ifndef _BOMBERMAN_PLAYER_H_
+#define _BOMBERMAN_PLAYER_H_
 
 // ---------------------------------------------------------------------------------
 // Inclusões
@@ -18,6 +18,8 @@
 #include "../Engine/Types.h"                      // tipos específicos da engine
 #include "../Engine/Object.h"                     // interface de Object
 #include "../Engine/Animation.h"                  // animação de sprites
+#include "../Engine/Timer.h"                      // animação de sprites
+#include "Bomb.h"
 
 // ------------------------------------------------------------------------------
 
@@ -28,9 +30,11 @@ enum PlayerState { STILL, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT };
 class Player : public Object
 {
 private:
-    TileSet   * walking;                // folha de sprites do personagem
-    Animation * anim;                   // animação do personagem
-    float       speed;                  // velocidade do personagem
+    TileSet   * playerTiles = nullptr;                // folha de sprites do personagem
+    Animation * anim = nullptr;                       // animação do personagem
+    Timer timer;                                      // medidor de tempo entre quadros da animação
+    float       speed;                                // velocidade do personagem
+    float       bored_timing;                         // tempo para ficar entediado
 
 public:
     uint state;                         // estado atual do personagem
@@ -39,14 +43,17 @@ public:
     ~Player();                            // destrutor
 
     void Update();                      // atualização do objeto
-    void Draw();                        // desenho do objeto
+    void Draw();                         // desenho do objeto
+    void CreateBBox();
 };
 
 // ---------------------------------------------------------------------------------
 // Função Membro Inline
 
 inline void Player::Draw()
-{ anim->Draw(x, y, z); }
+{
+    anim->Draw(x, y, z);
+}
 
 // ---------------------------------------------------------------------------------
 

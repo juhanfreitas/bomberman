@@ -15,8 +15,12 @@
 // ---------------------------------------------------------------------------------
 // Inclusões
 
+#include "../Engine/Audio.h"
+#include "../Engine/Font.h"
 #include "../Engine/Game.h"
 #include "../Engine/Sprite.h"
+#include "../Engine/Scene.h"
+#include "Background.h"
 #include "Player.h"
 
 // ------------------------------------------------------------------------------
@@ -24,10 +28,15 @@
 class AnimaWalk : public Game
 {
 private:
-    Sprite * backg = nullptr;       // sprite de fundo
-    Player * player = nullptr;          // objeto com animação    
+    Background * backg = nullptr;       // plano de fundo do jogo
+    Player * player = nullptr;          // objeto com animação
+
+    bool viewBBox = false;          // visualiza as bounding box na cena
+    bool viewScene = true;          // visualiza os sprites em cena
 
 public:
+    static Scene * scene;           // cena do jogo
+
     void Init();                    // inicialização
     void Update();                  // atualização
     void Draw();                    // desenho

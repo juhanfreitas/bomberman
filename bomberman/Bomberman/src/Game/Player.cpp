@@ -15,14 +15,19 @@
 
 Player::Player()
 {
-    walking = new TileSet("Resources/Walking.png", 55, 95, 8, 40);
-    anim = new Animation(walking, 0.060f, true);
+    playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
+    anim = new Animation(playerTiles, 0.120f, true, 2.0f);
 
-    uint SeqUp[8] = { 16, 17, 18, 19, 20, 21, 22, 23 };
-    uint SeqDown[8] = { 24, 25, 26, 27, 28, 29, 30, 31 };
-    uint SeqLeft[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-    uint SeqRight[8] = { 15, 14, 13, 12, 11, 10, 9, 8 };
-    uint SeqStill[1] = { 32 };
+    Player::CreateBBox();
+
+    uint SeqStill[1] = { 0 };
+    uint SeqUp[4] = { 9, 10, 9, 11 };
+    uint SeqDown[4] = { 0, 1, 0, 2 };
+    uint SeqLeft[4] = { 6, 7, 6, 8};
+    uint SeqRight[4] = { 3, 4, 3, 5 };
+    uint SeqBored[7] = { 66, 60, 61, 62, 63, 64, 65 };
+    uint SeqWinning[8] = { 48, 49, 50, 51, 52, 53, 54, 55 };
+    uint SeqDying[11] = { 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34 };
 
     anim->Add(WALKUP, SeqUp, 8);
     anim->Add(WALKDOWN, SeqDown, 8);
@@ -40,13 +45,16 @@ Player::Player()
 Player::~Player()
 {
     delete anim;
-    delete walking;
+    delete playerTiles;
 }
 
 // ---------------------------------------------------------------------------------
 
 void Player::Update()
 {
+    anim->ChangeLoop(TRUE);
+
+
     // anda para cima
     if (window->KeyDown(VK_UP))
     {
@@ -75,6 +83,24 @@ void Player::Update()
         Translate(speed * gameTime, 0);
     }
 
+    if (window->KeyPress(VK_SPACE))
+    {
+        timer.Reset();
+        state = DYING;
+        anim->ChangeLoop(FALSE);
+        //bomb->Draw();
+    }
+    if (window->KeyPress('B'))
+    {
+        //bomb->Draw();
+    }
+
+    if (window->KeyDown('N'))
+    {
+        timer.Reset();
+        state = WINNING;
+    }
+
     // se todas as teclas estão liberadas, mude para o estado parado
     if (window->KeyUp(VK_UP) && window->KeyUp(VK_DOWN) && window->KeyUp(VK_LEFT) && window->KeyUp(VK_RIGHT))
     {
@@ -86,17 +112,30 @@ void Player::Update()
     anim->NextFrame();
 
     // mantém personagem dentro da tela
-    if (x + walking->TileWidth() / 2.0f > window->Width())
-        MoveTo(window->Width() - walking->TileWidth() / 2.0f, y);
+    if (x + playerTiles->TileWidth() / 2.0f > window->Width())
+        MoveTo(window->Width() - playerTiles->TileWidth() / 2.0f, y);
 
-    if (x - walking->TileWidth() / 2.0f < 0)
-        MoveTo(walking->TileWidth() / 2.0f, y);
+    if (x - playerTiles->TileWidth() / 2.0f < 0)
+        MoveTo(playerTiles->TileWidth() / 2.0f, y);
 
-    if (y + walking->TileHeight() / 2.0f > window->Height())
-        MoveTo(x, window->Height() - walking->TileHeight() / 2.0f);
+    if (y + playerTiles->TileHeight() / 2.0f > window->Height())
+        MoveTo(x, window->Height() - playerTiles->TileHeight() / 2.0f);
 
-    if (y - walking->TileHeight() / 2.0f < 0)
-        MoveTo(x, walking->TileHeight() / 2.0f);
+    if (y - playerTiles->TileHeight() / 2.0f < 0)
+        MoveTo(x, playerTiles->TileHeight() / 2.0f);
 }
+
+void Player::CreateBBox()
+{
+    float l, r, t, b;
+
+    l = -1.0f * playerTiles->TileWidth() + 8;
+    r =  1.0f * playerTiles->TileWidth() - 8;
+    t =  1.0f * playerTiles->TileHeight() - 32;
+    b =  1.0f * playerTiles->TileHeight() - 2;
+
+    BBox(new Rect(l, t, r, b));
+}
+
 
 // ---------------------------------------------------------------------------------
