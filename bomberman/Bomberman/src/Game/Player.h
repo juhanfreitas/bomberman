@@ -9,8 +9,8 @@
 //
 **********************************************************************************/
 
-#ifndef _ANIMAWALK_PLAYER_H_
-#define _ANIMAWALK_PLAYER_H_
+#ifndef _BOMBERMAN_PLAYER_H_
+#define _BOMBERMAN_PLAYER_H_
 
 // ---------------------------------------------------------------------------------
 // Inclusões
@@ -29,7 +29,7 @@ enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING,
 class Player : public Object
 {
 private:
-    TileSet   * walking;                // folha de sprites do personagem
+    TileSet   * playerTiles;                // folha de sprites do personagem
     Animation * anim;                   // animação do personagem
     Timer timer;                        // medidor de tempo entre quadros da animação
     float       speed;                  // velocidade do personagem

@@ -190,6 +190,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Animation.h" />
+    <ClInclude Include="src\Engine\Audio.h" />
+    <ClInclude Include="src\Engine\Font.h" />
+    <ClInclude Include="src\Engine\Sound.h" />
     <ClInclude Include="src\Game\Main.h" />
     <ClInclude Include="src\Engine\Engine.h" />
     <ClInclude Include="src\Engine\Game.h" />

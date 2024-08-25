@@ -1,5 +1,5 @@
 /**********************************************************************************
-// AnimaWalk (Arquivo de Cabeçalho)
+// Bomber Man (Arquivo de Cabeçalho)
 //
 // Criação:     18 Abr 2012
 // Atualização: 12 Mar 2023
@@ -9,8 +9,8 @@
 //
 **********************************************************************************/
 
-#ifndef _ANIMAWALK_H_
-#define _ANIMAWALK_H_
+#ifndef _BOMBERMAN_H_
+#define _BOMBERMAN_H_
 
 // ---------------------------------------------------------------------------------
 // Inclusões

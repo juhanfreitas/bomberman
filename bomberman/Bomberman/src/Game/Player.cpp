@@ -15,8 +15,8 @@
 
 Player::Player()
 {
-    walking = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
-    anim = new Animation(walking, 0.120f, true, 2.0f);
+    playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
+    anim = new Animation(playerTiles, 0.120f, true, 2.0f);
 
     uint SeqStill[1] = { 0 };
     uint SeqUp[4] = { 9, 10, 9, 11 };
@@ -49,7 +49,7 @@ Player::Player()
 Player::~Player()
 {
     delete anim;
-    delete walking;
+    delete playerTiles;
 }
 
 // ---------------------------------------------------------------------------------
@@ -124,17 +124,17 @@ void Player::Update()
     anim->NextFrame();
 
     // mantém personagem dentro da tela
-    if (x + walking->TileWidth() / 2.0f > window->Width())
-        MoveTo(window->Width() - walking->TileWidth() / 2.0f, y);
+    if (x + playerTiles->TileWidth() / 2.0f > window->Width())
+        MoveTo(window->Width() - playerTiles->TileWidth() / 2.0f, y);
 
-    if (x - walking->TileWidth() / 2.0f < 0)
-        MoveTo(walking->TileWidth() / 2.0f, y);
+    if (x - playerTiles->TileWidth() / 2.0f < 0)
+        MoveTo(playerTiles->TileWidth() / 2.0f, y);
 
-    if (y + walking->TileHeight() / 2.0f > window->Height())
-        MoveTo(x, window->Height() - walking->TileHeight() / 2.0f);
+    if (y + playerTiles->TileHeight() / 2.0f > window->Height())
+        MoveTo(x, window->Height() - playerTiles->TileHeight() / 2.0f);
 
-    if (y - walking->TileHeight() / 2.0f < 0)
-        MoveTo(x, walking->TileHeight() / 2.0f);
+    if (y - playerTiles->TileHeight() / 2.0f < 0)
+        MoveTo(x, playerTiles->TileHeight() / 2.0f);
 }
 
 // ---------------------------------------------------------------------------------
