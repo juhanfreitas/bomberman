@@ -10,6 +10,7 @@
 **********************************************************************************/
 
 #include "Background.h"
+#include "Bomberman.h"
 #include <list>
 
 // ---------------------------------------------------------------------------------
@@ -17,7 +18,7 @@
 Background::Background()
 {
     Background::CreateMatrix();
-    MoveTo(window->CenterX(), window->CenterY(), Layer::BACK);
+    MoveTo(window->CenterX()/2.0f, window->CenterY() + 32, Layer::BACK);
     backgs = * new list<Sprite*>;
     backgs.push_back(new Sprite("Resources/Stage 1.png"));
     list<Sprite*>::iterator it = backgs.begin();
@@ -35,6 +36,15 @@ Background::~Background()
 // -------------------------------------------------------------------------------
 
 
+void Background::Draw()
+{
+    // desenha plano de fundo ativo
+    activeSprite->Draw(
+        window->CenterX() / Bomberman::screenScale,
+        window->CenterY() / Bomberman::screenScale + 16,
+        Layer::BACK
+    );
+}
 
 void Background::ChangeTo(uint value) 
 {

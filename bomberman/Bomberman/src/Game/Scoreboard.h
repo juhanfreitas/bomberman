@@ -49,7 +49,7 @@ public:
     ~Scoreboard();                            // destrutor
 
     static void UpdateScore(uint score);
-    static void UpdateTimer(uint timeLimit, uint gameTime);
+    static void UpdateTimer(float timeLimit, float gameTime);
     static void UpdateLives(uint lives);
 	static void UpdateBombs(uint bombs);
 	static void UpdatePower(uint power);
@@ -92,12 +92,12 @@ inline std::string Scoreboard::SetBoardText(
 	return ss.str();
 }
 
-inline void Scoreboard::UpdateScore(uint newScore)
+inline void Scoreboard::UpdateScore(uint score)
 {
-	Scoreboard::score = SetBoardText(newScore, 5);
+	Scoreboard::score = SetBoardText(score, 5);
 }
-inline void Scoreboard::UpdateTimer(uint timeLimit, uint gameTime) {
-	uint remainingTime = timeLimit - gameTime;
+inline void Scoreboard::UpdateTimer(float timeLimit, float gameTime) {
+	uint remainingTime = static_cast<uint>((timeLimit - gameTime > 0) ? timeLimit - gameTime : 0);
 	uint minutes = remainingTime / 60;
 	uint seconds = remainingTime % 60;
 	Scoreboard::timer = SetBoardText(minutes, seconds, ":", 2);

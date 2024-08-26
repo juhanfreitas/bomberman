@@ -38,6 +38,7 @@ private:
     list<Bomb> * bombs;
     float       speed;                      // velocidade do personagem
     float       bored_timing;               // tempo para ficar entediado
+    uint score;
 
 public:
     uint state;                             // estado atual do personagem

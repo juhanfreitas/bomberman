@@ -13,43 +13,47 @@
 #include "Resources.h"
 #include "Player.h"
 #include "Bomberman.h"
+#include "Intro.h"
 
-
-Scene* Bomberman::scene = nullptr;
+Game*       Bomberman::level = nullptr;
+Player*     Bomberman::player = nullptr;
+Audio*      Bomberman::audio = nullptr;
+Scoreboard* Bomberman::scoreboard = nullptr;
+float       Bomberman::timeLimit = 0;
+float       Bomberman::screenScale = 2.0f;
+bool        Bomberman::viewBBox = false;
 
 // -----------------------------------------------------------------------------
 
 void Bomberman::Init()
 {
-    scene = new Scene();
+    audio = new Audio();
 
-    //backg = new Sprite("Resources/BgStage.png");
-    backg = new Background();
+    audio->Add(VO_INTRO, "Resources/Sounds/Voices/By Hudson.wav");
+    audio->Add(MUS_MENU, "Resources/Sounds/Music/Title Theme.wav");
+    audio->Add(MUS_STAGE1, "Resources/Sounds/Music/Stage 1.wav");
+    audio->Add(SE_TIMER, "Resources/Sounds/Sound Effects/Timer.wav");
+    audio->Add(SE_SELECT, "Resources/Sounds/Sound Effects/Menu Select.wav");
+
+    viewBBox = false;
+
+    timeLimit = 180.0f;
+
     player = new Player();
+    scoreboard = new Scoreboard();
 
-    scene->Add(backg, STATIC);
-    scene->Add(player, MOVING);
+    level = new Intro();
+    level->Init();
 }
 
 // ------------------------------------------------------------------------------
 
 void Bomberman::Update()
 {
-    // sai com o pressionar do ESC
-    if (window->KeyDown(VK_ESCAPE))
-        window->Close();
-
     if (window->KeyPress(VK_F1))
         viewBBox = !viewBBox;
 
-    if (window->KeyPress(VK_F2))
-        viewScene = !viewScene;
-
-    // atualiza a cena do jogo;
-    scene->Update();
-
-    // detecta as colisões na cena
-    //scene->CollisionDetection();
+    level->Update();
 
 }
 
@@ -57,21 +61,18 @@ void Bomberman::Update()
 
 void Bomberman::Draw()
 {
-    //backg->Draw(window->CenterX(), window->CenterY(), Layer::BACK, 2.0f);
-
-    if (Bomberman::viewScene)
-        scene->Draw();
-    if (Bomberman::viewBBox)
-        scene->DrawBBox();
-
+    level->Draw();
 }
 
 // ------------------------------------------------------------------------------
 
 void Bomberman::Finalize()
 {
-    delete scene;
-    //delete backg;
+    level->Finalize();
+
+    delete player;
+    delete audio;
+    delete level;
 }
 
 
@@ -87,7 +88,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     // configura a engine
     engine->window->Mode(WINDOWED);
-    engine->window->Size(544, 416);
+    engine->window->Size(544, 480);
     engine->window->Color(0, 0, 0);
     engine->window->Title("Bomberman");
     engine->window->Icon(IDI_ICON);

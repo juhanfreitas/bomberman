@@ -19,19 +19,18 @@
 #include "../Engine/Game.h"
 #include "../Engine/Audio.h"
 #include "../Engine/Sprite.h"
+#include "../Engine/Timer.h"
 #include "Resources.h"
 
 // ------------------------------------------------------------------------------
-
-enum IntroSounds { INTRO };
 
 // ------------------------------------------------------------------------------
 
 class Intro : public Game
 {
 private:
-    Audio * audio = nullptr;    // sistema de áudio
     Sprite * bgImage = nullptr;
+    Timer timer;
 
 public:
     void Init();                    // inicialização

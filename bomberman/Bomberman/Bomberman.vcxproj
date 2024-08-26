@@ -191,6 +191,7 @@
     <ClCompile Include="src\Engine\Window.cpp" />
     <ClCompile Include="src\Game\Scoreboard.cpp" />
     <ClCompile Include="src\Game\Home.cpp" />
+    <ClCompile Include="src\Game\Stage1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Animation.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="src\Engine\Window.h" />
     <ClInclude Include="src\Game\Scoreboard.h" />
     <ClInclude Include="src\Game\Home.h" />
+    <ClInclude Include="src\Game\Stage1.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Engine\Pixel.hlsl">

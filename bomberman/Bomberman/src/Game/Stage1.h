@@ -9,8 +9,8 @@
 //
 **********************************************************************************/
 #pragma once
-#ifndef _BOMBERMAN_H_
-#define _BOMBERMAN_H_
+#ifndef _STAGE1_H_
+#define _STAGE1_H_
 
 // ---------------------------------------------------------------------------------
 // Inclusões
@@ -27,39 +27,30 @@
 
 // ------------------------------------------------------------------------------
 
-enum Sounds { VO_INTRO, MUS_MENU, SE_SELECT, MUS_STAGE1, SE_TIMER };
-
-// ------------------------------------------------------------------------------
-
-class Bomberman : public Game
+class Stage1 : public Game
 {
 private:
-    static Game * level;
+    Background* backg = nullptr;        // plano de fundo do jogo
+    Scoreboard* scoreboard = nullptr;
+
+    Timer timer;
+
+    bool viewBBox = false;              // visualiza as bounding box na cena
+    bool viewScene = true;              // visualiza os sprites em cena
+    bool timeUp = false;
+
+    friend class Player;
 
 public:
-    static Player * player;
-    static Audio * audio;
-    static Scoreboard * scoreboard;
-    static bool viewBBox;
-    static float timeLimit;
-    static float screenScale;
+    static Scene* scene;                // cena do jogo
 
 
     void Init();                        // inicialização
     void Update();                      // atualização
     void Draw();                        // desenho
     void Finalize();                    // finalização
-
-    template<class T>
-    static void NextLevel()
-    {
-        level->Finalize();
-        delete level;
-        level = new T();
-        level->Init();
-    }
 };
 
 // ---------------------------------------------------------------------------------
 
-#endif _BOMBERMAN_H_
+#endif _STAGE1_H_

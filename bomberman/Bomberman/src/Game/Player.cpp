@@ -10,13 +10,14 @@
 **********************************************************************************/
 
 #include "Player.h"
+#include "Bomberman.h"
 
 // ---------------------------------------------------------------------------------
 
 Player::Player()
 {
     playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
-    anim = new Animation(playerTiles, 0.120f, true, 2.0f);
+    anim = new Animation(playerTiles, 0.120f, true);
     //bombs = new list<Bomb>;
     
     Player::CreateBBox();
@@ -24,10 +25,10 @@ Player::Player()
     uint SeqStill[1] = { 0 };
     uint SeqUp[4] = { 9, 10, 9, 11 };
     uint SeqDown[4] = { 0, 1, 0, 2 };
-    uint SeqLeft[4] = { 6, 7, 6, 8};
+    uint SeqLeft[4] = { 6, 7, 6, 8 };
     uint SeqRight[4] = { 3, 4, 3, 5 };
-    uint SeqBored[7] = { 66, 60, 61, 62, 63, 64, 65 };
-    uint SeqWinning[8] = { 48, 49, 50, 51, 52, 53, 54, 55 };
+    uint SeqBored[8] = { 48, 49, 50, 51, 52, 53, 54, 55 };
+    uint SeqWinning[8] = { 36, 37, 38, 39, 40, 41, 42, 43 };
     uint SeqDying[11] = { 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34 };
 
     anim->Add(STILL, SeqStill, 1);
@@ -44,7 +45,10 @@ Player::Player()
     bored_timing = 10.0f;
     timer.Start();
 
-    MoveTo(window->CenterX(), window->CenterY());
+    MoveTo(
+        window->CenterX() / Bomberman::screenScale,
+        window->CenterY() / Bomberman::screenScale
+    );
 }
 
 // ---------------------------------------------------------------------------------
@@ -59,6 +63,7 @@ Player::~Player()
 
 void Player::Update()
 {
+    Bomberman::scoreboard->UpdateScore(score);
     // anda para cima
     if (window->KeyDown(VK_UP))
     {
@@ -102,6 +107,7 @@ void Player::Update()
     {
         timer.Reset();
         state = WINNING;
+        score += 10;
     }
 
     // se todas as teclas estão liberadas, mude para o estado parado

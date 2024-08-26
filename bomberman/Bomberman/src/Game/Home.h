@@ -24,23 +24,21 @@
 
 // ------------------------------------------------------------------------------
 
-enum HomeSounds { MENUMUSIC };
-
 // ------------------------------------------------------------------------------
 
 class Home : public Game
 {
 private:
-    Audio * audio = nullptr;    // sistema de áudio
     Sprite * sky = nullptr;
     Sprite * title = nullptr;
 
     Timer timer;
 
-    int titleYOffset;
+    float titleYOffset = 0;
 
-    int bgSpeed;
-    float yT;
+    int bgSpeed = 0;
+    float yT = 0;
+    float screenBorder = 0;
 
 public:
     void Init();                    // inicialização

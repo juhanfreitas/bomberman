@@ -5,7 +5,7 @@ Bomb::Bomb(BombType bombType, float x, float y)
 	MoveTo(x, y, Layer::FRONT);
 	
 	bombs = new TileSet("Resources/bombs.png", 16, 16, 8, 8);
-	anim = new Animation(bombs, 120.0f, true, 2.0f);
+	anim = new Animation(bombs, 120.0f, true);
 	type = bombType;
 
 	uint normalBomb[4] = {0, 1, 2, 3};

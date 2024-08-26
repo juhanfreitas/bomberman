@@ -45,12 +45,6 @@ public:
 
 // --------------------------------------------------------------------------------
 
-inline void Background::Draw()
-{
-    // desenha plano de fundo ativo
-    activeSprite->Draw(window->CenterX(), window->CenterY(), Layer::BACK, 2.0f, 0.0f);
-}
-
 inline void Background::Update()
 {
     // se o jogador passar de fase muda para o próximo plano de fundo
