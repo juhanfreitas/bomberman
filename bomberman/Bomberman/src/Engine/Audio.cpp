@@ -78,5 +78,12 @@ void Audio::Play(uint id)
     selected->sourceVoice->Start();
 }
 
+void Audio::Stop(uint id)
+{
+    Sound * selected = sounds[id];
+
+    selected->sourceVoice->Stop();
+}
+
 // ---------------------------------------------------------------------------------
 

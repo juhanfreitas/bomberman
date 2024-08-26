@@ -46,7 +46,7 @@ private:
     uint * sequence;            // seqüência atualmente selecionada
 
 public:
-    Animation(TileSet* tiles, float delay, bool repeat, float scale);                
+    Animation(TileSet* tiles, float delay, bool repeat);               
     ~Animation();                                                           
 
     // adiciona seqüência de animação

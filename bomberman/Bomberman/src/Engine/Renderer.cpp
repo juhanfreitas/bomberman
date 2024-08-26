@@ -905,6 +905,9 @@ bool Renderer::Initialize(Window * window, Graphics * graphics)
     // calcula a matriz de transformação
     float xScale = (graphics->viewport.Width  > 0) ? 2.0f / graphics->viewport.Width : 0.0f;
     float yScale = (graphics->viewport.Height > 0) ? 2.0f / graphics->viewport.Height : 0.0f;
+
+    xScale *= 2.0f;
+    yScale *= 2.0f;
     
     // transforma para coordenadas da tela
     XMMATRIX transformMatrix 
@@ -927,7 +930,7 @@ bool Renderer::Initialize(Window * window, Graphics * graphics)
 
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
     samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;

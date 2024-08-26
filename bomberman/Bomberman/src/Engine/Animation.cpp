@@ -15,7 +15,7 @@
 
 // ---------------------------------------------------------------------------------
 
-Animation::Animation(TileSet * tiles, float delay, bool repeat, float scale = 1.0f) : 
+Animation::Animation(TileSet * tiles, float delay, bool repeat) : 
     tileSet(tiles), 
     animDelay(delay), 
     animLoop(repeat)
@@ -27,7 +27,7 @@ Animation::Animation(TileSet * tiles, float delay, bool repeat, float scale = 1.
     endFrame = tileSet->Size() - 1;
 
     // configura sprite
-    sprite.scale     = scale;
+    sprite.scale     = 1.0f;
     sprite.rotation  = 0.0f;
     sprite.width     = tileSet->TileWidth();
     sprite.height    = tileSet->TileHeight();

@@ -37,6 +37,7 @@ public:
 
     void Add(uint id, string filename);         // adiciona um som <id, filename>
     void Play(uint id);                         // reproduz som através do seu id
+    void Stop(uint id);                                     // para a reprodução do som
 }; 
 
 // ---------------------------------------------------------------------------------
