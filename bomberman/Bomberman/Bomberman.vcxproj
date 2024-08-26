@@ -179,6 +179,7 @@
     <ClCompile Include="src\Engine\Geometry.cpp" />
     <ClCompile Include="src\Engine\Graphics.cpp" />
     <ClCompile Include="src\Engine\Image.cpp" />
+    <ClCompile Include="src\Game\Intro.cpp" />
     <ClCompile Include="src\Game\Player.cpp" />
     <ClCompile Include="src\Engine\Object.cpp" />
     <ClCompile Include="src\Engine\Renderer.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="src\Engine\Timer.cpp" />
     <ClCompile Include="src\Engine\Window.cpp" />
     <ClCompile Include="src\Game\Scoreboard.cpp" />
+    <ClCompile Include="src\Game\Home.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Animation.h" />
@@ -203,6 +205,7 @@
     <ClInclude Include="src\Engine\Geometry.h" />
     <ClInclude Include="src\Engine\Graphics.h" />
     <ClInclude Include="src\Engine\Image.h" />
+    <ClInclude Include="src\Game\Intro.h" />
     <ClInclude Include="src\Game\Player.h" />
     <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Renderer.h" />
@@ -215,6 +218,7 @@
     <ClInclude Include="src\Engine\Types.h" />
     <ClInclude Include="src\Engine\Window.h" />
     <ClInclude Include="src\Game\Scoreboard.h" />
+    <ClInclude Include="src\Game\Home.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Engine\Pixel.hlsl">

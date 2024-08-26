@@ -96,6 +96,12 @@
     <ClCompile Include="src\Game\Bomb.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Intro.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Home.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Animation.h">
@@ -163,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Sound.h">
       <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Intro.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Home.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\Background.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
