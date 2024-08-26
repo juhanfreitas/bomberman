@@ -8,7 +8,6 @@
 // Descrição:   Objeto animado
 //
 **********************************************************************************/
-
 #pragma once
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
@@ -22,7 +21,6 @@
 #include "../Engine/Animation.h"                  // animação de sprites
 #include "../Engine/Timer.h"                      // animação de sprites
 #include "../Engine/Scene.h"
-//#include "Bomberman.h"
 #include "Bomb.h"
 
 // ------------------------------------------------------------------------------
@@ -37,7 +35,7 @@ private:
     TileSet   * playerTiles;                // folha de sprites do personagem
     Animation * anim;                       // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
-    std::list<Bomb> * bombs;
+    list<Bomb> * bombs;
     float       speed;                      // velocidade do personagem
     float       bored_timing;               // tempo para ficar entediado
 
@@ -61,7 +59,7 @@ inline void Player::Draw()
 
 inline void Player::CreateBomb(BombType bombType)
 {
-    Bomb * bomb = new Bomb(bombType, x, y);
+    Bomb* bomb = new Bomb(bombType, x, y);
     bombs->push_front(*bomb);
     //Bomberman::scene->Add(bomb, STATIC);
 }

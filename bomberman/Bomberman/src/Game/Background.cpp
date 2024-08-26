@@ -10,6 +10,7 @@
 **********************************************************************************/
 
 #include "Background.h"
+#include <list>
 
 // ---------------------------------------------------------------------------------
 
@@ -119,7 +120,7 @@ void Background::CreateMatrix() {
             i == 5 || i == 7 || i == 9 || 
             i == 10|| i == 11|| i == 13|| 
             i == 15|| i == 16)
-        {
+{
             backGrid[6][i] = false;
             break;
         }
@@ -156,32 +157,33 @@ void Background::CreateMatrix() {
     for (auto i = 0; i < 17; i++) {
         if (i == 0 || i == 1 || i == 14 ||
             i == 15|| i == 16)
-        {
+    {
             backGrid[9][i] = false;
             break;
-        }
-        backGrid[9][i] = true;
     }
+        backGrid[9][i] = true;
+}
 
+// -------------------------------------------------------------------------------
 
     // décima primeira linha
     for (auto i = 0; i < 17; i++) {
         if (i == 0 || i == 1 || i == 3 ||
             i == 5 || i == 7 || i == 9 ||
             i == 11 || i == 13 || i == 15 || i == 16)
-        {
+{
             backGrid[10][i] = false;
             break;
         }
         backGrid[10][i] = true;
-    }
+}
 
 
     // décima segunda linha
     for (auto i = 0; i < 17; i++) {
         if (i == 0 || i == 1 || i == 5 ||
             i == 7 || i == 9 || i == 15|| i == 16)
-        {
+{
             backGrid[11][i] = false;
             break;
         }

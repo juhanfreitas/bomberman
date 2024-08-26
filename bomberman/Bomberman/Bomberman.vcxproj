@@ -172,7 +172,6 @@
     <ClCompile Include="src\Engine\Font.cpp" />
     <ClCompile Include="src\Engine\Sound.cpp" />
     <ClCompile Include="src\Game\Background.cpp" />
-    <ClCompile Include="src\Game\Block.cpp" />
     <ClCompile Include="src\Game\Bomb.cpp" />
     <ClCompile Include="src\Game\Bomberman.cpp" />
     <ClCompile Include="src\Engine\Engine.cpp" />
@@ -197,7 +196,6 @@
     <ClInclude Include="src\Engine\Font.h" />
     <ClInclude Include="src\Engine\Sound.h" />
     <ClInclude Include="src\Game\Background.h" />
-    <ClInclude Include="src\Game\Block.h" />
     <ClInclude Include="src\Game\Bomb.h" />
     <ClInclude Include="src\Game\Bomberman.h" />
     <ClInclude Include="src\Engine\Engine.h" />

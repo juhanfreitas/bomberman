@@ -21,5 +21,3 @@ Bomb::~Bomb()
 	delete anim;
 	delete bombs;
 }
-
-

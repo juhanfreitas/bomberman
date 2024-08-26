@@ -17,7 +17,7 @@ Player::Player()
 {
     playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
     anim = new Animation(playerTiles, 0.120f, true, 2.0f);
-    bombs = new list<Bomb>;
+    //bombs = new list<Bomb>;
     
     Player::CreateBBox();
 
@@ -59,8 +59,6 @@ Player::~Player()
 
 void Player::Update()
 {
-    anim->ChangeLoop(TRUE);
-
     // anda para cima
     if (window->KeyDown(VK_UP))
     {
@@ -145,9 +143,9 @@ void Player::CreateBBox()
     float l, r, t, b;
 
     l = -1.0f * playerTiles->TileWidth() + 8;
-    r = 1.0f * playerTiles->TileWidth() - 8;
-    t = 1.0f * playerTiles->TileHeight() - 32;
-    b = 1.0f * playerTiles->TileHeight() - 2;
+    r =  1.0f * playerTiles->TileWidth() - 8;
+    t =  1.0f * playerTiles->TileHeight() - 32;
+    b =  1.0f * playerTiles->TileHeight() - 2;
 
     BBox(new Rect(l, t, r, b));
 }
