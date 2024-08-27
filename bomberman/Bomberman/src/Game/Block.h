@@ -10,7 +10,7 @@
 
 // ----------------------------------------------------------
 
-enum BlockState {STILL, EXPLODE};
+enum BlockState {DEFAULT, EXPLODE};
 
 // ----------------------------------------------------------
 
@@ -33,7 +33,9 @@ public:
 };
 
 inline void Block::Draw()
-{anim->Draw(x, y, z);}
+{
+	anim->Draw(x, y, z);
+}
 
 inline void Block::ChangeState(BlockState state)
 {blkState = state;}

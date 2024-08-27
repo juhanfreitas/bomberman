@@ -21,6 +21,7 @@
 #include "../Engine/Animation.h"                  // animação de sprites
 #include "../Engine/Timer.h"                      // animação de sprites
 #include "../Engine/Scene.h"
+#include "Stage1.h"
 #include "Bomb.h"
 
 // ------------------------------------------------------------------------------
@@ -42,6 +43,7 @@ private:
 
 public:
     uint state;                             // estado atual do personagem
+    uint lastState;
 
     Player();                               // construtor
     ~Player();                              // destrutor
@@ -49,6 +51,7 @@ public:
     void Draw();                            // desenho do objeto
     void Update();                          // atualização do objeto
     void CreateBBox();
+    void OnCollision(Object* obj);
     void CreateBomb(BombType bombType);
 };
 
@@ -62,7 +65,7 @@ inline void Player::CreateBomb(BombType bombType)
 {
     Bomb* bomb = new Bomb(bombType, x, y);
     bombs->push_front(*bomb);
-    //Bomberman::scene->Add(bomb, STATIC);
+    //Stage1::scene->Add(bomb, STATIC);
 }
 
 // ---------------------------------------------------------------------------------

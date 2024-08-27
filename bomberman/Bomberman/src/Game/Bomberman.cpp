@@ -50,8 +50,8 @@ void Bomberman::Init()
 
 void Bomberman::Update()
 {
-    if (window->KeyPress(VK_F1))
-        viewBBox = !viewBBox;
+    /*if (window->KeyPress(VK_F1))
+        viewBBox = !viewBBox;*/
 
     level->Update();
 
@@ -70,7 +70,7 @@ void Bomberman::Finalize()
 {
     level->Finalize();
 
-    delete player;
+    //delete player;
     delete audio;
     delete level;
 }

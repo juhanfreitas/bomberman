@@ -1,22 +1,22 @@
 
 #include "Block.h"
+#include "Bomberman.h"
 
 Block::Block(float x, float y)
 {
-	float posX;
-	float posY;
-	blkState = STILL;
-	blockTiles = new TileSet("Resources/block_stg 1.png", 1, 1, 1, 1);
-	anim = new Animation(blockTiles, 120.0f, false, 2.0f);
+	type = BLOCK;
+	blkState = DEFAULT;
+	blockTiles = new TileSet("Resources/block_stg 1.png", 16, 16, 2, 2);
+	anim = new Animation(blockTiles, 120.0f, false);
 	
-	uint stillseq[1] = {0};
-	uint explodeseq[4] = {};
+	uint stillseq[1] = {3};
+	uint explodeseq[4] = {1};
 	
-	anim->Add(STILL, stillseq, 1);
+	anim->Add(DEFAULT, stillseq, 1);
 	anim->Add(EXPLODE, explodeseq, 4);
 
-	BBox(new Rect());
-	MoveTo(x, y);
+	BBox(new Rect(-8, -8, 8, 8));
+	MoveTo(x+8, y+8); 
 }
 
 Block::~Block()
@@ -27,8 +27,8 @@ Block::~Block()
 
 void Block::Update()
 {
-	if (blkState == STILL)
-		anim->Select(STILL);
+	if (blkState == DEFAULT)
+		anim->Select(DEFAULT);
 
 
 	if (blkState == EXPLODE)

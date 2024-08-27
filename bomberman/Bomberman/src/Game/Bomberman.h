@@ -28,6 +28,7 @@
 // ------------------------------------------------------------------------------
 
 enum Sounds { VO_INTRO, MUS_MENU, SE_SELECT, MUS_STAGE1, SE_TIMER };
+enum ObjectType { BLOCK, BOMB, BUILDING, ENEMY, PLAYER, POWERUPS };
 
 // ------------------------------------------------------------------------------
 

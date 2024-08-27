@@ -21,6 +21,9 @@
 #include "../Engine/Sprite.h"
 #include "../Engine/Scene.h"
 #include "../Engine/Timer.h"
+#include "../Engine/Object.h"
+#include "Building.h"
+#include "Block.h"
 #include "Background.h"
 #include "Player.h"
 #include "Scoreboard.h"
@@ -49,6 +52,8 @@ public:
     void Update();                      // atualização
     void Draw();                        // desenho
     void Finalize();                    // finalização
+    void CreateBoxes();
+    void CreateBlocks();
 };
 
 // ---------------------------------------------------------------------------------
