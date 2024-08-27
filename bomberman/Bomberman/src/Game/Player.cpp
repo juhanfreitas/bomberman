@@ -156,7 +156,7 @@ void Player::CreateBBox()
 
     l = -1.0f * playerTiles->TileWidth()/2.0f + 4;
     r =  1.0f * playerTiles->TileWidth()/2.0f - 4;
-    t = -1.0f * playerTiles->TileHeight()/2.0f + 20;
+    t = -1.0f * playerTiles->TileHeight()/2.0f + 18;
     b =  1.0f * playerTiles->TileHeight()/2.0f - 1;
 
     BBox(new Rect(l, t, r, b));

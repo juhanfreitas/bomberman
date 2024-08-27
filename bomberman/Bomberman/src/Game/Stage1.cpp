@@ -5,6 +5,9 @@
 #include "Home.h"
 #include "Stage1.h"
 #include <iostream>
+#include <iostream>
+#include <cstdlib> // For rand() and srand()
+#include <ctime>   // For time()
 
 
 Scene* Stage1::scene = nullptr;
@@ -117,7 +120,34 @@ void Stage1::CreateBoxes()
 
 void Stage1::CreateBlocks()
 {
-    for (auto i = 0; i < 13; i++)
+    {
+        auto i = 7, j = 11;
+        float posX = j * 16;
+        float posY = (i * 16) + 32;
+        Block* block = new Block(posX, posY);
+        scene->Add(block, STATIC);
+        backg->backGrid[i][j] = false;
+    }
+
+    srand(static_cast<uint>(time(0)));
+
+    for (auto i = 0; i < 39; i++)
+    {
+        int numLine = 1 + rand() % 11;
+        int numColm = 2 + rand() % 13;
+
+        if (backg->backGrid[numLine][numColm])
+        {
+            float posX = numColm * 16;
+            float posY = (numLine * 16) + 32;
+            Block* block = new Block(posX, posY);
+            scene->Add(block, STATIC);
+            backg->backGrid[numLine][numColm] = false;
+        }
+        else i--;
+    }
+
+    /*for (auto i = 0; i < 13; i++)
     {
         for (auto j = 0; j < 17; j++)
         {
@@ -129,5 +159,5 @@ void Stage1::CreateBlocks()
                 scene->Add(block, STATIC);
             }
         }
-    }
+    }*/
 }
