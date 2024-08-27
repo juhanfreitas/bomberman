@@ -80,7 +80,7 @@ void Stage1::Draw()
     
     if (viewScene)
         scene->Draw();
-    // if (viewBBox)
+    if (viewBBox)
     scene->DrawBBox();
 }
 
@@ -103,8 +103,8 @@ void Stage1::CreateBoxes()
         {
             if (!backg->backGrid[i][j])
             { 
-                float posX = j * 16;
-                float posY = (i * 16) + 32;
+                float posX = j * 16.0f;
+                float posY = (i * 16.0f) + 32;
                 Building* build = new Building(posX, posY);
                 scene->Add(build, STATIC);
             }

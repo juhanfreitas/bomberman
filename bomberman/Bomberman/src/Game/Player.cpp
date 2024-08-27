@@ -174,31 +174,7 @@ void Player::Update()
         MoveTo(x, 48);
 }
 
-void Player::OnCollision(Object* obj)
-{
-    if (obj->Type() == BOMB) {
-        if (state == WALKLEFT || lastState == WALKLEFT )
-            Translate(speed * gameTime, 0);
-        if (state == WALKRIGHT || lastState == WALKRIGHT)
-            Translate(-speed * gameTime, 0);
-        if (state == WALKUP || lastState == WALKUP)
-            Translate(0, speed * gameTime);
-        if (state == WALKDOWN || lastState == WALKDOWN)
-            Translate(0, -speed * gameTime);
-    }
-    if (obj->Type() == EXPLOSION) {
 
-        if (state != DYING) {
-            state = DYING;
-            anim->ChangeLoop(FALSE);
-            timer.Reset();
-            lives -= 1;
-            if (lives < 0) {
-                state = WINNING;
-            }
-        }
-    }
-}
 
 void Player::CreateBomb(BombType bombType)
 {
@@ -210,15 +186,19 @@ void Player::CreateBomb(BombType bombType)
     }
 }
 
+
+
 Geometry* Player::CreateBBox()
 {
     float l, r, t, b;
-    l = -1.0f * playerTiles->TileWidth() / 2.0f + 6;
-    t = 1.0f * playerTiles->TileHeight() / 2.0f - 12;
-    r = 1.0f * playerTiles->TileWidth() / 2.0f - 6;
-    b = 1.0f * playerTiles->TileHeight() / 2.0f;
+    l = -1.0f * playerTiles->TileWidth() / 2.0f + 5;
+    r = 1.0f * playerTiles->TileWidth() / 2.0f - 5;
+    t = -1.0f * playerTiles->TileHeight() / 2.0f + 20;
+    b = 1.0f * playerTiles->TileHeight() / 2.0f - 1;
     return new Rect(l, t, r, b);
 }
+
+
 
 void Player::HandleBombs()
 {
@@ -236,6 +216,8 @@ void Player::HandleBombs()
     }
 }
 
+
+
 void Player::HandleExplosions()
 {
     if (!explosionStack.empty()) {
@@ -247,6 +229,8 @@ void Player::HandleExplosions()
         }
     }
 }
+
+
 
 void Player::OnCollision(Object* obj)
 {
@@ -343,9 +327,27 @@ void Player::OnCollision(Object* obj)
         }
     }
     
-    if (obj->Type() == BOMB)
-    {
-        
+    if (obj->Type() == BOMB) {
+        if (state == WALKLEFT || lastState == WALKLEFT)
+            Translate(speed * gameTime, 0);
+        if (state == WALKRIGHT || lastState == WALKRIGHT)
+            Translate(-speed * gameTime, 0);
+        if (state == WALKUP || lastState == WALKUP)
+            Translate(0, speed * gameTime);
+        if (state == WALKDOWN || lastState == WALKDOWN)
+            Translate(0, -speed * gameTime);
+    }
+    if (obj->Type() == EXPLOSION) {
+
+        if (state != DYING) {
+            state = DYING;
+            anim->ChangeLoop(FALSE);
+            timer.Reset();
+            lives -= 1;
+            if (lives < 0) {
+                state = WINNING;
+            }
+        }
     }
 
     if (obj->Type() == BUILDING)
@@ -440,6 +442,8 @@ void Player::OnCollision(Object* obj)
             }
         }
     }
+
+
     if (obj->Type() == POWERUPS)
     { 
     
