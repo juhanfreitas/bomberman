@@ -15,13 +15,15 @@
 // ---------------------------------------------------------------------------------
 // Inclusões
 
-#include <list>
+#include <stack>
 #include "../Engine/Types.h"                      // tipos específicos da engine
 #include "../Engine/Object.h"                     // interface de Object
 #include "../Engine/Animation.h"                  // animação de sprites
 #include "../Engine/Timer.h"                      // animação de sprites
 #include "../Engine/Scene.h"
 #include "Bomb.h"
+
+using namespace std;
 
 // ------------------------------------------------------------------------------
 
@@ -35,21 +37,31 @@ private:
     TileSet   * playerTiles;                // folha de sprites do personagem
     Animation * anim;                       // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
-    list<Bomb> * bombs;
-    float       speed;                      // velocidade do personagem
+    stack<Bomb*> bombStack;
+    Bomb* recentBomb;
     float       bored_timing;               // tempo para ficar entediado
+
     uint score;
+    uint maxBombs;
+    uint bombPower;
+    uint lives;
+    uint availableBombs;
+    float       speed;                      // velocidade do personagem
 
 public:
     uint state;                             // estado atual do personagem
+    uint lastState;
 
     Player();                               // construtor
     ~Player();                              // destrutor
 
     void Draw();                            // desenho do objeto
     void Update();                          // atualização do objeto
-    void CreateBBox();
+    void OnCollision(Object* obj);
+
+    Geometry* CreateBBox();
     void CreateBomb(BombType bombType);
+    void HandleBombs();
 };
 
 // ---------------------------------------------------------------------------------
@@ -57,13 +69,6 @@ public:
 
 inline void Player::Draw()
 {anim->Draw(x, y, z);}
-
-inline void Player::CreateBomb(BombType bombType)
-{
-    Bomb* bomb = new Bomb(bombType, x, y);
-    bombs->push_front(*bomb);
-    //Bomberman::scene->Add(bomb, STATIC);
-}
 
 // ---------------------------------------------------------------------------------
 

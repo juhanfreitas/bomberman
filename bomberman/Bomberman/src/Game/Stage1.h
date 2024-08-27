@@ -44,7 +44,6 @@ private:
 public:
     static Scene* scene;                // cena do jogo
 
-
     void Init();                        // inicialização
     void Update();                      // atualização
     void Draw();                        // desenho

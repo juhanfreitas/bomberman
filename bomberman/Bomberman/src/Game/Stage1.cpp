@@ -32,9 +32,6 @@ void Stage1::Init()
 void Stage1::Update()
 {
     Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
-    Bomberman::scoreboard->UpdateBombs(2);
-    Bomberman::scoreboard->UpdatePower(2);
-    Bomberman::scoreboard->UpdateLives(3);
 
     // sai com o pressionar do ESC
     if (window->KeyDown(VK_ESCAPE))
@@ -66,7 +63,7 @@ void Stage1::Update()
     scene->Update();
 
     // detecta as colisões na cena
-    //scene->CollisionDetection();
+    scene->CollisionDetection();
 
 }
 
@@ -74,12 +71,11 @@ void Stage1::Update()
 
 void Stage1::Draw()
 {
-    //backg->Draw(window->CenterX(), window->CenterY(), Layer::BACK, 2.0f);
-
-    if (Stage1::viewScene)
+    
+    if (viewScene)
         scene->Draw();
-    if (Stage1::viewBBox)
-        scene->DrawBBox();
+    // if (viewBBox)
+    scene->DrawBBox();
 }
 
 // ------------------------------------------------------------------------------

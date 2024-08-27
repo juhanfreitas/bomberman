@@ -43,7 +43,6 @@ private:
 
 public:
     uint state;                         // estado atual do personagem
-    uint scoreboardHeight;
 
     Scoreboard();                             // construtor
     ~Scoreboard();                            // destrutor
@@ -69,7 +68,7 @@ public:
 
 inline uint Scoreboard::Height() const
 {
-	return scoreboardHeight;
+	return scoreboard->TileHeight();
 }
 
 inline std::string Scoreboard::SetBoardText(
