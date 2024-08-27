@@ -1,7 +1,7 @@
 // ---------------------------------------------------------
 #pragma once
-#ifndef _BOMB_H_
-#define _BOMB_H_
+#ifndef _EXPLOSION_H_
+#define _EXPLOSION_H_
 
 // ---------------------------------------------------------
 
@@ -13,29 +13,27 @@
 
 // ---------------------------------------------------------
 
-enum BombType { NORMAL, SPIKE };
-
-class Bomb : public Object
+class Explosion : public Object
 {
 private:
-	TileSet * bombs = nullptr;
-	Animation * anim = nullptr;
-	bool hasCollision = false;
+	TileSet* frames = nullptr;
+	Animation* anim = nullptr;
 
 public:
 
 	Timer timer;
-	BombType bombMode;
 
-	Bomb(BombType Bombtype, float playerX, float playerY);
-	~Bomb();
+	Explosion(float bombX, float bombY);
+	~Explosion();
 
 	void Update();
 	void Draw();
-	void CheckPlayerPosition();
 };
 
-inline void Bomb::Draw() 
+inline void Explosion::Draw()
 { anim->Draw(x, y, z); }
 
-#endif _BOMB_H_
+inline void Explosion::Update()
+{ anim->NextFrame(); }
+
+#endif _EXPLOSION_H_

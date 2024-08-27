@@ -15,7 +15,7 @@
 // ---------------------------------------------------------------------------------
 // Inclusões
 
-#include <list>
+#include <stack>
 #include "../Engine/Types.h"                      // tipos específicos da engine
 #include "../Engine/Object.h"                     // interface de Object
 #include "../Engine/Animation.h"                  // animação de sprites
@@ -23,6 +23,9 @@
 #include "../Engine/Scene.h"
 #include "Stage1.h"
 #include "Bomb.h"
+#include "Explosion.h"
+
+using namespace std;
 
 // ------------------------------------------------------------------------------
 
@@ -36,10 +39,18 @@ private:
     TileSet   * playerTiles;                // folha de sprites do personagem
     Animation * anim;                       // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
-    list<Bomb> * bombs;
-    float       speed;                      // velocidade do personagem
+    stack<Bomb*> bombStack;
+    stack<Explosion*> explosionStack;
     float       bored_timing;               // tempo para ficar entediado
+
+    uint startX, startY;
+
     uint score;
+    uint maxBombs;
+    uint bombPower;
+    uint lives;
+    uint availableBombs;
+    float       speed;                      // velocidade do personagem
 
 public:
     uint state;                             // estado atual do personagem
@@ -50,23 +61,23 @@ public:
 
     void Draw();                            // desenho do objeto
     void Update();                          // atualização do objeto
-    void CreateBBox();
     void OnCollision(Object* obj);
+
+    Geometry* CreateBBox();
     void CreateBomb(BombType bombType);
+    void HandleBombs();
+    void HandleExplosions();
+    void IncreaseScore(int points);
 };
 
 // ---------------------------------------------------------------------------------
 // Função Membro Inline
 
 inline void Player::Draw()
-{anim->Draw(x, y, z);}
+{ anim->Draw(x, y, z); }
 
-inline void Player::CreateBomb(BombType bombType)
-{
-    Bomb* bomb = new Bomb(bombType, x, y);
-    bombs->push_front(*bomb);
-    //Stage1::scene->Add(bomb, STATIC);
-}
+inline void Player::IncreaseScore(int points)
+{ score += points; }
 
 // ---------------------------------------------------------------------------------
 

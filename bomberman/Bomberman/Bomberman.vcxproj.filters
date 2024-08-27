@@ -93,9 +93,6 @@
     <ClCompile Include="src\Game\Background.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Bomb.cpp">
-      <Filter>Game\Arquivos de Origem</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\Intro.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
@@ -103,6 +100,12 @@
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Stage1.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Bomb.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Explosion.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\building.cpp">
@@ -188,10 +191,13 @@
     <ClInclude Include="src\Game\Background.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game\Stage1.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
     <ClInclude Include="src\Game\Bomb.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Stage1.h">
+    <ClInclude Include="src\Game\Explosion.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\Building.h">

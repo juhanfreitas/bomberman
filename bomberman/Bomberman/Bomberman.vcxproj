@@ -180,6 +180,7 @@
     <ClCompile Include="src\Engine\Geometry.cpp" />
     <ClCompile Include="src\Engine\Graphics.cpp" />
     <ClCompile Include="src\Engine\Image.cpp" />
+    <ClCompile Include="src\Game\Explosion.cpp" />
     <ClCompile Include="src\Game\building.cpp" />
     <ClCompile Include="src\Game\Intro.cpp" />
     <ClCompile Include="src\Game\Player.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="src\Engine\Geometry.h" />
     <ClInclude Include="src\Engine\Graphics.h" />
     <ClInclude Include="src\Engine\Image.h" />
+    <ClInclude Include="src\Game\Explosion.h" />
     <ClInclude Include="src\Game\Building.h" />
     <ClInclude Include="src\Game\Intro.h" />
     <ClInclude Include="src\Game\Player.h" />
