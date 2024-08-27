@@ -15,6 +15,7 @@
 // ---------------------------------------------------------------------------------
 // Inclusões
 
+#include <stack>
 #include "../Engine/Audio.h"
 #include "../Engine/Font.h"
 #include "../Engine/Game.h"
@@ -33,13 +34,12 @@ private:
     Background* backg = nullptr;        // plano de fundo do jogo
     Scoreboard* scoreboard = nullptr;
 
+
     Timer timer;
 
     bool viewBBox = false;              // visualiza as bounding box na cena
     bool viewScene = true;              // visualiza os sprites em cena
     bool timeUp = false;
-
-    friend class Player;
 
 public:
     static Scene* scene;                // cena do jogo
@@ -48,6 +48,7 @@ public:
     void Update();                      // atualização
     void Draw();                        // desenho
     void Finalize();                    // finalização
+    
 };
 
 // ---------------------------------------------------------------------------------

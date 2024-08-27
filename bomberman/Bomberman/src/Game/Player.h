@@ -22,6 +22,7 @@
 #include "../Engine/Timer.h"                      // animação de sprites
 #include "../Engine/Scene.h"
 #include "Bomb.h"
+#include "Explosion.h"
 
 using namespace std;
 
@@ -38,8 +39,10 @@ private:
     Animation * anim;                       // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
     stack<Bomb*> bombStack;
-    Bomb* recentBomb;
+    stack<Explosion*> explosionStack;
     float       bored_timing;               // tempo para ficar entediado
+
+    uint startX, startY;
 
     uint score;
     uint maxBombs;
@@ -62,13 +65,18 @@ public:
     Geometry* CreateBBox();
     void CreateBomb(BombType bombType);
     void HandleBombs();
+    void HandleExplosions();
+    void IncreaseScore(int points);
 };
 
 // ---------------------------------------------------------------------------------
 // Função Membro Inline
 
 inline void Player::Draw()
-{anim->Draw(x, y, z);}
+{ anim->Draw(x, y, z); }
+
+inline void Player::IncreaseScore(int points)
+{ score += points; }
 
 // ---------------------------------------------------------------------------------
 

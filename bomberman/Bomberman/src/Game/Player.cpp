@@ -11,8 +11,11 @@
 
 #include "Player.h"
 #include "Bomberman.h"
+#include "Intro.h"
 #include "Stage1.h"
 #include "Bomb.h"
+#include "Explosion.h"
+
 
 // ---------------------------------------------------------------------------------
 
@@ -21,12 +24,13 @@ Player::Player()
     playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
     anim = new Animation(playerTiles, 0.120f, true);
     bombStack = * new stack<Bomb*>;
-
+    explosionStack = * new stack<Explosion*>;
+    
     type = PLAYER;
 
     bombPower = 1;
     lives = 2;
-    maxBombs = 9;
+    maxBombs = 1;
     availableBombs = maxBombs;
 
     uint SeqStill[1] = { 0 };
@@ -54,10 +58,7 @@ Player::Player()
 
     BBox(CreateBBox());
 
-    MoveTo(
-        window->CenterX() / Bomberman::screenScale,
-        window->CenterY() / Bomberman::screenScale
-    );
+    MoveTo(40, 48);
 }
 
 // ---------------------------------------------------------------------------------
@@ -77,10 +78,18 @@ void Player::Update()
     Bomberman::scoreboard->UpdatePower(bombPower);
     Bomberman::scoreboard->UpdateLives(lives);
 
+    if (state == DYING && timer.Elapsed(1.5f)){
+        MoveTo(40, 48);
+        state = STILL;
+        anim->ChangeLoop(TRUE);
+
+    }
+
     HandleBombs();
+    HandleExplosions();
 
     // anda para cima
-    if (window->KeyDown(VK_UP))
+    if (window->KeyDown(VK_UP) && state != DYING)
     {
         timer.Reset();
         lastState = state;
@@ -89,7 +98,7 @@ void Player::Update()
     }
 
     // anda para baixo
-    if (window->KeyDown(VK_DOWN))
+    if (window->KeyDown(VK_DOWN) && state != DYING)
     {
         timer.Reset();
         lastState = state;
@@ -98,7 +107,7 @@ void Player::Update()
     }
 
     // anda para esquerda
-    if (window->KeyDown(VK_LEFT))
+    if (window->KeyDown(VK_LEFT) && state != DYING)
     {
         timer.Reset();
         lastState = state;
@@ -107,7 +116,7 @@ void Player::Update()
     }
 
     // anda para direita
-    if (window->KeyDown(VK_RIGHT))
+    if (window->KeyDown(VK_RIGHT) && state != DYING)
     {
         timer.Reset();
         lastState = state;
@@ -115,7 +124,7 @@ void Player::Update()
         Translate(speed * gameTime, 0);
     }
 
-    if (window->KeyPress(VK_SPACE))
+    if (window->KeyPress(VK_SPACE) && state != DYING)
     {
         timer.Reset();
         CreateBomb(NORMAL);
@@ -127,12 +136,6 @@ void Player::Update()
         state = WINNING;
         score += 10;
     }
-    if (window->KeyDown('H'))
-    {
-        timer.Reset();
-        state = DYING;
-        anim->ChangeLoop(FALSE);
-    }
 
     // se todas as teclas estão liberadas, mude para o estado parado
     if (window->KeyUp(VK_UP)
@@ -141,7 +144,7 @@ void Player::Update()
         && window->KeyUp(VK_RIGHT)
         && window->KeyUp(VK_SPACE)
         && window->KeyUp('N')
-        && window->KeyUp('H'))
+        && state != DYING)
     {
         state = STILL;
     }
@@ -171,7 +174,6 @@ void Player::Update()
 
 void Player::OnCollision(Object* obj)
 {
-    // bola colide com bloco
     if (obj->Type() == BOMB) {
         if (state == WALKLEFT || lastState == WALKLEFT )
             Translate(speed * gameTime, 0);
@@ -182,10 +184,18 @@ void Player::OnCollision(Object* obj)
         if (state == WALKDOWN || lastState == WALKDOWN)
             Translate(0, -speed * gameTime);
     }
-        
+    if (obj->Type() == EXPLOSION) {
 
-    // experimente deixar o bloco cair em vez de removê-lo da cena
-        //((Block*) obj)->velY = 200.0f;
+        if (state != DYING) {
+            state = DYING;
+            anim->ChangeLoop(FALSE);
+            timer.Reset();
+            lives -= 1;
+            if (lives < 0) {
+                state = WINNING;
+            }
+        }
+    }
 }
 
 void Player::CreateBomb(BombType bombType)
@@ -211,14 +221,28 @@ Geometry* Player::CreateBBox()
 void Player::HandleBombs()
 {
     if (!bombStack.empty()) {
-        recentBomb = bombStack.top();
+        Bomb * recentBomb = bombStack.top();
         
-        if (recentBomb->timer.Elapsed(10.0f)) {
+        if (recentBomb->timer.Elapsed(3.0f)) {
             availableBombs += 1;
             Stage1::scene->Delete(recentBomb, STATIC);
+            Explosion* explosion = new Explosion(recentBomb->X(), recentBomb->Y());
+            Stage1::scene->Add(explosion, STATIC);
+            explosionStack.push(explosion);
             bombStack.pop();
         }
+    }
+}
 
+void Player::HandleExplosions()
+{
+    if (!explosionStack.empty()) {
+        Explosion* recentExplosion = explosionStack.top();
+
+        if (recentExplosion->timer.Elapsed(1.5f)) {
+            Stage1::scene->Delete(recentExplosion, STATIC);
+            explosionStack.pop();
+        }
     }
 }
 

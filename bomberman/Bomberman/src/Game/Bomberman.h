@@ -32,7 +32,8 @@ enum ObjTypes {
     PLAYER,
     BOMB,
     BARRIER,
-    BLOCK
+    BLOCK,
+    EXPLOSION
 };
 
 // ------------------------------------------------------------------------------

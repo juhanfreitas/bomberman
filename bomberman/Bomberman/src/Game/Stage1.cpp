@@ -4,6 +4,7 @@
 #include "Bomberman.h"
 #include "Home.h"
 #include "Stage1.h"
+#include "Explosion.h"
 
 
 Scene* Stage1::scene = nullptr;
@@ -31,6 +32,7 @@ void Stage1::Init()
 
 void Stage1::Update()
 {
+
     Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
 
     // sai com o pressionar do ESC
