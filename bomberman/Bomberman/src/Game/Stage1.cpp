@@ -18,7 +18,6 @@ void Stage1::Init()
 {
     scene = new Scene();
 
-    //backg = new Sprite("Resources/BgStage.png");
     backg = new Background();
     scoreboard = new Scoreboard();
     CreateBoxes();
@@ -29,7 +28,7 @@ void Stage1::Init()
     scene->Add(Bomberman::player, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
-    //Bomberman::audio->Play(MUS_STAGE1);
+    Bomberman::audio->Play(MUS_STAGE1);
 }
 
 // ------------------------------------------------------------------------------
@@ -81,7 +80,7 @@ void Stage1::Draw()
     if (viewScene)
         scene->Draw();
     if (viewBBox)
-    scene->DrawBBox();
+        scene->DrawBBox();
 }
 
 // ------------------------------------------------------------------------------
@@ -89,14 +88,12 @@ void Stage1::Draw()
 void Stage1::Finalize()
 {
     delete scene;
-    //delete backg;
 }
 
 // -------------------------------------------------------------------------------
 
 void Stage1::CreateBoxes() 
 {
-    /*bool grid = * backg->backGrid;*/
     for (auto i = 1; i < 12; i++)
     {
         for (auto j = 2; j < 15; j++)
@@ -143,18 +140,4 @@ void Stage1::CreateBlocks()
         }
         else i--;
     }
-
-    /*for (auto i = 0; i < 13; i++)
-    {
-        for (auto j = 0; j < 17; j++)
-        {
-            if (backg->backGrid[i][j])
-            {
-                float posX = j * 16;
-                float posY = (i * 16) + 32;
-                Block * block = new Block(posX, posY);
-                scene->Add(block, STATIC);
-            }
-        }
-    }*/
 }

@@ -55,6 +55,7 @@ private:
 public:
     uint state;                             // estado atual do personagem
     uint lastState;
+    list<PlayerState> listState;
 
     Player();                               // construtor
     ~Player();                              // destrutor

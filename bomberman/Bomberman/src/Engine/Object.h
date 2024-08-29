@@ -13,8 +13,8 @@
 //
 **********************************************************************************/
 
-#ifndef _PROGJOGOS_OBJECT_H_
-#define _PROGJOGOS_OBJECT_H_
+#ifndef _BOMBERMAN_OBJECT_H_
+#define _BOMBERMAN_OBJECT_H_
 
 // -----------------------------------------------------------------------------
 

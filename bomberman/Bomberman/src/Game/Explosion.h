@@ -28,6 +28,7 @@ public:
 
 	void Update();
 	void Draw();
+	void OnCollision(Object * obj);
 };
 
 inline void Explosion::Draw()

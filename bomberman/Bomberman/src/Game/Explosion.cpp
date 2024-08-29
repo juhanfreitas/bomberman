@@ -39,3 +39,11 @@ Explosion::~Explosion()
 	delete anim;
 	delete frames;
 }
+
+void Explosion::OnCollision(Object * obj) {
+	if (obj->Type() == BLOCK)
+	{
+		Stage1::scene->Delete(obj, STATIC);
+		delete obj;
+	}
+}
