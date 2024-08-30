@@ -51,7 +51,7 @@ void Stage1::Update()
     if (window->KeyPress(VK_F3))
         Bomberman::NextLevel<Home>();
 
-    // toca um sinal de aviso quando o tempo está acabando
+    // toca um sinal de aviso quando o tempo estï¿½ acabando
     if (timer.Elapsed(Bomberman::timeLimit))
     {
         timeUp = true;
@@ -67,7 +67,7 @@ void Stage1::Update()
     // atualiza a cena do jogo;
     scene->Update();
 
-    // detecta as colisões na cena
+    // detecta as colisï¿½es na cena
     scene->CollisionDetection();
 
 }
@@ -87,6 +87,8 @@ void Stage1::Draw()
 
 void Stage1::Finalize()
 {
+    scene->Remove(Bomberman::player, MOVING);
+    scene->Remove(Bomberman::scoreboard, STATIC);
     delete scene;
 }
 
@@ -119,7 +121,7 @@ void Stage1::CreateBlocks()
         float posX = j * 16;
         float posY = (i * 16) + 32;
         Block* block = new Block(posX, posY);
-        scene->Add(block, STATIC);
+        scene->Add(block, MOVING);
         backg->backGrid[i][j] = false;
     }
 
@@ -135,7 +137,7 @@ void Stage1::CreateBlocks()
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
             Block* block = new Block(posX, posY);
-            scene->Add(block, STATIC);
+            scene->Add(block, MOVING);
             backg->backGrid[numLine][numColm] = false;
         }
         else i--;
