@@ -36,38 +36,35 @@ enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING,
 class Player : public Object
 {
 private:
-    TileSet   * playerTiles;                // folha de sprites do personagem
-    Animation * anim;                       // animação do personagem
-    Timer timer;                            // medidor de tempo entre quadros da animação
-    stack<Bomb*> bombStack;
-    stack<Explosion*> explosionStack;
-    float       bored_timing;               // tempo para ficar entediado
+    TileSet   *         playerTiles;        // folha de sprites do personagem
+    Animation *         anim;               // animação do personagem
+    list<Bomb*>         bombStack;
 
-    uint startX, startY;
+    Timer               timer;              // medidor de tempo entre quadros da animação
+    float               bored_timing;       // tempo para ficar entediado
 
-    uint score;
-    uint maxBombs;
-    uint bombPower;
-    uint lives;
-    uint availableBombs;
-    float       speed;                      // velocidade do personagem
+    int                 score;
+    int                 lives;
+    uint                bombPower;
+    uint                maxBombs;
+    uint                availableBombs;
+
+    float               speed;              // velocidade do personagem
 
 public:
-    uint state;                             // estado atual do personagem
-    uint lastState;
-    list<PlayerState> listState;
+    list<PlayerState>   stateBuffer;        // estado atual do personagem
 
     Player();                               // construtor
     ~Player();                              // destrutor
 
-    void Draw();                            // desenho do objeto
     void Update();                          // atualização do objeto
+    void Draw();                            // desenho do objeto
     void OnCollision(Object* obj);
+    void Reset();
 
     Geometry* CreateBBox();
     void CreateBomb(BombType bombType);
     void HandleBombs();
-    void HandleExplosions();
     void IncreaseScore(int points);
 };
 

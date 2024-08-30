@@ -2,7 +2,7 @@
 #include "Bomberman.h"
 
 
-Bomb::Bomb(BombType bombType, float playerX, float playerY)
+Bomb::Bomb(BombType bombType, float playerX, float playerY) : bombMode(bombType)
 {
 	uint gridX = static_cast<uint>(playerX / 16);
 	uint gridY = static_cast<uint>((playerY + 8 - Bomberman::scoreboard->Height()) / 16);
@@ -10,6 +10,8 @@ Bomb::Bomb(BombType bombType, float playerX, float playerY)
 	anim = new Animation(bombs, 0.320f, true);
 
 	type = BOMB;
+	fuseTime = 3.0f;
+	state = FUSING;
 
 	timer.Start();
 
@@ -19,9 +21,13 @@ Bomb::Bomb(BombType bombType, float playerX, float playerY)
 	anim->Add(NORMAL, normalBomb, 4);
 	anim->Add(SPIKE, spikeBomb, 4);
 
-	bombMode = bombType;
-
 	MoveTo((gridX * 16.0f) + 8, (gridY * 16.0f) + 8 + Bomberman::scoreboard->Height(), Layer::LOWER);
+}
+
+Bomb::~Bomb()
+{
+	delete anim;
+	delete bombs;
 }
 
 void Bomb::CheckPlayerPosition()
@@ -31,10 +37,10 @@ void Bomb::CheckPlayerPosition()
 	int gridY = static_cast<int>((y - (Bomberman::scoreboard->Height())) / 16);
 
 	if (
-		(static_cast<int>((playerBox->Right() + 1)/16) - gridX > 1 ||
-		gridX - static_cast<int>((playerBox->Left() - 1)/ 16) > 1) ||
-		static_cast<int>((playerBox->Bottom() - Bomberman::scoreboard->Height() + 1) / 16) - gridY > 1 ||
-		gridY - static_cast<int>((playerBox->Top() - Bomberman::scoreboard->Height() - 1) / 16) > 1
+		(static_cast<int>((playerBox->Right() - 1)/16) - gridX > 1 ||
+		gridX - static_cast<int>((playerBox->Left() + 1)/ 16) > 1) ||
+		static_cast<int>((playerBox->Bottom() - Bomberman::scoreboard->Height() - 1) / 16) - gridY > 1 ||
+		gridY - static_cast<int>((playerBox->Top() - Bomberman::scoreboard->Height() + 1) / 16) > 1
 	) {
 		hasCollision = true;
 
@@ -54,12 +60,26 @@ void Bomb::Update()
 	if (!hasCollision)
 		CheckPlayerPosition();
 
+	if (timer.Elapsed(fuseTime))
+		state = READY;
+
 	anim->Select(bombMode);
 	anim->NextFrame();
 }
 
-Bomb::~Bomb()
+void Bomb::Explode(uint power)
 {
-	delete anim;
-	delete bombs;
+	Explosion* explosion = new Explosion(x, y, power);
+	Stage1::scene->Add(explosion, MOVING);
+	Stage1::scene->Delete(this, STATIC);
+}
+
+void Bomb::OnCollision(Object* obj)
+{
+	switch (obj->Type())
+	{
+	case EXPLOSION:
+		state = READY;
+		break;
+	}
 }
