@@ -21,9 +21,7 @@ private:
 
 public:
 
-	Timer timer;
-
-	Explosion(float bombX, float bombY);
+	Explosion(float bombX, float bombY, uint power=1);
 	~Explosion();
 
 	void Update();
@@ -33,8 +31,5 @@ public:
 
 inline void Explosion::Draw()
 { anim->Draw(x, y, z); }
-
-inline void Explosion::Update()
-{ anim->NextFrame(); }
 
 #endif _EXPLOSION_H_
