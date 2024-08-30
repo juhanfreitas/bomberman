@@ -6,17 +6,17 @@ Block::Block(float x, float y)
 {
 	type = BLOCK;
 	blkState = DEFAULT;
-	blockTiles = new TileSet("Resources/block_stg 1.png", 16, 16, 2, 2);
-	anim = new Animation(blockTiles, 120.0f, false);
+	blockTiles = new TileSet("Resources/block_stg 1.png", 16, 16, 6, 12);
+	anim = new Animation(blockTiles, 120.0f, true);
 	
-	uint stillseq[1] = {3};
-	uint explodeseq[4] = {1};
+	uint SeqStill[4] = { 0, 1, 2, 3 };
+	uint SeqExploding[6] = { 6, 7, 8, 9, 10, 11 };
 	
-	anim->Add(DEFAULT, stillseq, 1);
-	anim->Add(EXPLODE, explodeseq, 4);
+	anim->Add(DEFAULT, SeqStill, 4);
+	anim->Add(EXPLODING, SeqExploding, 6);
 
 	BBox(new Rect(-8, -8, 8, 8));
-	MoveTo(x+8, y+8); 
+	MoveTo(x+8, y+8, Layer::LOWER); 
 }
 
 Block::~Block()
@@ -27,15 +27,14 @@ Block::~Block()
 
 void Block::Update()
 {
-	if (blkState == DEFAULT)
-		anim->Select(DEFAULT);
-
-
-	if (blkState == EXPLODE)
+	if (blkState == EXPLODING)
 	{
-		anim->Select(EXPLODE);
-		anim->ChangeLoop(true);
+		anim->ChangeLoop(false);
 	}
 
+	if (anim->Inactive())
+		Stage1::scene->Delete(this, STATIC);
+
+	anim->Select(blkState);
 	anim->NextFrame();
 }
