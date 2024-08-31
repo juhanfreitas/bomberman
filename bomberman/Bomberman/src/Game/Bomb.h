@@ -43,6 +43,6 @@ public:
 };
 
 inline void Bomb::Draw() 
-{ anim->Draw(x, y, z); }
+{ anim->Draw(x, y, Layer::UPPER); }
 
 #endif _BOMB_H_

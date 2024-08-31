@@ -60,7 +60,7 @@ void Scoreboard::Draw()
 	anim->Draw(
 		window->CenterX() / Bomberman::screenScale,
 		scoreboard->TileHeight() / Bomberman::screenScale,
-		Layer::FRONT
+		Layer::UPPER
 	);
 	font->Draw(59, scoreboard->TileHeight() / 2.0f + 9, Scoreboard::score);
 	font->Draw((scoreboard->TileWidth() / 2.0f) - 6, scoreboard->TileHeight() / 2.0f + 9, Scoreboard::timer);

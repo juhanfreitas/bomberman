@@ -192,6 +192,7 @@
     <ClCompile Include="src\Engine\TileSet.cpp" />
     <ClCompile Include="src\Engine\Timer.cpp" />
     <ClCompile Include="src\Engine\Window.cpp" />
+    <ClCompile Include="src\Game\Portal.cpp" />
     <ClCompile Include="src\Game\Scoreboard.cpp" />
     <ClCompile Include="src\Game\Home.cpp" />
     <ClCompile Include="src\Game\Stage1.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="src\Game\Player.h" />
     <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Renderer.h" />
+    <ClInclude Include="src\Game\Portal.h" />
     <ClInclude Include="src\Game\Resources.h" />
     <ClInclude Include="src\Engine\Scene.h" />
     <ClInclude Include="src\Engine\Sprite.h" />

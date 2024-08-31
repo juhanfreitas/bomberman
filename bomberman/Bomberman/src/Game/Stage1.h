@@ -28,6 +28,7 @@
 #include "Background.h"
 #include "Player.h"
 #include "Scoreboard.h"
+#include "Portal.h"
 
 // ------------------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ class Stage1 : public Game
 private:
     Background* backg = nullptr;        // plano de fundo do jogo
     Scoreboard* scoreboard = nullptr;
+    Portal* portal = nullptr;
 
 
     Timer timer;
@@ -53,6 +55,8 @@ public:
     void Finalize();                    // finalização
     void CreateBoxes();
     void CreateBlocks();
+    void CreatePortal();
+    void CreateExtraBoxes();
 };
 
 // ---------------------------------------------------------------------------------

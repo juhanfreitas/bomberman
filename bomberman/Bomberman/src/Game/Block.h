@@ -3,7 +3,6 @@
 #define _BLOCK_H_
 
 // ----------------------------------------------------------
-
 #include "../Engine/Object.h"
 #include "../Engine/Sprite.h"
 #include "../Engine/TileSet.h"
@@ -11,7 +10,7 @@
 
 // ----------------------------------------------------------
 
-enum BlockState { DEFAULT, EXPLODING };
+enum BlockState { DEFAULT, EXPLODING};
 
 // ----------------------------------------------------------
 
@@ -19,8 +18,9 @@ class Block : public Object
 {
 private:
 
-	TileSet * blockTiles;
-	Animation * anim;
+	TileSet* blockTiles;
+	Sprite* shadow;
+	Animation* anim;
 	BlockState blkState;
 
 public:
@@ -30,14 +30,21 @@ public:
 
 	void Update();
 	void Draw();
-
 	void ChangeState(BlockState state);
 };
 
 inline void Block::Draw()
-{ anim->Draw(x, y, z); }
+{
+	anim->Draw(x, y, Layer::MIDDLE);
+	if (shadow != nullptr)
+	{
+		shadow->Draw(x, y + 16, Layer::LOWER);
+	}
+}
 
 inline void Block::ChangeState(BlockState state)
-{ blkState = state; }
+{
+	blkState = state;
+}
 
 #endif _BLOCK_H_

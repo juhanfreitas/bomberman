@@ -28,9 +28,9 @@ Player::Player()
     
     type = PLAYER;
 
-    bombPower = 1;
+    bombPower = 3;
     lives = 2;
-    maxBombs = 1;
+    maxBombs = 4;
     availableBombs = maxBombs;
 
     uint SeqStill[1] = { 0 };
@@ -168,6 +168,12 @@ void Player::Update()
     {
         stateBuffer.push_front(STILL);
     }
+    else {
+        if (stateBuffer.size() > 1)
+        {
+            stateBuffer.remove(BORED);
+        }
+    }
 
     switch (stateBuffer.front())
     {
@@ -207,6 +213,24 @@ void Player::Update()
             Reset();
         }
         break;
+    }
+
+    // mantém personagem dentro da tela
+    {
+        // saída pela esquerda
+        if (x < 40)
+            MoveTo(40, y);
+
+        // saída pela direita
+        if (x > window->Width() / 2.0f - 40)
+            MoveTo(window->Width() / 2.0f - 40, y);
+
+        if (y < 49)
+            MoveTo(x, 49);
+
+        // saída por baixo
+        if (y > window->Height() / 2.0f - 31)
+            MoveTo(x, window->Height() / 2.0f - 31);
     }
 
     // atualiza animação

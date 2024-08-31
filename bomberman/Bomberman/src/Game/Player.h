@@ -72,7 +72,7 @@ public:
 // Função Membro Inline
 
 inline void Player::Draw()
-{ anim->Draw(x, y, z); }
+{ anim->Draw(x, y, Layer::FRONT); }
 
 inline void Player::IncreaseScore(int points)
 { score += points; }
