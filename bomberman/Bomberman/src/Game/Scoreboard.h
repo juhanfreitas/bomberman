@@ -43,12 +43,13 @@ private:
 
 public:
     uint state;                         // estado atual do personagem
+    uint scoreboardHeight;
 
     Scoreboard();                             // construtor
     ~Scoreboard();                            // destrutor
 
     static void UpdateScore(uint score);
-    static void UpdateTimer(float timeLimit, float gameTime);
+    static void UpdateTimer(uint timeLimit, uint gameTime);
     static void UpdateLives(uint lives);
 	static void UpdateBombs(uint bombs);
 	static void UpdatePower(uint power);
@@ -68,7 +69,7 @@ public:
 
 inline uint Scoreboard::Height() const
 {
-	return scoreboard->TileHeight();
+	return scoreboardHeight;
 }
 
 inline std::string Scoreboard::SetBoardText(
@@ -91,12 +92,12 @@ inline std::string Scoreboard::SetBoardText(
 	return ss.str();
 }
 
-inline void Scoreboard::UpdateScore(uint score)
+inline void Scoreboard::UpdateScore(uint newScore)
 {
-	Scoreboard::score = SetBoardText(score, 5);
+	Scoreboard::score = SetBoardText(newScore, 5);
 }
-inline void Scoreboard::UpdateTimer(float timeLimit, float gameTime) {
-	uint remainingTime = static_cast<uint>((timeLimit - gameTime > 0) ? timeLimit - gameTime : 0);
+inline void Scoreboard::UpdateTimer(uint timeLimit, uint gameTime) {
+	uint remainingTime = timeLimit - gameTime;
 	uint minutes = remainingTime / 60;
 	uint seconds = remainingTime % 60;
 	Scoreboard::timer = SetBoardText(minutes, seconds, ":", 2);

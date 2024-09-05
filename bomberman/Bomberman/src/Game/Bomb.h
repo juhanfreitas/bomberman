@@ -10,6 +10,7 @@
 #include "../Engine/TileSet.h"
 #include "../Engine/Animation.h"
 #include "../Engine/Timer.h"
+#include "Explosion.h"
 
 // ---------------------------------------------------------
 
@@ -23,15 +24,20 @@ private:
 	Animation * anim = nullptr;
 
 	float fuseTime;
+	bool playerIn = true;
+	uint explosionPWR;
 
-	bool hasCollision = false;
+	list<Explosion*> expUp;
+	list<Explosion*> expDn;
+	list<Explosion*> expLt;
+	list<Explosion*> expRt;
 
 public:
 	Timer timer;
 	BombType bombMode;
 	BombState state;
 
-	Bomb(BombType Bombtype, float playerX, float playerY);
+	Bomb(BombType Bombtype, float playerX, float playerY, uint power = 1);
 	~Bomb();
 
 	void Update();
@@ -39,7 +45,8 @@ public:
 	void OnCollision(Object* obj);
 
 	void CheckPlayerPosition();
-	void Explode(uint power);
+	void CreateExplosionRange();
+	void Explode();
 };
 
 inline void Bomb::Draw() 

@@ -70,7 +70,7 @@ void Bomberman::Finalize()
 {
     level->Finalize();
 
-    //delete player;
+    delete player;
     delete audio;
     delete level;
 }

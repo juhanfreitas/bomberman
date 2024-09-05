@@ -51,7 +51,7 @@ Player::Player()
     anim->Add(WINNING,      SeqWinning, 8);
     anim->Add(STILL,        SeqStill,   1);
 
-    speed = 50.0f;
+    speed = 70.0f;
     bored_timing = 5.0f;
     timer.Start();
 
@@ -88,7 +88,7 @@ void Player::Update()
     Bomberman::scoreboard->UpdatePower(bombPower);
     Bomberman::scoreboard->UpdateLives(lives);
 
-    HandleBombs();
+    HandleExplosions();
 
     // anda para cima
     if (window->KeyPress(VK_UP))
@@ -256,7 +256,7 @@ void Player::CreateBomb(BombType bombType)
 {
     if (availableBombs > 0) {
         availableBombs -= 1;
-        Bomb* bomb = new Bomb(bombType, x, y);
+        Bomb* bomb = new Bomb(bombType, x, y, bombPower);
         Stage1::scene->Add(bomb, STATIC);
         bombStack.push_back(bomb);
     }
@@ -264,15 +264,15 @@ void Player::CreateBomb(BombType bombType)
 
 // ---------------------------------------------------------------------------------
 
-void Player::HandleBombs()
+void Player::HandleExplosions()
 {
     if (!bombStack.empty()) {
         Bomb * recentBomb = bombStack.front();
         
         if (recentBomb->state == READY) {
-            availableBombs += 1;
-            recentBomb->Explode(bombPower);
+            recentBomb->Explode();
             bombStack.pop_front();
+            availableBombs += 1;
         }
     }
 }
@@ -304,21 +304,14 @@ void Player::OnCollision(Object* obj)
             if ((diffUp >= -4 && diffUp <= 0))
             {
                 if (stateBuffer.front() == WALKRIGHT)
-                {
                     MoveTo(x, y + diffUp);
-                }
             }
             else if ((diffDn >= -4 && diffDn <= 0))
             {
                 if (stateBuffer.front() == WALKRIGHT)
-                {
                     MoveTo(x, y - diffDn);
-                }
             }
-            else 
-            { 
-                MoveTo(objBox->Left() - (width / 2.0f), y);
-            }
+            else MoveTo(objBox->Left() - (width / 2.0f), y);    
         }
 
         // colisão por cima
@@ -327,19 +320,14 @@ void Player::OnCollision(Object* obj)
             if (diffLt >= -4 && diffLt <= 0)
             {
                 if (stateBuffer.front() == WALKDOWN)
-                {
                     MoveTo(x + diffLt, y);
-                }
             }
             else if (diffRt >= -4 && diffRt <= 0)
             {
                 if (stateBuffer.front() == WALKDOWN)
-                {
                     MoveTo(x - diffRt, y);
-                }
             }
-            else
-                MoveTo(x, objBox->Top() - (height / 2.0f) - 7);
+            else MoveTo(x, objBox->Top() - (height / 2.0f) - 7);
         }
 
         // colisão pela direita
@@ -348,19 +336,14 @@ void Player::OnCollision(Object* obj)
             if (diffUp >= -4 && diffUp <= 0)
             {
                 if (stateBuffer.front() == WALKLEFT)
-                {
                     MoveTo(x, y + diffUp);
-                }
             }
             else if (diffDn >= -4 && diffDn <= 0)
             {
                 if (stateBuffer.front() == WALKLEFT)
-                {
                     MoveTo(x, y - diffDn);
-                }
             }
-            else
-                MoveTo(objBox->Right() + (width / 2.0f), y);
+            else MoveTo(objBox->Right() + (width / 2.0f), y);
         }        
 
         // colisão por baixo
@@ -369,34 +352,29 @@ void Player::OnCollision(Object* obj)
             if (diffLt >= -4 && diffLt <= 0)
             {
                 if (stateBuffer.front() == WALKUP)
-                {
                     MoveTo(x + diffLt, y);
-                }
             }
             else if (diffRt >= -4 && diffRt <= 0)
             {
                 if (stateBuffer.front() == WALKUP)
-                {
                     MoveTo(x - diffRt, y);
-                }
             }
-            else
-                MoveTo(x, objBox->Bottom() + (height / 2.0f) - 7);
+            else MoveTo(x, objBox->Bottom() + (height / 2.0f) - 7);
         }
         break;
     // --------------------------------------------------------------------------------------------
     case BOMB:
-        if (stateBuffer.front() == WALKLEFT)
-            Translate(speed * gameTime, 0);
-        
-        if (stateBuffer.front() == WALKRIGHT)
+        /*if (stateBuffer.front() == WALKLEFT)
             Translate(-speed * gameTime, 0);
         
+        if (stateBuffer.front() == WALKRIGHT)
+            Translate(speed * gameTime, 0);
+        
         if (stateBuffer.front() == WALKUP)
-            Translate(0, speed * gameTime);
+            Translate(0, -speed * gameTime);
 
         if (stateBuffer.front() == WALKDOWN)
-            Translate(0, -speed * gameTime);
+            Translate(0, speed * gameTime);*/
 
         break;
     // --------------------------------------------------------------------------------------------

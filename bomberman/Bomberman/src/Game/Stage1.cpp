@@ -11,6 +11,7 @@
 
 
 Scene* Stage1::scene = nullptr;
+Background* Stage1::backg = nullptr;
 
 // -----------------------------------------------------------------------------
 
@@ -26,7 +27,6 @@ void Stage1::Init()
     timer.Start();
 
     scene->Add(backg, STATIC);
-    scene->Add(portal, STATIC);
     scene->Add(Bomberman::player, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
@@ -43,8 +43,6 @@ void Stage1::Update()
     // sai com o pressionar do ESC
     if (window->KeyDown(VK_ESCAPE))
         window->Close();
-    /*if (window->KeyPress('P'))
-        Stage1::OnPause();*/
 
     if (window->KeyPress(VK_F1))
         viewBBox = !viewBBox;
@@ -54,6 +52,9 @@ void Stage1::Update()
 
     if (window->KeyPress(VK_F3))
         Bomberman::NextLevel<Home>();
+
+    /*if (window->KeyPress('P'))
+        Stage1::OnPause();*/
 
     // toca um sinal de aviso quando o tempo est� acabando
     if (timer.Elapsed(Bomberman::timeLimit))
@@ -91,6 +92,8 @@ void Stage1::Draw()
 
 void Stage1::Finalize()
 {
+    scene->Remove(backg, STATIC);
+    scene->Remove(portal, STATIC);
     scene->Remove(Bomberman::player, MOVING);
     scene->Remove(Bomberman::scoreboard, STATIC);
     delete scene;
@@ -104,7 +107,7 @@ void Stage1::CreateBoxes()
     {
         for (auto j = 2; j < 15; j++)
         {
-            if (!backg->backGrid[i][j])
+            if (!backg->CheckGridPosition(i, j))
             {
                 float posX = j * 16.0f;
                 float posY = (i * 16.0f) + 32;
@@ -113,9 +116,9 @@ void Stage1::CreateBoxes()
             }
         }
     }
-    backg->backGrid[1][2] = false;
-    backg->backGrid[1][3] = false;
-    backg->backGrid[2][2] = false;
+    backg->OccupyGridPosition(1,2);
+    backg->OccupyGridPosition(1,3);
+    backg->OccupyGridPosition(2,2);
 
     CreateExtraBoxes();
 }
@@ -135,7 +138,7 @@ void Stage1::CreateExtraBoxes()
             float posY = (numL * 16) + 32;
             Building* build = new Building(posX, posY);
             scene->Add(build, STATIC);
-            backg->backGrid[numL][numC] = false;
+            backg->OccupyGridPosition(numL, numC);
         }
         else i--;
     }
@@ -145,12 +148,9 @@ void Stage1::CreateBlocks()
 {
     float posX = portal->X();
     float posY = portal->Y();
-    Block* block = new Block(posX-8, posY-8);
-    scene->Add(block, MOVING);
-    int numColm = (int)posX / 16;
-    int numLine = ((int)posY - 32) / 16;
-    backg->backGrid[numLine][numColm] = false;
-    
+    Block* block = new Block(posX - 8, posY - 8);
+    scene->Add(block, STATIC);
+    backg->OccupyGridPosition(posX, posY);
 
     srand(static_cast<uint>(time(0)));
 
@@ -159,32 +159,39 @@ void Stage1::CreateBlocks()
         int numLine = 1 + rand() % 11;
         int numColm = 2 + rand() % 13;
 
-        if (backg->backGrid[numLine][numColm])
+        if (backg->CheckGridPosition(numLine, numColm))
         {
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
             Block* block = new Block(posX, posY);
-            scene->Add(block, MOVING);
-            backg->backGrid[numLine][numColm] = false;
+            scene->Add(block, STATIC);
+            backg->OccupyGridPosition(numLine, numColm);
         }
         else i--;
     }
+
+    backg->ClearGridPosition(1, 2);
+    backg->ClearGridPosition(1, 3);
+    backg->ClearGridPosition(2, 2);
 }
 
 void Stage1::CreatePortal()
 {
     srand(static_cast<uint>(time(0)));
+    int numLine;
+    int numColm;
 
     for (auto i = 0; i < 1; i++)
     {
-        int numLine = 1 + rand() % 11;
-        int numColm = 2 + rand() % 13;
+        numLine = 1 + rand() % 11;
+        numColm = 2 + rand() % 13;
 
-        if (backg->backGrid[numLine][numColm])
+        if (backg->CheckGridPosition(numLine, numColm))
         {
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
             portal = new Portal(posX, posY);
+            scene->Add(portal, STATIC);
         }
         else i = 0;
     }

@@ -1,13 +1,15 @@
 #include "Bomb.h"
 #include "Bomberman.h"
+#include "Stage1.h"
 
 
-Bomb::Bomb(BombType bombType, float playerX, float playerY) : bombMode(bombType)
+Bomb::Bomb(BombType bombType, float playerX, float playerY, uint power) : bombMode(bombType)
 {
+	explosionPWR = power;
 	uint gridX = static_cast<uint>(playerX / 16);
 	uint gridY = static_cast<uint>((playerY + 8 - Bomberman::scoreboard->Height()) / 16);
-	bombs = new TileSet("Resources/bombs.png", 16, 16, 8, 64);
-	anim = new Animation(bombs, 0.320f, true);
+	bombs = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
+	anim = new Animation(bombs, 0.250f, true);
 
 	type = BOMB;
 	fuseTime = 3.0f;
@@ -21,7 +23,7 @@ Bomb::Bomb(BombType bombType, float playerX, float playerY) : bombMode(bombType)
 	anim->Add(NORMAL, normalBomb, 4);
 	anim->Add(SPIKE, spikeBomb, 4);
 
-	MoveTo((gridX * 16.0f) + 8, (gridY * 16.0f) + 8 + Bomberman::scoreboard->Height(), Layer::LOWER);
+	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + Bomberman::scoreboard->Height(), Layer::UPPER);
 }
 
 Bomb::~Bomb()
@@ -33,31 +35,24 @@ Bomb::~Bomb()
 void Bomb::CheckPlayerPosition()
 {
 	Rect* playerBox = (Rect*)Bomberman::player->BBox();
-	int gridX = static_cast<int>(x / 16);
-	int gridY = static_cast<int>((y - (Bomberman::scoreboard->Height())) / 16);
-
-	if (
-		(static_cast<int>((playerBox->Right() - 1)/16) - gridX > 1 ||
-		gridX - static_cast<int>((playerBox->Left() + 1)/ 16) > 1) ||
-		static_cast<int>((playerBox->Bottom() - Bomberman::scoreboard->Height() - 1) / 16) - gridY > 1 ||
-		gridY - static_cast<int>((playerBox->Top() - Bomberman::scoreboard->Height() + 1) / 16) > 1
-	) {
-		hasCollision = true;
-
-		BBox(new Rect(
-			-1.0f * bombs->TileHeight() / 2.0f,
-			-1.0f * bombs->TileWidth() / 2.0f,
-			bombs->TileHeight() / 2.0f,
-			bombs->TileWidth() / 2.0f
-		));
-
-		MoveTo((gridX * 16.0f) + 8, (gridY * 16.0f) + 8 + Bomberman::scoreboard->Height(), Layer::LOWER);
+	if ((abs(playerBox->Left() - (x - 8)) >= 16) || (
+		abs(playerBox->Top() - (y - 8)) >= 16))
+	{
+		BBox(
+			new Rect(
+				-1.0f * bombs->TileHeight() / 2.0f,
+				-1.0f * bombs->TileWidth() / 2.0f,
+				bombs->TileHeight() / 2.0f,
+				bombs->TileWidth() / 2.0f)
+		);
+		MoveTo(x, y, Layer::UPPER);
+		playerIn = !playerIn;
 	}
 }
 
 void Bomb::Update()
 {
-	if (!hasCollision)
+	if (playerIn)
 		CheckPlayerPosition();
 
 	if (timer.Elapsed(fuseTime))
@@ -67,10 +62,11 @@ void Bomb::Update()
 	anim->NextFrame();
 }
 
-void Bomb::Explode(uint power)
+void Bomb::Explode()
 {
-	Explosion* explosion = new Explosion(x, y, power);
+	Explosion* explosion = new Explosion(x, y, BASE);
 	Stage1::scene->Add(explosion, MOVING);
+	CreateExplosionRange();
 	Stage1::scene->Delete(this, STATIC);
 }
 
@@ -81,5 +77,119 @@ void Bomb::OnCollision(Object* obj)
 	case EXPLOSION:
 		state = READY;
 		break;
+	}
+}
+
+
+
+void Bomb::CreateExplosionRange()
+{
+	const float posX = x;
+	const float posY = y;
+	float xpsX = 0, xpsY = 0;
+
+	// top explosions
+	for (auto i = 1; i <= explosionPWR; i++)
+	{
+		xpsY = posY - (i * 16); xpsX = posX;
+
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		{
+			Explosion* explo;
+			if (i == explosionPWR)
+				explo = new Explosion(xpsX, xpsY, TIP_UP);
+			else 
+				explo = new Explosion(xpsX, xpsY, BODY_V);
+			
+			expUp.push_back(explo);
+		}
+		else break;
+	}
+
+
+	// right explosions
+	for (auto i = 1; i <= explosionPWR; i++)
+	{
+		xpsX = posX + (i * 16); xpsY = posY;
+
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		{
+			Explosion* explo;
+			if (i == explosionPWR)
+				explo = new Explosion(xpsX, xpsY, TIP_RT);
+			else
+				explo = new Explosion(xpsX, xpsY, BODY_H);
+
+			expLt.push_back(explo);
+		}
+		else break;
+	}
+
+	// bottom explosions
+	for (auto i = 1; i <= explosionPWR; i++)
+	{
+		xpsY = posY + (i * 16); xpsX = posX;
+
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		{
+			Explosion* explo;
+			if (i == explosionPWR)
+				explo = new Explosion(xpsX, xpsY, TIP_DN);
+			else
+				explo = new Explosion(xpsX, xpsY, BODY_V);
+
+			expDn.push_back(explo);
+		}
+		else break;
+	}
+
+
+	// left explosions
+	for (auto i = 1; i <= explosionPWR; i++)
+	{
+		xpsX = posX - (i * 16); xpsY = posY;
+
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		{
+			Explosion* explo;
+			if (i == explosionPWR)
+				explo = new Explosion(xpsX, xpsY, TIP_LT);
+			else
+				explo = new Explosion(xpsX, xpsY, BODY_H);
+
+			expLt.push_back(explo);
+		}
+		else break;
+	}
+
+	
+
+
+	for (auto i = 1; i <= explosionPWR; i++)
+	{
+		if (!expUp.empty())
+		{
+			Explosion* explo = expUp.front();
+			Stage1::scene->Add(explo, MOVING);
+			expUp.pop_front();
+		}
+		if (!expRt.empty())
+		{
+			Explosion* explo = expRt.front();
+			Stage1::scene->Add(explo, MOVING);
+			expRt.pop_front();
+		}
+		if (!expDn.empty())
+		{
+			Explosion* explo = expDn.front();
+			Stage1::scene->Add(explo, MOVING);
+			expDn.pop_front();
+		}
+		if (!expLt.empty())
+		{
+			Explosion* explo = expLt.front();
+			Stage1::scene->Add(explo, MOVING);
+			expLt.pop_front();
+		}
 	}
 }

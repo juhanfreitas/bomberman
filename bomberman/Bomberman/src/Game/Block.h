@@ -10,7 +10,7 @@
 
 // ----------------------------------------------------------
 
-enum BlockState { DEFAULT, EXPLODING};
+enum BlockState {DEFAULT, EXPLODING};
 
 // ----------------------------------------------------------
 
@@ -18,10 +18,10 @@ class Block : public Object
 {
 private:
 
-	TileSet* blockTiles;
-	Sprite* shadow;
-	Animation* anim;
+	TileSet * blockTiles;
+	Animation * anim;
 	BlockState blkState;
+	Sprite * shadow;
 
 public:
 
@@ -36,15 +36,11 @@ public:
 inline void Block::Draw()
 {
 	anim->Draw(x, y, Layer::MIDDLE);
-	if (shadow != nullptr)
-	{
-		shadow->Draw(x, y + 16, Layer::LOWER);
-	}
+	if (shadow != nullptr) 
+		shadow->Draw(x, y, Layer::LOWER);
 }
 
 inline void Block::ChangeState(BlockState state)
-{
-	blkState = state;
-}
+{blkState = state;}
 
 #endif _BLOCK_H_

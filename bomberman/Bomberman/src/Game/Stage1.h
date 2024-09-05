@@ -35,9 +35,8 @@
 class Stage1 : public Game
 {
 private:
-    Background* backg = nullptr;        // plano de fundo do jogo
-    Scoreboard* scoreboard = nullptr;
-    Portal* portal = nullptr;
+    Scoreboard* scoreboard = nullptr;   // placar do jogo
+    Portal* portal = nullptr;           // portal do mapa atual
 
 
     Timer timer;
@@ -48,6 +47,7 @@ private:
 
 public:
     static Scene* scene;                // cena do jogo
+    static Background* backg;                  // plano de fundo do jogo
 
     void Init();                        // inicialização
     void Update();                      // atualização
@@ -58,6 +58,7 @@ public:
     void CreatePortal();
     void CreateExtraBoxes();
 };
+
 
 // ---------------------------------------------------------------------------------
 

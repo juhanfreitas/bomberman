@@ -1,36 +1,34 @@
 #include "Explosion.h"
 #include "Bomberman.h"
 #include "Stage1.h"
+#include <iostream>
 
-Explosion::Explosion(float bombX, float bombY, uint explosionPower)
+Explosion::Explosion(float posX, float posY, ExplosionPart part)
 {
-	int gridX = static_cast<int>(bombX / 16);
-	int gridY = static_cast<int>((bombY - Bomberman::scoreboard->Height()) / 16);
-
-	frames = new TileSet("Resources/explosion.png", 48, 48, 12, 12);
+	frames = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(frames, 0.100f, false);
 
 	type = EXPLOSION;
 
-	Mixed* mixed = new Mixed();
-	Rect* rect1 = new Rect(
-		-0.9f * frames->TileWidth()/6.0f,
-		-(0.4f + explosionPower) * frames->TileHeight()/3.0f,
-		0.9f * frames->TileWidth() / 6.0f,
-		(0.4f + explosionPower) * frames->TileHeight()/3.0f);
+	uint baseSeq[5] = { 24, 25, 26, 27, 28 };
+	uint bodyVSeq[5] = { 32 ,33, 34, 35, 36 };
+	uint bodyHSeq[5] = { 48, 49, 50, 51, 52 };
+	uint tipUpSeq[5] = { 60, 61, 62, 63, 64 };
+	uint tipDnSeq[5] = { 72, 73, 74, 75, 76 };
+	uint tipRtSeq[5] = { 84, 85, 86, 87, 88 };
+	uint tipLtSeq[5] = { 96, 97, 98, 99, 100};
 
-	Rect* rect2 = new Rect(
-		-(0.4f + explosionPower) * frames->TileWidth() / 3.0f,
-		-0.9f * frames->TileHeight() / 6.0f,
-		(0.4f + explosionPower) * frames->TileWidth() / 3.0f,
-		0.9f * frames->TileHeight() / 6.0f);
+	anim->Add(BASE,		baseSeq, 5);
+	anim->Add(BODY_V,	bodyVSeq, 5);
+	anim->Add(BODY_H,	bodyHSeq, 5);
+	anim->Add(TIP_UP,	tipUpSeq, 5);
+	anim->Add(TIP_DN,	tipDnSeq, 5);
+	anim->Add(TIP_LT,	tipLtSeq, 5);
+	anim->Add(TIP_RT,	tipRtSeq, 5);
+	anim->Select(part);
 
-	mixed->Insert(rect1);
-	mixed->Insert(rect2);
-
-	BBox(mixed);
-
-	MoveTo((gridX * 16.0f) + 8, (gridY * 16.0f) + 8 + Bomberman::scoreboard->Height(), Layer::MIDDLE);
+	BBox(new Rect(-8, -8, 8, 8));
+	MoveTo(posX, posY, Layer::UPPER);
 }
 
 Explosion::~Explosion()
@@ -49,7 +47,8 @@ void Explosion::Update()
 void Explosion::OnCollision(Object * obj) {
 	switch (obj->Type()) {
 	case BLOCK:
-		Stage1::scene->Delete(obj, MOVING);
+		Block* blk = dynamic_cast<Block*>(obj);
+		blk->ChangeState(EXPLODING);
 		break;
 	}
 }

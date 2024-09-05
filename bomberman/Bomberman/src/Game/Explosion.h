@@ -13,6 +13,8 @@
 
 // ---------------------------------------------------------
 
+enum ExplosionPart {BASE, BODY_V, BODY_H, TIP_UP, TIP_DN, TIP_LT, TIP_RT};
+
 class Explosion : public Object
 {
 private:
@@ -21,7 +23,7 @@ private:
 
 public:
 
-	Explosion(float bombX, float bombY, uint power=1);
+	Explosion(float bombX, float bombY, ExplosionPart part);
 	~Explosion();
 
 	void Update();
@@ -30,6 +32,6 @@ public:
 };
 
 inline void Explosion::Draw()
-{ anim->Draw(x, y, z); }
+{ anim->Draw(x, y, Layer::UPPER); }
 
 #endif _EXPLOSION_H_
