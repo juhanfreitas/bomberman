@@ -29,6 +29,7 @@ public:
 	void Update();
 	void Draw();
 	void OnCollision(Object * obj);
+	Mixed * createCollision(ExplosionPart);
 };
 
 inline void Explosion::Draw()
