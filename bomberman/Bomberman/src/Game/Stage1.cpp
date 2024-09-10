@@ -179,7 +179,7 @@ void Stage1::CreatePortal()
     int numLine;
     int numColm;
 
-    for (auto i = 0; i < 1; i++)
+    while (portal == nullptr)
     {
         numLine = 1 + rand() % 11;
         numColm = 2 + rand() % 13;
@@ -191,6 +191,5 @@ void Stage1::CreatePortal()
             portal = new Portal(posX, posY);
             scene->Add(portal, STATIC);
         }
-        else i = 0;
     }
 }
