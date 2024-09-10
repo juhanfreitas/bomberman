@@ -21,8 +21,8 @@
 #include "../Engine/Animation.h"                  // animação de sprites
 #include "../Engine/Timer.h"                      // animação de sprites
 #include "../Engine/Scene.h"
-#include "Bomb.h"
 #include "Explosion.h"
+#include "Bomb.h"
 
 using namespace std;
 
@@ -35,24 +35,27 @@ enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING,
 class Player : public Object
 {
 private:
-    TileSet* playerTiles;                // folha de sprites do personagem
-    Animation* anim;                       // animação do personagem
+    TileSet* playerTiles;                   // folha de sprites do personagem
+    Animation* anim;                        // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
     list<Bomb*> bombStack;
     list<Explosion*> explosionStack;
     list<PlayerState> stateBuffer;
     float       bored_timing;               // tempo para ficar entediado
-
     uint startX, startY;
 
+
+public:
     uint score;
     uint maxBombs;
     uint bombPower;
     uint lives;
+    BombType bombType;
+    bool bombKick;
+    bool bombPass;
+    bool wallPass;
+    float speed;                            // velocidade do personagem
     uint availableBombs;
-    float       speed;                      // velocidade do personagem
-
-public:
 
     Player();                               // construtor
     ~Player();                              // destrutor
@@ -60,13 +63,15 @@ public:
     void Draw();                            // desenho do objeto
     void Update();                          // atualização do objeto
     void OnCollision(Object* obj);
+    void DefaultCollision(Object* obj);
 
     Geometry* CreateBBox();
     void CreateBomb(BombType bombType);
-    void HandleBombs();
-    void HandleExplosions();
+    Directions CollisionDirection(Object* obj);
+    void DetonateBombs();
     void IncreaseScore(int points);
     void Reset();
+    void ClearPowerUps();
 };
 
 // ---------------------------------------------------------------------------------
@@ -80,6 +85,14 @@ inline void Player::Draw()
 inline void Player::IncreaseScore(int points)
 {
     score += points;
+}
+
+inline void Player::ClearPowerUps() 
+{
+    bombType = NORMAL;
+    bombPass = false;
+    bombKick = false;
+    wallPass = false;   
 }
 
 // ---------------------------------------------------------------------------------

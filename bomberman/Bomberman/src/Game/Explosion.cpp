@@ -6,12 +6,12 @@
 Explosion::Explosion(float posX, float posY, ExplosionPart part)
 {
 	frames = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
-	anim = new Animation(frames, 0.100f, false);
+	anim = new Animation(frames, 0.090f, false);
 
 	type = EXPLOSION;
 
-	uint baseSeq[5]	 = { 24, 25, 26, 27, 28 };
-	uint bodyVSeq[5] = { 36 ,37, 38, 39, 40 };
+	uint baseSeq[5] = { 24, 25, 26, 27, 28 };
+	uint bodyVSeq[5] = { 36, 37, 38, 39, 40 };
 	uint bodyHSeq[5] = { 48, 49, 50, 51, 52 };
 	uint tipUpSeq[5] = { 60, 61, 62, 63, 64 };
 	uint tipDnSeq[5] = { 72, 73, 74, 75, 76 };
@@ -30,7 +30,7 @@ Explosion::Explosion(float posX, float posY, ExplosionPart part)
 	Mixed* collisionBox = createCollision(part);
 
 	BBox(collisionBox);
-	MoveTo(posX, posY, Layer::UPPER);
+	MoveTo(posX, posY);
 }
 
 Explosion::~Explosion()
@@ -48,8 +48,11 @@ void Explosion::Update()
 
 void Explosion::OnCollision(Object * obj) {
 	switch (obj->Type()) {
+	case PORTAL:
+		break;
 	case BLOCK:
-		Block* blk = dynamic_cast<Block*>(obj);
+		Block* blk;
+		blk = static_cast<Block*>(obj);
 		blk->ChangeState(EXPLODING);
 		break;
 	}
@@ -62,26 +65,26 @@ Mixed* Explosion::createCollision(ExplosionPart part)
 	switch (part)
 	{
 	case BASE:
-		mixed->Insert(new Rect(-8, -7, 8, 7));
-		mixed->Insert(new Rect(-7, -8, 7, 8));
+		mixed->Insert(new Rect(-8, -6, 8, 6));
+		mixed->Insert(new Rect(-6, -8, 6, 8));
 		break;
 	case BODY_V:
-		mixed->Insert(new Rect(-7, -8, 7, 8));
+		mixed->Insert(new Rect(-6, -8, 6, 8));
 		break;
 	case BODY_H:
-		mixed->Insert(new Rect(-8, -7, 8, 7));
+		mixed->Insert(new Rect(-8, -6, 8, 6));
 		break;
 	case TIP_UP:
-		mixed->Insert(new Rect(-7, -7, 7, 8));
+		mixed->Insert(new Rect(-6, -6, 6, 8));
 		break;
 	case TIP_DN:
-		mixed->Insert(new Rect(-7, -8, 7, 7));
+		mixed->Insert(new Rect(-6, -8, 6, 6));
 		break;
 	case TIP_LT:
-		mixed->Insert(new Rect(-7, -7, 8, 7));
+		mixed->Insert(new Rect(-6, -6, 8, 6));
 		break;
 	case TIP_RT:
-		mixed->Insert(new Rect(-8, -7, 7, 7));
+		mixed->Insert(new Rect(-8, -6, 6, 6));
 		break;
 	}
 

@@ -65,6 +65,7 @@ public:
         Color color = { 1, 1, 1, 1 });              // efeito de cor
 
     void ChangeLoop(bool loopState);
+    void ChangeDelay(float delay);
 
     void Frame(uint aFrame);    // define o frame atual da animação
     uint Frame();               // retorna o frame de animação ativo
@@ -75,6 +76,9 @@ public:
 
 // ---------------------------------------------------------------------------------
 // funções membro inline
+
+inline void Animation::ChangeDelay(float delay)
+{animDelay = delay;}
 
 // desenha quadro atual da animação
 inline void Animation::Draw(float x, float y, float z, Color color)

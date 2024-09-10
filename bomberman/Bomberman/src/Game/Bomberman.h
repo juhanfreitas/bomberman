@@ -45,6 +45,7 @@ class Bomberman : public Game
 {
 private:
     static Game * level;
+    bool paused;
 
 public:
     static Player * player;

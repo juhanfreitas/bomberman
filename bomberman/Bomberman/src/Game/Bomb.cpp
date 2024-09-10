@@ -3,11 +3,14 @@
 #include "Stage1.h"
 
 
-Bomb::Bomb(BombType bombType, float playerX, float playerY, uint power) : bombMode(bombType)
+Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint power)
 {
 	explosionPWR = power;
-	uint gridX = static_cast<uint>(playerX / 16);
-	uint gridY = static_cast<uint>((playerY + 8 - Bomberman::scoreboard->Height()) / 16);
+	playerOwner = owner;
+	bombMode = bombType;
+	bombKicked = false;
+	int gridX = (int)(playerX / 16);
+	int gridY = (int)((playerY + 8 - Bomberman::scoreboard->Height()) / 16);
 	bombs = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(bombs, 0.250f, true);
 
@@ -18,10 +21,12 @@ Bomb::Bomb(BombType bombType, float playerX, float playerY, uint power) : bombMo
 	timer.Start();
 
 	uint normalBomb[4] = { 0, 1, 2, 3 };
-	uint spikeBomb[4] = { 60, 61, 62, 63 };
+	uint redBomb[4] = { 12, 13, 14, 15 };
+	uint timedBomb[2] = { 10, 11 };
 
 	anim->Add(NORMAL, normalBomb, 4);
-	anim->Add(SPIKE, spikeBomb, 4);
+	anim->Add(R_BOMB, redBomb, 4);
+	anim->Add(TIMED, timedBomb, 2);
 
 	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + Bomberman::scoreboard->Height(), Layer::UPPER);
 }
@@ -34,16 +39,16 @@ Bomb::~Bomb()
 
 void Bomb::CheckPlayerPosition()
 {
-	Rect* playerBox = (Rect*)Bomberman::player->BBox();
+	Rect* playerBox = (Rect*)playerOwner->BBox();
 	if ((abs(playerBox->Left() - (x - 8)) >= 16) || (
 		abs(playerBox->Top() - (y - 8)) >= 16))
 	{
 		BBox(
 			new Rect(
-				-1.0f * bombs->TileHeight() / 2.0f,
-				-1.0f * bombs->TileWidth() / 2.0f,
-				bombs->TileHeight() / 2.0f,
-				bombs->TileWidth() / 2.0f)
+				-1.0f * bombs->TileHeight() / 2.0f + 1,
+				-1.0f * bombs->TileWidth() / 2.0f  + 1 ,
+				bombs->TileHeight() / 2.0f - 1,
+				bombs->TileWidth() / 2.0f - 1)
 		);
 		MoveTo(x, y, Layer::UPPER);
 		playerIn = !playerIn;
@@ -58,29 +63,74 @@ void Bomb::Update()
 	if (timer.Elapsed(fuseTime))
 		state = READY;
 
+	if ((state == READY) && (bombMode != TIMED))
+		Explode();
+
+	if (bombKicked)
+		MoveBomb();
+
 	anim->Select(bombMode);
 	anim->NextFrame();
 }
+
+
 
 void Bomb::Explode()
 {
 	Explosion* explosion = new Explosion(x, y, BASE);
 	Stage1::scene->Add(explosion, MOVING);
 	CreateExplosionRange();
-	Stage1::scene->Delete(this, STATIC);
+	playerOwner->availableBombs += 1;
+	Stage1::scene->Delete(this, MOVING);
 }
+
+
 
 void Bomb::OnCollision(Object* obj)
 {
+	Rect* objBox = (Rect*)obj->BBox();
+	Rect* bmbBox = (Rect*)BBox();
+	float diffUp = objBox->Top() - bmbBox->Bottom();
+	float diffDn = bmbBox->Top() - objBox->Bottom();
+	float diffLt = objBox->Left() - bmbBox->Right();
+	float diffRt = bmbBox->Left() - objBox->Right();
+	
 	switch (obj->Type())
 	{
 	case EXPLOSION:
-		state = READY;
+		Explode();
 		break;
 	}
 }
 
-
+void Bomb::MoveBomb()
+{
+	switch (dirKicked)
+	{
+	case UP:
+		if (Stage1::backg->CheckGridPosition(x, y-9, MPT))
+			Translate(0, -speed * gameTime);
+		else bombKicked = false;
+		break;
+	case DOWN:
+		if (Stage1::backg->CheckGridPosition(x, y+8, MPT))
+			Translate(0, speed * gameTime);
+		else bombKicked = false;
+		break;
+	case LEFT:
+		if (Stage1::backg->CheckGridPosition(x-9, y, MPT))
+			Translate(-speed * gameTime, 0);
+		else bombKicked = false;
+		break;
+	case RIGHT:
+		if (Stage1::backg->CheckGridPosition(x+8, y, MPT))
+			Translate(speed * gameTime, 0);
+		else bombKicked = false;
+		break;
+	default:
+		break;
+	}
+}
 
 void Bomb::CreateExplosionRange()
 {
@@ -93,7 +143,7 @@ void Bomb::CreateExplosionRange()
 	{
 		xpsY = posY - (i * 16); xpsX = posX;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)
@@ -101,18 +151,18 @@ void Bomb::CreateExplosionRange()
 			else 
 				explo = new Explosion(xpsX, xpsY, BODY_V);
 			
-			expUp.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
 	}
-
+	// -----------------------------------------------------------------
 
 	// right explosions
 	for (auto i = 1; i <= explosionPWR; i++)
 	{
 		xpsX = posX + (i * 16); xpsY = posY;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)
@@ -120,17 +170,18 @@ void Bomb::CreateExplosionRange()
 			else
 				explo = new Explosion(xpsX, xpsY, BODY_H);
 
-			expLt.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
 	}
+	// -----------------------------------------------------------------
 
 	// bottom explosions
 	for (auto i = 1; i <= explosionPWR; i++)
 	{
 		xpsY = posY + (i * 16); xpsX = posX;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)
@@ -138,18 +189,18 @@ void Bomb::CreateExplosionRange()
 			else
 				explo = new Explosion(xpsX, xpsY, BODY_V);
 
-			expDn.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
 	}
-
+	// -----------------------------------------------------------------
 
 	// left explosions
 	for (auto i = 1; i <= explosionPWR; i++)
 	{
 		xpsX = posX - (i * 16); xpsY = posY;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY))
+		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)
@@ -157,39 +208,9 @@ void Bomb::CreateExplosionRange()
 			else
 				explo = new Explosion(xpsX, xpsY, BODY_H);
 
-			expLt.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
 	}
-
-	
-
-
-	for (auto i = 1; i <= explosionPWR; i++)
-	{
-		if (!expUp.empty())
-		{
-			Explosion* explo = expUp.front();
-			Stage1::scene->Add(explo, MOVING);
-			expUp.pop_front();
-		}
-		if (!expRt.empty())
-		{
-			Explosion* explo = expRt.front();
-			Stage1::scene->Add(explo, MOVING);
-			expRt.pop_front();
-		}
-		if (!expDn.empty())
-		{
-			Explosion* explo = expDn.front();
-			Stage1::scene->Add(explo, MOVING);
-			expDn.pop_front();
-		}
-		if (!expLt.empty())
-		{
-			Explosion* explo = expLt.front();
-			Stage1::scene->Add(explo, MOVING);
-			expLt.pop_front();
-		}
-	}
+	// -----------------------------------------------------------------
 }

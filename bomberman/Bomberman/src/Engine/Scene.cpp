@@ -167,7 +167,7 @@ void Scene::DrawBBox()
     for (const auto& obj : moving)
     {
         if (obj->BBox())
-            Engine::renderer->Draw(obj->BBox(), 0xffff00ff);
+            Engine::renderer->Draw(obj->BBox(), 0xff00ffff);
     }
 
     // finaliza desenho de pixels

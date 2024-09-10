@@ -5,16 +5,16 @@
 Block::Block(float x, float y)
 {
 	type = BLOCK;
-	blockTiles = new TileSet("Resources/stage/block1.png", 16, 16, 6, 10);
+	blockTiles = new TileSet("Resources/stage/block1.png", 16, 16, 7, 14);
 	shadow = new Sprite("Resources/stage/block1_shadow.png");
-	anim = new Animation(blockTiles, .120f, true);
+	anim = new Animation(blockTiles, .150f, true);
 	blkState = DEFAULT;
 
 	uint stillseq[4] = { 0, 1, 2, 3 };
-	uint explodeseq[6] = { 6, 7, 8, 9, 10, 11 };
+	uint explodeseq[7] = { 7, 8, 9, 10, 11, 12, 13 };
 
 	anim->Add(DEFAULT, stillseq, 4);
-	anim->Add(EXPLODING, explodeseq, 6);
+	anim->Add(EXPLODING, explodeseq, 7);
 
 	BBox(new Rect(-8, -8, 8, 8));
 	MoveTo(x + 8, y + 8, Layer::MIDDLE);
@@ -34,7 +34,10 @@ void Block::Update()
 
 
 	if (blkState == EXPLODING)
+	{
+		anim->ChangeDelay(.120f);
 		anim->ChangeLoop(false);
+	}
 
 
 	if (y >= 16 * 13)
@@ -44,6 +47,7 @@ void Block::Update()
 
 	if (anim->Inactive())
 	{
+		Bomberman::player->IncreaseScore(10);
 		Stage1::backg->ClearGridPosition(x, y);
 		Stage1::scene->Delete(this, STATIC);
 	}

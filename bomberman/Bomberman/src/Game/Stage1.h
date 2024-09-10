@@ -53,10 +53,10 @@ public:
     void Update();                      // atualização
     void Draw();                        // desenho
     void Finalize();                    // finalização
-    void CreateBoxes();
+    void CreateWalls();
     void CreateBlocks();
     void CreatePortal();
-    void CreateExtraBoxes();
+    void CreateExtraWalls();
 };
 
 

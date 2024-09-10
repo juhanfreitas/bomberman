@@ -21,32 +21,52 @@
 
 // ---------------------------------------------------------------------------------
 
+enum FillType { MPT, PWR, PTL, BLK, WLL };
+
 class Background : public Object
 {
 private: 
 
-    list<Sprite*> backgs;                         // lista contendo todos os planos de fundo
-    Sprite * activeSprite;                        // plano de fundo atual
-    list<Sprite*>::iterator it;                   // iterador dos planos de fundo
+    // lista contendo todos os planos de fundo
+    list<Sprite*> backgs;                         
+    // plano de fundo atual
+    Sprite * activeSprite;                        
+    // iterador dos planos de fundo
+    list<Sprite*>::iterator it;                   
 
 public:
 
-    bool backGrid[13][17];
+    FillType backGrid[13][17];
     bool stagePassed = false;
 
     Background();                                   // construtor
     ~Background();                                  // destrutor
 
-    void Draw();                                    // desenho do objeto
-    void Update();                                  // atualização do plano de fundo ativo
-    void ChangeTo(uint value);                      // muda o plano de fundo para o endereço passado
-    void CreateGrid();                              // cria matriz padrão de blocos do cenário
-    void OccupyGridPosition(float x, float y);      // seta a posição do grid dado pelos pontos x e y como falso, indicando que está ocupado
-    void OccupyGridPosition(int line, int column);  // seta o valor da linha e coluna do grid falso, indicando que está ocupado
-    void ClearGridPosition(float x, float y);       // transforma a posição do grid dado pelos pontos x e y verdadeiros
-    void ClearGridPosition(int line, int column);   // transforma o valor do grid pela linha e coluna em verdadeiro
-    bool CheckGridPosition(float x, float y);       // verifica o valor da posição do grid dada pelos pontos x e y passados
-    bool CheckGridPosition(int line, int column);   // verifica o valor do grid na linha e coluna passados
+    // desenha o plano de fundo ativo   na cena
+    void Draw();                                    
+    // atualização do plano de fundo ativo
+    void Update();
+    // muda o plano de fundo para o endereço passado
+    void ChangeTo(uint value);                      
+    // cria grid padrão de blocos do cenário
+    void CreateGrid();         
+    //bool CheckGridPosition(float x, float y);
+    // ocupa a posição do grid dado pelos pontos x e y com o tipo passado
+    void OccupyGridPosition(float x, float y, FillType type);      
+    // ocupa a linha e coluna do grid com o tipo passado
+    void OccupyGridPosition(int line, int column, FillType type);  
+    // assume a posição do grid dado pelos pontos x e y como vazio
+    void ClearGridPosition(float x, float y);       
+    // torna o valor da linha e coluna do grid como vazio
+    void ClearGridPosition(int line, int column);   
+    // verifica o valor da posição do grid dada pelos pontos x e y passados
+    FillType CheckGridPosition(float x, float y);       
+    // compara o valor da posição do grid dada pelos pontos x e y passados com o tipo passado
+    bool CheckGridPosition(float x, float y, FillType type);       
+    // verifica o valor do grid na linha e coluna passados
+    FillType CheckGridPosition(int line, int column);   
+    // verifica o valor do grid na linha e coluna desejada com o tipo passado
+    bool CheckGridPosition(int line, int column, FillType  type);   
     
 }; 
 
@@ -64,58 +84,72 @@ inline void Background::Update()
     {
         std::advance(it, 1);
         activeSprite = *it;
+        stagePassed = false;
     }
 }
 
-// ----------------------------------------------------------------------------
+//inline bool Background::CheckGridPosition(float x, float y)
+//{
+//    int line = (y - 32) / 16;
+//    int column = x / 16;
+//    
+//    return backGrid[line][column];
+//}
 
-inline void Background::OccupyGridPosition(float x, float y)
+// ----------------------------------------------------------------------------
+inline void Background::OccupyGridPosition(float x, float y, FillType type)
 {
     int line = (y - 32) / 16;
     int column = x / 16;
-    backGrid[line][column] = false;
+    backGrid[line][column] = type;
 }
-
-
-inline void Background::OccupyGridPosition(int line, int column)
-{
-    backGrid[line][column] = false;
-}
-
 // ----------------------------------------------------------------------------
-
+inline void Background::OccupyGridPosition(int line, int column, FillType type)
+{
+    backGrid[line][column] = type;
+}
+// ----------------------------------------------------------------------------
 inline void Background::ClearGridPosition(float x, float y)
 {
     int line = (y - 32) / 16;
     int column = x / 16;
 
-    backGrid[line][column] = true;
+    //backGrid[line][column] = true;
+    backGrid[line][column] = MPT;
 }
-
 // ----------------------------------------------------------------------------
-
 inline void Background::ClearGridPosition(int line, int column)
 {
-    backGrid[line][column] = true;
+    //backGrid[line][column] = true;
+    backGrid[line][column] = MPT;
 }
-
 // ----------------------------------------------------------------------------
-
-inline bool Background::CheckGridPosition(float x, float y)
+inline FillType Background::CheckGridPosition(float x, float y)
 {
     int line = (y - 32) / 16;
     int column = x / 16;
 
     return backGrid[line][column];
 }
+// ----------------------------------------------------------------------------
+inline bool Background::CheckGridPosition(float x, float y, FillType type)
+{
+    int line = (y - 32) / 16;
+    int column = x / 16;
 
-inline bool Background::CheckGridPosition(int line, int column)
+    return backGrid[line][column] == type;
+}
+// ----------------------------------------------------------------------------
+inline FillType Background::CheckGridPosition(int line, int column)
 {
     return backGrid[line][column];
 }
-
 // ----------------------------------------------------------------------------
-
+inline bool Background::CheckGridPosition(int line, int column, FillType type)
+{
+    return backGrid[line][column] == type;
+}
+// ----------------------------------------------------------------------------
 inline void Background::CreateGrid() {
     for (auto lin = 0; lin < 13; lin++)
     {
@@ -123,9 +157,7 @@ inline void Background::CreateGrid() {
         {
             // primeira e última linha
             if (lin == 0 || lin == 12)
-            {
-                backGrid[lin][col] = false;
-            }
+                backGrid[lin][col] = WLL;
 
             // linhas restantes
             if (lin > 0 && lin < 12)
@@ -133,18 +165,18 @@ inline void Background::CreateGrid() {
                 // linhas impares
                 if ((lin % 2 != 0))
                 {
-                    backGrid[lin][col] = true;
+                    backGrid[lin][col] = MPT;
 
                     if (col == 0 || col == 1 ||
                         col == 15 || col == 16)
                     {
-                        backGrid[lin][col] = false;
+                        backGrid[lin][col] = WLL;
                     }
                 }
                 // linhas pares
                 else
                 {
-                    backGrid[lin][col] = true;
+                    backGrid[lin][col] = MPT;
 
                     if (col == 0 || col == 1 ||
                         col == 3 || col == 5 ||
@@ -152,14 +184,12 @@ inline void Background::CreateGrid() {
                         col == 11 || col == 13 ||
                         col == 15 || col == 16)
                     {
-                        backGrid[lin][col] = false;
+                        backGrid[lin][col] = WLL;
                     }
                 }
             }
         }
     }
 }
-
 // ---------------------------------------------------------------------------------
-
 #endif _BACKGROUND_H_

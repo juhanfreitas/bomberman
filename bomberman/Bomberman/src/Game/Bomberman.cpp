@@ -28,6 +28,7 @@ bool        Bomberman::viewBBox = false;
 void Bomberman::Init()
 {
     audio = new Audio();
+    paused = false;
 
     audio->Add(VO_INTRO, "Resources/Sounds/Voices/By Hudson.wav");
     audio->Add(MUS_MENU, "Resources/Sounds/Music/Title Theme.wav");
@@ -50,10 +51,13 @@ void Bomberman::Init()
 
 void Bomberman::Update()
 {
-    /*if (window->KeyPress(VK_F1))
-        viewBBox = !viewBBox;*/
-
-    level->Update();
+    if (window->KeyPress('P'))
+        paused = !paused;
+    
+    if (paused)
+        level->OnPause();
+    else 
+        level->Update();
 
 }
 
