@@ -32,7 +32,7 @@ void Intro::Update()
 {
 
     // sai com pressionamento do ESC
-    if (window->KeyDown(VK_ESCAPE))
+    if (window->KeyPress(VK_ESCAPE))
         window->Close();
 
     // avança ao fim do som

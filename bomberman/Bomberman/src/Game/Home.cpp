@@ -25,7 +25,7 @@ void Home::Init()
 
     bgSpeed = 3;
 
-    titleYOffset = window->Height() - (title->Height()*2.0f);
+    titleYOffset = window->Height() - (title->Height() * Bomberman::screenScale);
     screenBorder = 15 * Bomberman::screenScale;
 
     // inicia tocando uma música 
@@ -37,7 +37,13 @@ void Home::Init()
 
 void Home::Update()
 {
+    // verifica se a duração da musica ja passou e toca novamente
+    if (timer.Elapsed(21.0f)) {
+        Bomberman::audio->Play(MUS_MENU);
+        timer.Reset();
+    }
 
+    // anima o título
     if (yT < screenBorder - titleYOffset || yT > titleYOffset - screenBorder) {
         bgSpeed *= -1;
     }
@@ -45,20 +51,14 @@ void Home::Update()
     yT += bgSpeed * gameTime;    
 
     // sai com pressionamento do ESC
-    if (window->KeyDown(VK_ESCAPE))
+    if (window->KeyPress(VK_ESCAPE))
         window->Close();
 
     // avança com pressionamento do ENTER
-    if (window->KeyDown(VK_RETURN)) {
+    if (window->KeyPress(VK_RETURN)) {
         Bomberman::audio->Play(SE_SELECT);
         Bomberman::audio->Stop(MUS_MENU);
         Bomberman::NextLevel<Stage1>();
-    }
-
-    // verifica se a duração da musica ja passou e toca novamente
-    if (timer.Elapsed(21.0f)) {
-        Bomberman::audio->Play(MUS_MENU);
-        timer.Reset();
     }
 }
 

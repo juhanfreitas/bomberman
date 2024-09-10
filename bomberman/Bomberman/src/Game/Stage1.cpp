@@ -5,7 +5,6 @@
 #include "Home.h"
 #include "Stage1.h"
 #include <iostream>
-#include <iostream>
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
 
@@ -21,42 +20,27 @@ void Stage1::Init()
 
     backg = new Background();
     scoreboard = new Scoreboard();
+
     CreateBoxes();
     CreatePortal();
     CreateBlocks();
+
     timer.Start();
 
     scene->Add(backg, STATIC);
     scene->Add(Bomberman::player, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
-    //Bomberman::audio->Play(MUS_STAGE1);
+    Bomberman::player->SoftReset();
+
+    Bomberman::audio->Play(MUS_STAGE1);
 }
 
 // ------------------------------------------------------------------------------
 
 void Stage1::Update()
 {
-
-    Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
-
-    // sai com o pressionar do ESC
-    if (window->KeyDown(VK_ESCAPE))
-        window->Close();
-
-    if (window->KeyPress(VK_F1))
-        viewBBox = !viewBBox;
-
-    if (window->KeyPress(VK_F2))
-        viewScene = !viewScene;
-
-    if (window->KeyPress(VK_F3))
-        Bomberman::NextLevel<Home>();
-
-    /*if (window->KeyPress('P'))
-        Stage1::OnPause();*/
-
-    // toca um sinal de aviso quando o tempo est� acabando
+    // toca um sinal de aviso quando o tempo esta acabando
     if (timer.Elapsed(Bomberman::timeLimit))
     {
         timeUp = true;
@@ -67,13 +51,30 @@ void Stage1::Update()
     // encerra o jogo ao encerrar o tempo
     if (timer.Elapsed(2) && timeUp)
         window->Close();
-        
 
-    // atualiza a cena do jogo;
-    scene->Update();
+    // sai com o pressionar do ESC
+    if (window->KeyPress(VK_ESCAPE)) {
+        Bomberman::audio->Stop(MUS_STAGE1);
+        Bomberman::NextLevel<Home>();
+        Bomberman::player->Reset();
+    }
 
-    // detecta as colis�es na cena
-    scene->CollisionDetection();
+    else if (window->KeyPress(VK_F3)) {
+        Bomberman::audio->Stop(MUS_STAGE1);
+        Bomberman::NextLevel<Home>();
+        Bomberman::player->Reset();
+    }
+
+    else {
+
+        Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
+
+        // atualiza a cena do jogo;
+        scene->Update();
+
+        // detecta as colis�es na cena
+        scene->CollisionDetection();
+    }
 
 }
 
@@ -81,10 +82,9 @@ void Stage1::Update()
 
 void Stage1::Draw()
 {
-    
-    if (viewScene)
+    if (Bomberman::viewScene)
         scene->Draw();
-    if (viewBBox)
+    if (Bomberman::viewBBox)
         scene->DrawBBox();
 }
 
@@ -92,8 +92,6 @@ void Stage1::Draw()
 
 void Stage1::Finalize()
 {
-    scene->Remove(backg, STATIC);
-    scene->Remove(portal, STATIC);
     scene->Remove(Bomberman::player, MOVING);
     scene->Remove(Bomberman::scoreboard, STATIC);
     delete scene;
@@ -116,9 +114,9 @@ void Stage1::CreateBoxes()
             }
         }
     }
-    backg->OccupyGridPosition(1,2);
-    backg->OccupyGridPosition(1,3);
-    backg->OccupyGridPosition(2,2);
+    backg->OccupyGridPosition(1, 2);
+    backg->OccupyGridPosition(1, 3);
+    backg->OccupyGridPosition(2, 2);
 
     CreateExtraBoxes();
 }

@@ -51,6 +51,7 @@ public:
     static Audio * audio;
     static Scoreboard * scoreboard;
     static bool viewBBox;
+    static bool viewScene;
     static float timeLimit;
     static float screenScale;
 

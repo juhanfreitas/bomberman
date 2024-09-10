@@ -22,6 +22,7 @@ Scoreboard* Bomberman::scoreboard = nullptr;
 float       Bomberman::timeLimit = 0;
 float       Bomberman::screenScale = 2.0f;
 bool        Bomberman::viewBBox = false;
+bool        Bomberman::viewScene = true;
 
 // -----------------------------------------------------------------------------
 
@@ -50,8 +51,11 @@ void Bomberman::Init()
 
 void Bomberman::Update()
 {
-    /*if (window->KeyPress(VK_F1))
-        viewBBox = !viewBBox;*/
+    if (window->KeyPress(VK_F1))
+        viewBBox = !viewBBox;
+
+    if (window->KeyPress(VK_F2))
+        viewScene = !viewScene;
 
     level->Update();
 
