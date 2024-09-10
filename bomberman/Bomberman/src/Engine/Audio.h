@@ -1,8 +1,8 @@
 /**********************************************************************************
 // Audio (Arquivo de Cabeçalho)
-// 
+//
 // Criação:     14 Out 2011
-// Atualização: 11 Set 2021
+// Atualização: 28 Ago 2023
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   Classe para reproduzir áudio
@@ -14,11 +14,11 @@
 
 // ---------------------------------------------------------------------------------
 
-#include "Sound.h"                              // guarda o som no formato WAVE
-#include "Types.h"                              // tipos específicos da engine
-#include <XAudio2.h>                            // XAudio2 API
-#include <unordered_map>                        // tabela de dispersão
-#include <string>                               // tipo string da STL
+#include "Sound.h"                                          // guarda o som no formato WAVE
+#include "Types.h"                                          // tipos específicos da engine
+#include <XAudio2.h>                                        // XAudio2 API
+#include <unordered_map>                                    // tabela de dispersão
+#include <string>                                           // tipo string da STL
 using std::unordered_map;
 using std::string;
 
@@ -27,18 +27,20 @@ using std::string;
 class Audio
 {
 private:
-    IXAudio2* audioEngine;                      // sistema de áudio (engine)
-    IXAudio2MasteringVoice* masterVoice;        // dispositivo principal de áudio
-    unordered_map<uint, Sound*> sounds;         // coleção de sons
+    IXAudio2* audioEngine;                                  // sistema de áudio (engine)
+    IXAudio2MasteringVoice* masterVoice;                    // dispositivo principal de áudio
+    unordered_map<uint, Sound*> soundTable;                 // coleção de sons
 
 public:
-    Audio();                                    // construtor
-    ~Audio();                                   // destrutor
+    Audio();                                                // construtor
+    ~Audio();                                               // destrutor
 
-    void Add(uint id, string filename);         // adiciona um som <id, filename>
-    void Play(uint id);                         // reproduz som através do seu id
+    void Add(uint id, string filename, uint nVoices = 1);   // adiciona arquivo a coleção de sons
+    void Play(uint id, bool repeat = false);                // inicia a reprodução do som
     void Stop(uint id);                                     // para a reprodução do som
-}; 
+    void Volume(uint id, float level);                      // ajusta volume do som
+    void Frequency(uint id, float level);                   // ajusta a frequência do som
+};
 
 // ---------------------------------------------------------------------------------
 

@@ -1,8 +1,8 @@
 /**********************************************************************************
 // Audio (Código Fonte)
-// 
+//
 // Criação:     14 Out 2011
-// Atualização: 11 Set 2021
+// Atualização: 28 Ago 2023
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   Classe para reproduzir áudio
@@ -36,9 +36,13 @@ Audio::Audio()
 Audio::~Audio()
 {
     // deleta todos os sons da coleção
-    for (const auto & [id, sound] : sounds)
+    for (const auto& [id, sound] : soundTable)
     {
-        sound->sourceVoice->DestroyVoice();
+        // destroi todas as vozes criadas para este som
+        for (uint k = 0; k < sound->tracks; ++k)
+            sound->voices[k]->DestroyVoice();
+
+        // libera o som
         delete sound;
     }
 
@@ -54,35 +58,88 @@ Audio::~Audio()
 
 // ---------------------------------------------------------------------------------
 
-void Audio::Add(uint id, string filename)
+void Audio::Add(uint id, string filename, uint nVoices)
 {
     // cria novo som
-    Sound * sound = new Sound(filename);
-    
-    // cria uma SourceVoice para o som
-    audioEngine->CreateSourceVoice(&sound->sourceVoice, (WAVEFORMATEX*) &sound->soundFormat);    
+    Sound* sound = new Sound(filename, nVoices);
+
+    // cria o número de vozes requisitadas para o som
+    for (uint i = 0; i < nVoices; ++i)
+        audioEngine->CreateSourceVoice(&sound->voices[i], (WAVEFORMATEX*)&sound->format);
 
     // insere novo som na coleção
-    sounds[id] = sound;
+    soundTable[id] = sound;
 }
 
 // ---------------------------------------------------------------------------------
 
-void Audio::Play(uint id)
-{ 
-    Sound * selected = sounds[id];
+void Audio::Play(uint id, bool repeat)
+{
+    // recupera som da tabela
+    Sound* selected = soundTable[id];
 
-    selected->sourceVoice->Stop();
-    selected->sourceVoice->FlushSourceBuffers();
-    selected->sourceVoice->SubmitSourceBuffer(&selected->soundBuffer);
-    selected->sourceVoice->Start();
+    // toca áudio em loop ou apenas uma vez
+    if (repeat)
+        selected->buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
+    else
+        selected->buffer.LoopCount = 0;
+
+    // limpa voz corrente e inicia reprodução do som
+    selected->voices[selected->index]->Stop();
+    selected->voices[selected->index]->FlushSourceBuffers();
+    selected->voices[selected->index]->SetVolume(selected->volume);
+    selected->voices[selected->index]->SubmitSourceBuffer(&selected->buffer);
+    selected->voices[selected->index]->Start();
+
+    // seleciona nova trilha para reprodução do próximo som
+    selected->index = (selected->index + 1) % selected->tracks;
 }
+
+// ---------------------------------------------------------------------------------
 
 void Audio::Stop(uint id)
 {
-    Sound * selected = sounds[id];
+    // recupera som da tabela
+    Sound* selected = soundTable[id];
 
-    selected->sourceVoice->Stop();
+    // encerra todas as trilhas desse som
+    for (uint i = 0; i < selected->tracks; ++i)
+        selected->voices[i]->Stop();
+}
+
+// ---------------------------------------------------------------------------------
+
+void Audio::Volume(uint id, float level)
+{
+    // verifica se o nível está dentro dos limites
+    if (level < 0)
+        level = 0;
+
+    if (level > XAUDIO2_MAX_VOLUME_LEVEL)
+        level = XAUDIO2_MAX_VOLUME_LEVEL;
+
+    // recupera som da tabela
+    Sound* selected = soundTable[id];
+
+    // ajusta o volume
+    selected->volume = level;
+    selected->voices[selected->index]->SetVolume(level);
+}
+
+// ---------------------------------------------------------------------------------
+
+void Audio::Frequency(uint id, float level)
+{
+    // verifica se o nível está dentro dos limites
+    if (level < XAUDIO2_MIN_FREQ_RATIO)
+        level = XAUDIO2_MIN_FREQ_RATIO;
+
+    // recupera som da tabela
+    Sound* selected = soundTable[id];
+
+    // ajusta a frequencia
+    selected->frequency = level;
+    selected->voices[selected->index]->SetFrequencyRatio(level);
 }
 
 // ---------------------------------------------------------------------------------
