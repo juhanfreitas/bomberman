@@ -69,13 +69,20 @@ Player::~Player()
 }
 
 // ---------------------------------------------------------------------------------
-
+// Reset for Game Over or Level Clear
 void Player::Reset()
+{
+    SoftReset();
+    bombStack.clear();
+}
+
+// Reset for deaths
+void Player::SoftReset()
 {
     MoveTo(40, 48);
     stateBuffer.clear();
-    bombStack.clear();
     stateBuffer.push_front(STILL);
+    timer.Reset();
     anim->ChangeLoop(true);
 }
 
@@ -210,7 +217,7 @@ void Player::Update()
     case DYING:
         if (anim->Inactive())
         {
-            Reset();
+            SoftReset();
         }
         break;
     }

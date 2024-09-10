@@ -67,6 +67,7 @@ public:
     void HandleExplosions();
     void IncreaseScore(int points);
     void Reset();
+    void SoftReset();
 };
 
 // ---------------------------------------------------------------------------------
