@@ -1,11 +1,11 @@
 /**********************************************************************************
-// Player (Código Fonte)
+// Player (Cï¿½digo Fonte)
 //
-// Criação:     27 Jan 2013
-// Atualização: 12 Mar 2023
+// Criaï¿½ï¿½o:     27 Jan 2013
+// Atualizaï¿½ï¿½o: 12 Mar 2023
 // Compilador:  Visual C++ 2022
 //
-// Descrição:   Objeto animado
+// Descriï¿½ï¿½o:   Objeto animado
 //
 **********************************************************************************/
 
@@ -25,7 +25,7 @@ Player::Player()
     playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
     anim = new Animation(playerTiles, 0.120f, true);
     bombStack = * new list<Bomb*>;
-    
+
     type = PLAYER;
 
     bombPower = 3;
@@ -185,7 +185,7 @@ void Player::Update()
         }
         break;
     case BORED:
-        
+
         break;
     case WALKUP:
         timer.Reset();
@@ -215,25 +215,26 @@ void Player::Update()
         break;
     }
 
-    // mantém personagem dentro da tela
+    // mantÃ©m personagem dentro da tela
     {
-        // saída pela esquerda
+        // saÃ­da pela esquerda
         if (x < 40)
             MoveTo(40, y);
 
-        // saída pela direita
+        // saÃ­da pela direita
         if (x > window->Width() / 2.0f - 40)
             MoveTo(window->Width() / 2.0f - 40, y);
 
+        // saÃ­da por cima
         if (y < 49)
             MoveTo(x, 49);
 
-        // saída por baixo
+        // saÃ­da por baixo
         if (y > window->Height() / 2.0f - 31)
             MoveTo(x, window->Height() / 2.0f - 31);
     }
 
-    // atualiza animação
+    // atualiza animaÃ§Ã£o
     anim->Select(stateBuffer.front());
     anim->NextFrame();
 }
@@ -243,10 +244,10 @@ void Player::Update()
 Geometry* Player::CreateBBox()
 {
     float l, r, t, b;
-    l = -1.0f * playerTiles->TileWidth() / 2.0f + 4;
-    r = 1.0f * playerTiles->TileWidth() / 2.0f - 4;
-    t = -1.0f * playerTiles->TileHeight() / 2.0f + 15;
-    b = 1.0f * playerTiles->TileHeight() / 2.0f - 1;
+    l = -1.0f * playerTiles->TileWidth() / 2.0f + 5;
+    r = 1.0f * playerTiles->TileWidth() / 2.0f - 5;
+    t = -1.0f * playerTiles->TileHeight() / 2.0f + 18;
+    b = 1.0f * playerTiles->TileHeight() / 2.0f - 2;
     return new Rect(l, t, r, b);
 }
 
@@ -267,8 +268,8 @@ void Player::CreateBomb(BombType bombType)
 void Player::HandleExplosions()
 {
     if (!bombStack.empty()) {
-        Bomb * recentBomb = bombStack.front();
-        
+        Bomb* recentBomb = bombStack.front();
+
         if (recentBomb->state == READY) {
             recentBomb->Explode();
             bombStack.pop_front();
@@ -287,10 +288,10 @@ void Player::OnCollision(Object* obj)
     float diffDn = plrBox->Top() - objBox->Bottom();
     float diffLt = objBox->Left() - plrBox->Right();
     float diffRt = plrBox->Left() - objBox->Right();
-    
+
     float width = plrBox->Right() - plrBox->Left();
     float height = plrBox->Bottom() - plrBox->Top();
- 
+
     switch (obj->Type())
     {
     case BLOCK:
@@ -298,98 +299,103 @@ void Player::OnCollision(Object* obj)
     // --------------------------------------------------------------------------------------------
     case BUILDING:
 
-        // colisão pela esquerda
+        // colisÃ£o pela esquerda
         if (diffLt <= 0 && diffLt >= -1)
         {
-            if ((diffUp >= -4 && diffUp <= 0))
+            if ((diffUp >= -6 && diffUp <= 0))
             {
                 if (stateBuffer.front() == WALKRIGHT)
                     MoveTo(x, y + diffUp);
             }
-            else if ((diffDn >= -4 && diffDn <= 0))
+            else if ((diffDn >= -6 && diffDn <= 0))
             {
                 if (stateBuffer.front() == WALKRIGHT)
                     MoveTo(x, y - diffDn);
             }
-            else MoveTo(objBox->Left() - (width / 2.0f), y);    
+            else Translate(-speed * gameTime, 0);
         }
 
-        // colisão por cima
+        // colisÃ£o por cima
         if (diffUp <= 0 && diffUp >= -1)
         {
-            if (diffLt >= -4 && diffLt <= 0)
+            if (diffLt >= -6 && diffLt <= 0)
             {
                 if (stateBuffer.front() == WALKDOWN)
                     MoveTo(x + diffLt, y);
             }
-            else if (diffRt >= -4 && diffRt <= 0)
+            else if (diffRt >= -6 && diffRt <= 0)
             {
                 if (stateBuffer.front() == WALKDOWN)
                     MoveTo(x - diffRt, y);
             }
-            else MoveTo(x, objBox->Top() - (height / 2.0f) - 7);
+            else Translate(0, -speed * gameTime);
         }
 
-        // colisão pela direita
+        // colisÃ£o pela direita
         if (diffRt <= 0 && diffRt >= -1)
         {
-            if (diffUp >= -4 && diffUp <= 0)
+            if (diffUp >= -6 && diffUp <= 0)
             {
                 if (stateBuffer.front() == WALKLEFT)
                     MoveTo(x, y + diffUp);
             }
-            else if (diffDn >= -4 && diffDn <= 0)
+            else if (diffDn >= -6 && diffDn <= 0)
             {
                 if (stateBuffer.front() == WALKLEFT)
                     MoveTo(x, y - diffDn);
             }
-            else MoveTo(objBox->Right() + (width / 2.0f), y);
-        }        
+            else Translate(speed * gameTime, 0);
+        }
 
-        // colisão por baixo
+        // colisÃ£o por baixo
         if (diffDn <= 0 && diffDn >= -1)
         {
-            if (diffLt >= -4 && diffLt <= 0)
+            if (diffLt >= -6 && diffLt <= 0)
             {
                 if (stateBuffer.front() == WALKUP)
                     MoveTo(x + diffLt, y);
             }
-            else if (diffRt >= -4 && diffRt <= 0)
+            else if (diffRt >= -6 && diffRt <= 0)
             {
                 if (stateBuffer.front() == WALKUP)
                     MoveTo(x - diffRt, y);
             }
-            else MoveTo(x, objBox->Bottom() + (height / 2.0f) - 7);
+            else Translate(0, speed * gameTime);
         }
         break;
+    
     // --------------------------------------------------------------------------------------------
     case BOMB:
-        /*if (stateBuffer.front() == WALKLEFT)
-            Translate(-speed * gameTime, 0);
-        
-        if (stateBuffer.front() == WALKRIGHT)
+        // colisÃ£o pela direita
+        if (stateBuffer.front() == WALKLEFT)
             Translate(speed * gameTime, 0);
-        
+
+        // colisÃ£o pela esquerda
+        if (stateBuffer.front() == WALKRIGHT)
+            Translate(-speed * gameTime, 0);
+
+        // colisÃ£o por baixo
         if (stateBuffer.front() == WALKUP)
+            Translate(0, speed * gameTime);
+
+        // colisÃ£o por cima
+        if (stateBuffer.front() == WALKDOWN)
             Translate(0, -speed * gameTime);
 
-        if (stateBuffer.front() == WALKDOWN)
-            Translate(0, speed * gameTime);*/
-
         break;
+    
     // --------------------------------------------------------------------------------------------
     case EXPLOSION:
         if (stateBuffer.front() != DYING) {
             stateBuffer.clear();
             stateBuffer.push_front(DYING);
             anim->ChangeLoop(FALSE);
-        }        
+        }
         break;
 
     case POWERUPS:
 
         break;
-    // --------------------------------------------------------------------------------------------
     }
 }
 
