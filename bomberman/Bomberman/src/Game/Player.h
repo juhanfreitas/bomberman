@@ -64,7 +64,6 @@ public:
     Geometry* CreateBBox();
     void CreateBomb(BombType bombType);
     void HandleBombs();
-    void HandleExplosions();
     void IncreaseScore(int points);
     void Reset();
     void SoftReset();

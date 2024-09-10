@@ -95,7 +95,7 @@ void Player::Update()
     Bomberman::scoreboard->UpdatePower(bombPower);
     Bomberman::scoreboard->UpdateLives(lives);
 
-    HandleExplosions();
+    HandleBombs();
 
     // anda para cima
     if (window->KeyPress(VK_UP))
@@ -272,7 +272,7 @@ void Player::CreateBomb(BombType bombType)
 
 // ---------------------------------------------------------------------------------
 
-void Player::HandleExplosions()
+void Player::HandleBombs()
 {
     if (!bombStack.empty()) {
         Bomb* recentBomb = bombStack.front();

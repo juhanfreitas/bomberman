@@ -80,8 +80,6 @@ void Bomb::OnCollision(Object* obj)
 	}
 }
 
-
-
 void Bomb::CreateExplosionRange()
 {
 	const float posX = x;
@@ -101,7 +99,7 @@ void Bomb::CreateExplosionRange()
 			else 
 				explo = new Explosion(xpsX, xpsY, BODY_V);
 			
-			expUp.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
 	}
@@ -120,7 +118,7 @@ void Bomb::CreateExplosionRange()
 			else
 				explo = new Explosion(xpsX, xpsY, BODY_H);
 
-			expLt.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
 	}
@@ -138,7 +136,7 @@ void Bomb::CreateExplosionRange()
 			else
 				explo = new Explosion(xpsX, xpsY, BODY_V);
 
-			expDn.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
 	}
@@ -157,39 +155,8 @@ void Bomb::CreateExplosionRange()
 			else
 				explo = new Explosion(xpsX, xpsY, BODY_H);
 
-			expLt.push_back(explo);
+			Stage1::scene->Add(explo, MOVING);
 		}
 		else break;
-	}
-
-	
-
-
-	for (auto i = 1; i <= explosionPWR; i++)
-	{
-		if (!expUp.empty())
-		{
-			Explosion* explo = expUp.front();
-			Stage1::scene->Add(explo, MOVING);
-			expUp.pop_front();
-		}
-		if (!expRt.empty())
-		{
-			Explosion* explo = expRt.front();
-			Stage1::scene->Add(explo, MOVING);
-			expRt.pop_front();
-		}
-		if (!expDn.empty())
-		{
-			Explosion* explo = expDn.front();
-			Stage1::scene->Add(explo, MOVING);
-			expDn.pop_front();
-		}
-		if (!expLt.empty())
-		{
-			Explosion* explo = expLt.front();
-			Stage1::scene->Add(explo, MOVING);
-			expLt.pop_front();
-		}
 	}
 }
