@@ -21,6 +21,8 @@ Audio*      Bomberman::audio = nullptr;
 Scoreboard* Bomberman::scoreboard = nullptr;
 float       Bomberman::timeLimit = 0;
 float       Bomberman::screenScale = 2.0f;
+float       Bomberman::MUSVolume = 0.8f;
+float       Bomberman::SEVolume = 0.8f;
 bool        Bomberman::viewBBox = false;
 bool        Bomberman::viewScene = true;
 
@@ -38,7 +40,7 @@ void Bomberman::Init()
 
     viewBBox = false;
 
-    timeLimit = 180.0f;
+    timeLimit = 40.0f;
 
     player = new Player();
     scoreboard = new Scoreboard();

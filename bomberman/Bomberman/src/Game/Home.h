@@ -32,8 +32,6 @@ private:
     Sprite * sky = nullptr;
     Sprite * title = nullptr;
 
-    Timer timer;
-
     float titleYOffset = 0;
 
     int bgSpeed = 0;

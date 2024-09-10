@@ -54,6 +54,8 @@ public:
     static bool viewScene;
     static float timeLimit;
     static float screenScale;
+    static float MUSVolume;
+    static float SEVolume;
 
 
     void Init();                        // inicialização

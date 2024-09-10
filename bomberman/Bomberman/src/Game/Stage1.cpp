@@ -33,13 +33,22 @@ void Stage1::Init()
 
     Bomberman::player->SoftReset();
 
-    Bomberman::audio->Play(MUS_STAGE1);
+    Bomberman::audio->Play(MUS_STAGE1, true);
+    Bomberman::audio->Volume(MUS_STAGE1, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
 
 void Stage1::Update()
 {
+    // atualiza o timer do scoreboard se o tempo não tiver esgotado
+    if (!timeUp)
+        Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
+
+    // acelera a musica quando faltar 30 segundos
+    if (timer.Elapsed(Bomberman::timeLimit - 30.0f))
+        Bomberman::audio->Frequency(MUS_STAGE1, 1.3f);
+
     // toca um sinal de aviso quando o tempo esta acabando
     if (timer.Elapsed(Bomberman::timeLimit))
     {
@@ -67,12 +76,10 @@ void Stage1::Update()
 
     else {
 
-        Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
-
         // atualiza a cena do jogo;
         scene->Update();
 
-        // detecta as colis�es na cena
+        // detecta as colisões na cena
         scene->CollisionDetection();
     }
 

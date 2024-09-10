@@ -29,19 +29,14 @@ void Home::Init()
     screenBorder = 15 * Bomberman::screenScale;
 
     // inicia tocando uma música 
-    Bomberman::audio->Play(MUS_MENU);
-    timer.Start();
+    Bomberman::audio->Play(MUS_MENU, true);
+    Bomberman::audio->Volume(MUS_MENU, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
 
 void Home::Update()
 {
-    // verifica se a duração da musica ja passou e toca novamente
-    if (timer.Elapsed(21.0f)) {
-        Bomberman::audio->Play(MUS_MENU);
-        timer.Reset();
-    }
 
     // anima o título
     if (yT < screenBorder - titleYOffset || yT > titleYOffset - screenBorder) {
