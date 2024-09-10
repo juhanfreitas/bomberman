@@ -1,5 +1,4 @@
 #include "Bomb.h"
-#include "Bomberman.h"
 #include "Stage1.h"
 
 
@@ -10,7 +9,7 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	bombMode = bombType;
 	bombKicked = false;
 	int gridX = (int)(playerX / 16);
-	int gridY = (int)((playerY + 8 - Bomberman::scoreboard->Height()) / 16);
+	int gridY = (int)((playerY + 8 - 32) / 16);
 	bombs = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(bombs, 0.250f, true);
 
@@ -28,7 +27,7 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	anim->Add(R_BOMB, redBomb, 4);
 	anim->Add(TIMED, timedBomb, 2);
 
-	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + Bomberman::scoreboard->Height(), Layer::UPPER);
+	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + 32, Layer::UPPER);
 }
 
 Bomb::~Bomb()
@@ -80,6 +79,7 @@ void Bomb::Explode()
 	Explosion* explosion = new Explosion(x, y, BASE);
 	Stage1::scene->Add(explosion, MOVING);
 	CreateExplosionRange();
+	playerOwner->bombStack.remove(this);
 	playerOwner->availableBombs += 1;
 	Stage1::scene->Delete(this, MOVING);
 }
@@ -143,7 +143,8 @@ void Bomb::CreateExplosionRange()
 	{
 		xpsY = posY - (i * 16); xpsX = posX;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
+		if ((Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT)) ||
+			((bombMode == R_BOMB) && !(Stage1::backg->CheckGridPosition(xpsX, xpsY, WLL))))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)
@@ -162,7 +163,8 @@ void Bomb::CreateExplosionRange()
 	{
 		xpsX = posX + (i * 16); xpsY = posY;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
+		if ((Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT)) ||
+			((bombMode == R_BOMB) && !(Stage1::backg->CheckGridPosition(xpsX, xpsY, WLL))))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)
@@ -181,7 +183,8 @@ void Bomb::CreateExplosionRange()
 	{
 		xpsY = posY + (i * 16); xpsX = posX;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
+		if ((Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT)) ||
+			((bombMode == R_BOMB) && !(Stage1::backg->CheckGridPosition(xpsX, xpsY, WLL))))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)
@@ -200,7 +203,8 @@ void Bomb::CreateExplosionRange()
 	{
 		xpsX = posX - (i * 16); xpsY = posY;
 
-		if (Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT))
+		if ((Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT)) ||
+			((bombMode == R_BOMB) && !(Stage1::backg->CheckGridPosition(xpsX, xpsY, WLL))))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)

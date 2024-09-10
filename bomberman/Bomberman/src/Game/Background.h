@@ -18,10 +18,9 @@
 #include "../Engine/Types.h"                      // tipos específicos da engine
 #include "../Engine/Object.h"                     // interface de Object
 #include "../Engine/Sprite.h"                     // background é composto por sprites
+#include "Enums.h"
 
 // ---------------------------------------------------------------------------------
-
-enum FillType { MPT, PWR, PTL, BLK, WLL };
 
 class Background : public Object
 {

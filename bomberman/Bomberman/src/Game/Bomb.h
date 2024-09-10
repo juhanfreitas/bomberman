@@ -14,9 +14,9 @@
 
 // ---------------------------------------------------------
 
-enum BombType { NORMAL, R_BOMB, TIMED };
-enum BombState { FUSING, READY };
-enum Directions { UP, DOWN, LEFT, RIGHT };
+//enum BombType { NORMAL, R_BOMB, TIMED };
+//enum BombState { FUSING, READY };
+//enum Directions { UP, DOWN, LEFT, RIGHT };
 
 class Player;
 

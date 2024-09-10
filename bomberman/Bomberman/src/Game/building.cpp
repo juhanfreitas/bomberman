@@ -1,5 +1,5 @@
 #include "Building.h"
-//#include "Bomberman.h"
+#include "Stage1.h"
 
 Building::Building(float x, float y)
 {
@@ -14,4 +14,10 @@ Building::~Building()
 {
 	delete building;
 	delete shadow;
+}
+
+void Building::Update()
+{
+	if ((y >= 16 * 13) || (Stage1::backg->CheckGridPosition(x, y, MPT)))
+		shadow = nullptr;
 }

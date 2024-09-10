@@ -28,7 +28,7 @@ using namespace std;
 
 // ------------------------------------------------------------------------------
 
-enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING, DYING };
+//enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING, DYING };
 
 // ---------------------------------------------------------------------------------
 
@@ -38,14 +38,13 @@ private:
     TileSet* playerTiles;                   // folha de sprites do personagem
     Animation* anim;                        // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
-    list<Bomb*> bombStack;
-    list<Explosion*> explosionStack;
     list<PlayerState> stateBuffer;
     float       bored_timing;               // tempo para ficar entediado
     uint startX, startY;
 
 
 public:
+    list<Bomb*> bombStack;
     uint score;
     uint maxBombs;
     uint bombPower;
@@ -53,7 +52,7 @@ public:
     BombType bombType;
     bool bombKick;
     bool bombPass;
-    bool wallPass;
+    bool blockPass;
     float speed;                            // velocidade do personagem
     uint availableBombs;
 
@@ -92,7 +91,7 @@ inline void Player::ClearPowerUps()
     bombType = NORMAL;
     bombPass = false;
     bombKick = false;
-    wallPass = false;   
+    blockPass = false;   
 }
 
 // ---------------------------------------------------------------------------------

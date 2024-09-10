@@ -7,10 +7,11 @@
 #include "../Engine/Sprite.h"
 #include "../Engine/TileSet.h"
 #include "../Engine/Animation.h"
+#include "Enums.h"
 
 // ----------------------------------------------------------
 
-enum BlockState {DEFAULT, EXPLODING};
+//enum BlockState {DEFAULT, EXPLODING};
 
 // ----------------------------------------------------------
 

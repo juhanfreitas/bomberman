@@ -4,6 +4,7 @@
 #include "Bomberman.h"
 #include "Home.h"
 #include "Stage1.h"
+#include "Powerup.h"
 #include <iostream>
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
@@ -176,6 +177,11 @@ void Stage1::CreateBlocks()
             
             Block* block = new Block(posX, posY);
             scene->Add(block, STATIC);
+            if (i < 20)
+            {
+                Powerup* powerup = new Powerup(posX, posY, (PowerUpType)i);
+                scene->Add(powerup, STATIC);
+            }
             //backg->backGrid[numLine][numColm] = false;
             backg->OccupyGridPosition(numLine, numColm, FillType::BLK);
         }

@@ -6,6 +6,7 @@
 #include "../Engine/Object.h"
 #include "../Engine/Types.h"
 #include "../Engine/Sprite.h"
+#include "Enums.h"
 
 class Building : public Object
 {
@@ -24,16 +25,7 @@ inline void Building::Draw()
 {
 	building->Draw(x, y, Layer::MIDDLE);
 	if (shadow != nullptr)
-	{
 		shadow->Draw(x, y + 16, Layer::LOWER);
-	}
 }
 
-inline void Building::Update()
-{
-	if (y >= 16 * 13)
-	{
-		shadow = nullptr;
-	}
-}
 #endif // !_BUILDING_H_

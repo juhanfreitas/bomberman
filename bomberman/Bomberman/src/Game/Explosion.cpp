@@ -1,6 +1,6 @@
 #include "Explosion.h"
-#include "Bomberman.h"
 #include "Stage1.h"
+#include "Powerup.h"
 #include <iostream>
 
 Explosion::Explosion(float posX, float posY, ExplosionPart part)
@@ -49,6 +49,11 @@ void Explosion::Update()
 void Explosion::OnCollision(Object * obj) {
 	switch (obj->Type()) {
 	case PORTAL:
+		break;
+	case POWERUPS:
+		Powerup* pwr;
+		pwr = dynamic_cast<Powerup*>(obj);
+		pwr->ExplosionState();
 		break;
 	case BLOCK:
 		Block* blk;

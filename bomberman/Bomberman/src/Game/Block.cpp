@@ -40,10 +40,8 @@ void Block::Update()
 	}
 
 
-	if (y >= 16 * 13)
-	{
+	if ((y >= 16 * 13) || !(Stage1::backg->CheckGridPosition(x, y, MPT)))
 		shadow = nullptr;
-	}
 
 	if (anim->Inactive())
 	{

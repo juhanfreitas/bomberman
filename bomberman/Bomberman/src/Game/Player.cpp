@@ -13,8 +13,6 @@
 #include "Bomberman.h"
 #include "Intro.h"
 #include "Stage1.h"
-#include "Bomb.h"
-#include "Explosion.h"
 #include "Powerup.h"
 
 
@@ -33,7 +31,7 @@ Player::Player()
     bombKick = false;
     bombPass = false;
     bombPower = 2;
-    wallPass = false;
+    blockPass = false;
     lives = 2;
     maxBombs = 2;
     availableBombs = maxBombs;
@@ -295,14 +293,26 @@ void Player::OnCollision(Object* obj)
     switch (obj->Type())
     {
     case BLOCK:
+        if (blockPass)
+            break;
         DefaultCollision(obj);
         break;
     // --------------------------------------------------------------------------------------------
     case BOMB:
+        if (bombKick)
+        {
+            Bomb* bomb;
+            bomb = dynamic_cast<Bomb*>(obj);
+            bomb->bombKicked = true;
+            bomb->dirKicked = CollisionDirection(obj);
+            break;
+        }
+        if (bombPass)
+            break;
         DefaultCollision(obj);
         break;
     // --------------------------------------------------------------------------------------------
-    case BUILDING:
+    case BUILDING:    
         DefaultCollision(obj);
         break; 
     // --------------------------------------------------------------------------------------------
@@ -314,7 +324,10 @@ void Player::OnCollision(Object* obj)
         }        
         break;
     // --------------------------------------------------------------------------------------------
-    
+    case POWERUPS:
+        Powerup* pwr = dynamic_cast<Powerup*>(obj);
+        pwr->PowerUpActions(this);
+        break;
     // --------------------------------------------------------------------------------------------
     }
 }

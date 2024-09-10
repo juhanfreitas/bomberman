@@ -10,10 +10,11 @@
 #include "../Engine/TileSet.h"
 #include "../Engine/Animation.h"
 #include "../Engine/Timer.h"
+#include "Enums.h"
 
 // ---------------------------------------------------------
 
-enum ExplosionPart {BASE, BODY_V, BODY_H, TIP_UP, TIP_DN, TIP_LT, TIP_RT};
+//enum ExplosionPart {BASE, BODY_V, BODY_H, TIP_UP, TIP_DN, TIP_LT, TIP_RT};
 
 class Explosion : public Object
 {
