@@ -5,7 +5,7 @@
 
 Explosion::Explosion(float posX, float posY, ExplosionPart part)
 {
-	frames = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
+	frames = new TileSet("Resources/Sprites/general/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(frames, 0.100f, false);
 
 	type = EXPLOSION;

@@ -8,7 +8,7 @@ Bomb::Bomb(BombType bombType, float playerX, float playerY, uint power) : bombMo
 	explosionPWR = power;
 	uint gridX = static_cast<uint>(playerX / 16);
 	uint gridY = static_cast<uint>((playerY + 8 - Bomberman::scoreboard->Height()) / 16);
-	bombs = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
+	bombs = new TileSet("Resources/Sprites/general/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(bombs, 0.250f, true);
 
 	type = BOMB;
@@ -22,6 +22,8 @@ Bomb::Bomb(BombType bombType, float playerX, float playerY, uint power) : bombMo
 
 	anim->Add(NORMAL, normalBomb, 4);
 	anim->Add(SPIKE, spikeBomb, 4);
+
+	anim->Select(bombMode);
 
 	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + Bomberman::scoreboard->Height(), Layer::UPPER);
 }

@@ -20,8 +20,8 @@
 
 void Home::Init()
 {
-    sky = new Sprite("Resources/BgTitle1.png");
-    title = new Sprite("Resources/BgTitle2.png");
+    sky = new Sprite("Resources/Sprites/title/BgTitle1.png");
+    title = new Sprite("Resources/Sprites/title/BgTitle2.png");
 
     bgSpeed = 3;
 
@@ -29,8 +29,8 @@ void Home::Init()
     screenBorder = 15 * Bomberman::screenScale;
 
     // inicia tocando uma música 
-    Bomberman::audio->Play(MUS_MENU, true);
-    Bomberman::audio->Volume(MUS_MENU, Bomberman::MUSVolume);
+    Bomberman::audio->Play(MUS_TITLE, true);
+    Bomberman::audio->Volume(MUS_TITLE, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ void Home::Update()
     // avança com pressionamento do ENTER
     if (window->KeyPress(VK_RETURN)) {
         Bomberman::audio->Play(SE_SELECT);
-        Bomberman::audio->Stop(MUS_MENU);
+        Bomberman::audio->Stop(MUS_TITLE);
         Bomberman::NextLevel<Stage1>();
     }
 }

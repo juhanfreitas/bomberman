@@ -19,7 +19,7 @@
 
 void Intro::Init()
 {
-    bgImage = new Sprite("Resources/HudsonGroup.png");
+    bgImage = new Sprite("Resources/Sprites/title/HudsonGroup.png");
     timer.Start();
 
     // inicia tocando uma música 

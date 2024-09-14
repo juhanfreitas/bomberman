@@ -27,7 +27,21 @@
 
 // ------------------------------------------------------------------------------
 
-enum Sounds { VO_INTRO, MUS_MENU, SE_SELECT, MUS_STAGE1, SE_TIMER };
+enum Sounds {
+    VO_INTRO,
+    MUS_TITLE,
+    MUS_STAGESTART,
+    MUS_STAGECLEAR,
+    MUS_WORLD1,
+    MUS_GAMEOVER,
+    MUS_PASSWORD,
+    SE_SELECT,
+    SE_TIMER,
+    SE_BOMBEXPLOSION,
+    SE_BOMBPLACE,
+    SE_PLAYERDEATH
+};
+
 enum ObjTypes { 
     PLAYER,
     BOMB,

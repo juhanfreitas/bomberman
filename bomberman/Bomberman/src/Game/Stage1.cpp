@@ -33,8 +33,8 @@ void Stage1::Init()
 
     Bomberman::player->SoftReset();
 
-    Bomberman::audio->Play(MUS_STAGE1, true);
-    Bomberman::audio->Volume(MUS_STAGE1, Bomberman::MUSVolume);
+    Bomberman::audio->Play(MUS_WORLD1, true);
+    Bomberman::audio->Volume(MUS_WORLD1, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ void Stage1::Update()
 
     // acelera a musica quando faltar 30 segundos
     if (timer.Elapsed(Bomberman::timeLimit - 30.0f))
-        Bomberman::audio->Frequency(MUS_STAGE1, 1.3f);
+        Bomberman::audio->Frequency(MUS_WORLD1, 1.3f);
 
     // toca um sinal de aviso quando o tempo esta acabando
     if (timer.Elapsed(Bomberman::timeLimit))
@@ -63,13 +63,13 @@ void Stage1::Update()
 
     // sai com o pressionar do ESC
     if (window->KeyPress(VK_ESCAPE)) {
-        Bomberman::audio->Stop(MUS_STAGE1);
+        Bomberman::audio->Stop(MUS_WORLD1);
         Bomberman::NextLevel<Home>();
         Bomberman::player->Reset();
     }
 
     else if (window->KeyPress(VK_F3)) {
-        Bomberman::audio->Stop(MUS_STAGE1);
+        Bomberman::audio->Stop(MUS_WORLD1);
         Bomberman::NextLevel<Home>();
         Bomberman::player->Reset();
     }

@@ -20,7 +20,7 @@ string Scoreboard::power;
 
 Scoreboard::Scoreboard()
 {
-	scoreboard = new TileSet("Resources/scoreboard.png", 272, 32, 2, 6);
+	scoreboard = new TileSet("Resources/Sprites/general/scoreboard.png", 272, 32, 2, 6);
 	anim = new Animation(scoreboard, 0.750f, true);
 
 	string timer;

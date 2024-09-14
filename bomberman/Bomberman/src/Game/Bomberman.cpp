@@ -33,14 +33,16 @@ void Bomberman::Init()
     audio = new Audio();
 
     audio->Add(VO_INTRO, "Resources/Sounds/Voices/By Hudson.wav");
-    audio->Add(MUS_MENU, "Resources/Sounds/Music/Title Theme.wav");
-    audio->Add(MUS_STAGE1, "Resources/Sounds/Music/Stage 1.wav");
+
+    audio->Add(MUS_TITLE, "Resources/Sounds/Music/Title Theme.wav");
+    audio->Add(MUS_WORLD1, "Resources/Sounds/Music/Stage 1.wav");
+    
     audio->Add(SE_TIMER, "Resources/Sounds/Sound Effects/Timer.wav");
     audio->Add(SE_SELECT, "Resources/Sounds/Sound Effects/Menu Select.wav");
 
     viewBBox = false;
 
-    timeLimit = 40.0f;
+    timeLimit = 180.0f;
 
     player = new Player();
     scoreboard = new Scoreboard();
