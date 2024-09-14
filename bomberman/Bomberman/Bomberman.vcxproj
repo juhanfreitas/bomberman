@@ -182,6 +182,7 @@
     <ClCompile Include="src\Engine\Image.cpp" />
     <ClCompile Include="src\Game\Explosion.cpp" />
     <ClCompile Include="src\Game\building.cpp" />
+    <ClCompile Include="src\Game\GameOver.cpp" />
     <ClCompile Include="src\Game\Intro.cpp" />
     <ClCompile Include="src\Game\Player.cpp" />
     <ClCompile Include="src\Engine\Object.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="src\Engine\Image.h" />
     <ClInclude Include="src\Game\Explosion.h" />
     <ClInclude Include="src\Game\Building.h" />
+    <ClInclude Include="src\Game\GameOver.h" />
     <ClInclude Include="src\Game\Intro.h" />
     <ClInclude Include="src\Game\Player.h" />
     <ClInclude Include="src\Engine\Object.h" />
