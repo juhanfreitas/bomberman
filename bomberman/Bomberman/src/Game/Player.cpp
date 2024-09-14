@@ -217,6 +217,8 @@ void Player::Update()
     case DYING:
         if (anim->Inactive())
         {
+            Bomberman::audio->Play(SE_PLAYERDEATH);
+            Bomberman::audio->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
             SoftReset();
         }
         break;
@@ -264,6 +266,8 @@ void Player::CreateBomb(BombType bombType)
 {
     if (availableBombs > 0) {
         availableBombs -= 1;
+        Bomberman::audio->Play(SE_BOMBPLACE);
+        Bomberman::audio->Volume(SE_BOMBPLACE, Bomberman::SEVolume);
         Bomb* bomb = new Bomb(bombType, x, y, bombPower);
         Stage1::scene->Add(bomb, STATIC);
         bombStack.push_back(bomb);

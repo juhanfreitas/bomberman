@@ -35,10 +35,17 @@ void Bomberman::Init()
     audio->Add(VO_INTRO, "Resources/Sounds/Voices/By Hudson.wav");
 
     audio->Add(MUS_TITLE, "Resources/Sounds/Music/Title Theme.wav");
-    audio->Add(MUS_WORLD1, "Resources/Sounds/Music/Stage 1.wav");
+    audio->Add(MUS_WORLD1, "Resources/Sounds/Music/World 1.wav");
+    audio->Add(MUS_GAMEOVER, "Resources/Sounds/Music/Game Over.wav");
+    audio->Add(MUS_PASSWORD, "Resources/Sounds/Music/Password.wav");
+    audio->Add(MUS_STAGESTART, "Resources/Sounds/Music/Stage Start.wav");
+    audio->Add(MUS_STAGECLEAR, "Resources/Sounds/Music/Stage Clear.wav");
     
     audio->Add(SE_TIMER, "Resources/Sounds/Sound Effects/Timer.wav");
     audio->Add(SE_SELECT, "Resources/Sounds/Sound Effects/Menu Select.wav");
+    audio->Add(SE_BOMBEXPLOSION, "Resources/Sounds/Sound Effects/Bomb Explodes.wav");
+    audio->Add(SE_BOMBPLACE, "Resources/Sounds/Sound Effects/Place Bomb.wav");
+    audio->Add(SE_PLAYERDEATH, "Resources/Sounds/Sound Effects/Player Death.wav");
 
     viewBBox = false;
 

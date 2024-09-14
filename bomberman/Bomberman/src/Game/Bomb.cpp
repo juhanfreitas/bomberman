@@ -68,6 +68,8 @@ void Bomb::Explode()
 {
 	Explosion* explosion = new Explosion(x, y, BASE);
 	Stage1::scene->Add(explosion, MOVING);
+	Bomberman::audio->Play(SE_BOMBEXPLOSION);
+	Bomberman::audio->Volume(SE_BOMBEXPLOSION, Bomberman::SEVolume);
 	CreateExplosionRange();
 	Stage1::scene->Delete(this, STATIC);
 }

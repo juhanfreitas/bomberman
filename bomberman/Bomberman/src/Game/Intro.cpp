@@ -24,6 +24,7 @@ void Intro::Init()
 
     // inicia tocando uma música 
     Bomberman::audio->Play(VO_INTRO);
+    Bomberman::audio->Volume(VO_INTRO, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------

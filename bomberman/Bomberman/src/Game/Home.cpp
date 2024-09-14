@@ -52,6 +52,7 @@ void Home::Update()
     // avança com pressionamento do ENTER
     if (window->KeyPress(VK_RETURN)) {
         Bomberman::audio->Play(SE_SELECT);
+        Bomberman::audio->Volume(SE_SELECT, Bomberman::SEVolume);
         Bomberman::audio->Stop(MUS_TITLE);
         Bomberman::NextLevel<Stage1>();
     }
