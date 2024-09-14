@@ -47,7 +47,7 @@ void Home::Update()
 
     // sai com pressionamento do ESC
     if (window->KeyPress(VK_ESCAPE))
-        window->Close();
+        Bomberman::NextLevel<Intro>();
 
     // avança com pressionamento do ENTER
     if (window->KeyPress(VK_RETURN)) {

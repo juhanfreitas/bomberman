@@ -1,8 +1,8 @@
 /**********************************************************************************
 // Player (Arquivo de Cabeçalho)
 //
-// Criação:     27 Jan 2013
-// Atualização: 12 Mar 2023
+// Criação:     23 Ago 2013
+// Atualização: 14 Set 2023
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   Objeto animado
@@ -28,29 +28,31 @@ using namespace std;
 
 // ------------------------------------------------------------------------------
 
-enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING, DYING };
+enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING, LOSING, DYING };
 
 // ---------------------------------------------------------------------------------
 
 class Player : public Object
 {
 private:
-    TileSet* playerTiles;                // folha de sprites do personagem
-    Animation* anim;                       // animação do personagem
+    TileSet* playerTiles;                   // folha de sprites do personagem
+    Animation* anim;                        // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
     list<Bomb*> bombStack;
-    list<Explosion*> explosionStack;
     list<PlayerState> stateBuffer;
-    float       bored_timing;               // tempo para ficar entediado
+    float bored_timing;                     // tempo para ficar entediado
 
-    uint startX, startY;
+    // coordenadas iniciais do player no mapa
+    float startX = 40;
+    float startY = 48;
 
-    uint score;
-    uint maxBombs;
-    uint bombPower;
-    uint lives;
-    uint availableBombs;
-    float       speed;                      // velocidade do personagem
+    int score;
+    int maxBombs;
+    int bombPower;
+    int lives;
+    int availableBombs;
+    bool alive = true;
+    float speed;                            // velocidade do personagem
 
 public:
 
@@ -67,6 +69,9 @@ public:
     void IncreaseScore(int points);
     void Reset();
     void SoftReset();
+    void Die();
+    void Die(uint type);
+    bool IsAlive() const;
 };
 
 // ---------------------------------------------------------------------------------
@@ -79,7 +84,14 @@ inline void Player::Draw()
 
 inline void Player::IncreaseScore(int points)
 {
-    score += points;
+    if (score + points >= 0)
+        score + points <= 999999 ? score += points : 999999;
+    else score = 0;
+}
+
+inline bool Player::IsAlive() const
+{
+    return alive;
 }
 
 // ---------------------------------------------------------------------------------

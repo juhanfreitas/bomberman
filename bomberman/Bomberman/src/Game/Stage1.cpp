@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Bomberman.h"
 #include "Home.h"
+#include "GameOver.h"
 #include "Stage1.h"
 #include <iostream>
 #include <cstdlib> // For rand() and srand()
@@ -19,7 +20,6 @@ void Stage1::Init()
     scene = new Scene();
 
     backg = new Background();
-    scoreboard = new Scoreboard();
 
     CreateBoxes();
     CreatePortal();
@@ -31,7 +31,7 @@ void Stage1::Init()
     scene->Add(Bomberman::player, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
-    Bomberman::player->SoftReset();
+    Bomberman::player->Reset();
 
     Bomberman::audio->Play(MUS_WORLD1, true);
     Bomberman::audio->Volume(MUS_WORLD1, Bomberman::MUSVolume);
@@ -54,25 +54,27 @@ void Stage1::Update()
     {
         timeUp = true;
         timer.Reset();
+        Bomberman::player->Die(LOSING);
         Bomberman::audio->Play(SE_TIMER);
     }
 
     // encerra o jogo ao encerrar o tempo
-    if (timer.Elapsed(2) && timeUp)
-        window->Close();
+    if (timer.Elapsed(2.5f) && timeUp && Bomberman::player->IsAlive())
+        Bomberman::NextLevel<Stage1>();
+
+    // verifica situações de game over
+    else if (!timeUp && !Bomberman::player->IsAlive()) {
+        Bomberman::NextLevel<GameOver>();
+    }
+    else if (!Bomberman::player->IsAlive() && timeUp && timer.Elapsed(2.5f))
+        Bomberman::NextLevel<GameOver>();
 
     // sai com o pressionar do ESC
-    if (window->KeyPress(VK_ESCAPE)) {
-        Bomberman::audio->Stop(MUS_WORLD1);
+    else if (window->KeyPress(VK_ESCAPE))
         Bomberman::NextLevel<Home>();
-        Bomberman::player->Reset();
-    }
 
-    else if (window->KeyPress(VK_F3)) {
-        Bomberman::audio->Stop(MUS_WORLD1);
+    else if (window->KeyPress(VK_F3))
         Bomberman::NextLevel<Home>();
-        Bomberman::player->Reset();
-    }
 
     else {
 
@@ -99,6 +101,8 @@ void Stage1::Draw()
 
 void Stage1::Finalize()
 {
+    Bomberman::audio->Stop(MUS_WORLD1);
+    Bomberman::player->Reset();
     scene->Remove(Bomberman::player, MOVING);
     scene->Remove(Bomberman::scoreboard, STATIC);
     delete scene;

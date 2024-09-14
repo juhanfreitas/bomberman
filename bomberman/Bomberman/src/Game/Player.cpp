@@ -1,11 +1,11 @@
 /**********************************************************************************
-// Player (C�digo Fonte)
+// Player (Código Fonte)
 //
-// Cria��o:     27 Jan 2013
-// Atualiza��o: 12 Mar 2023
+// Criação:     27 Jan 2013
+// Atualização: 12 Mar 2023
 // Compilador:  Visual C++ 2022
 //
-// Descri��o:   Objeto animado
+// Descrição:   Objeto animado
 //
 **********************************************************************************/
 
@@ -28,9 +28,9 @@ Player::Player()
 
     type = PLAYER;
 
-    bombPower = 3;
-    lives = 2;
-    maxBombs = 4;
+    bombPower = 1;
+    lives = 0;
+    maxBombs = 1;
     availableBombs = maxBombs;
 
     uint SeqStill[1] = { 0 };
@@ -39,6 +39,7 @@ Player::Player()
     uint SeqLeft[4] = { 6, 7, 6, 8 };
     uint SeqRight[4] = { 3, 4, 3, 5 };
     uint SeqBored[8] = { 48, 49, 50, 51, 52, 53, 54, 55 };
+    uint SeqLosing[3] = { 45, 46, 47 };
     uint SeqWinning[8] = { 36, 37, 38, 39, 40, 41, 42, 43 };
     uint SeqDying[11] = { 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34 };
 
@@ -48,15 +49,16 @@ Player::Player()
     anim->Add(WALKRIGHT,    SeqRight,   4);
     anim->Add(BORED,        SeqBored,   7);
     anim->Add(DYING,        SeqDying,   11);
+    anim->Add(LOSING,       SeqLosing,  3);
     anim->Add(WINNING,      SeqWinning, 8);
     anim->Add(STILL,        SeqStill,   1);
 
-    speed = 70.0f;
+    speed = 50.0f;
     bored_timing = 5.0f;
     timer.Start();
 
     BBox(CreateBBox());
-    MoveTo(40, 48);
+    MoveTo(startX, startY);
 
 }
 
@@ -74,12 +76,17 @@ void Player::Reset()
 {
     SoftReset();
     bombStack.clear();
+    // verifica se o player está vivo para o reset de game over
+    if (!alive) {
+        alive = true;
+        lives = 2;
+    }
 }
 
 // Reset for deaths
 void Player::SoftReset()
 {
-    MoveTo(40, 48);
+    MoveTo(startX, startY);
     stateBuffer.clear();
     stateBuffer.push_front(STILL);
     timer.Reset();
@@ -88,8 +95,50 @@ void Player::SoftReset()
 
 // ---------------------------------------------------------------------------------
 
+void Player::Die()
+{
+    if (stateBuffer.front() != DYING) {
+        stateBuffer.clear();
+        stateBuffer.push_front(DYING);
+        Bomberman::audio->Play(SE_PLAYERDEATH);
+        Bomberman::audio->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
+        anim->ChangeLoop(false);
+    }
+}
+
+void Player::Die(uint type)
+{
+    if (stateBuffer.front() == type)
+        return;
+
+    stateBuffer.clear();
+
+    switch (type)
+    {
+    case DYING:
+        stateBuffer.push_front(DYING);
+        Bomberman::audio->Play(SE_PLAYERDEATH);
+        Bomberman::audio->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
+        anim->ChangeLoop(false);
+        break;
+    case LOSING:
+        stateBuffer.push_front(LOSING);
+        lives -= 1;
+        break;
+    default:
+        break;
+    }    
+}
+// ---------------------------------------------------------------------------------
+
 void Player::Update()
 {
+    // Verifica se o player morreu
+    if (lives < 0) {
+        lives = 0;
+        alive = false;
+    }
+
     Bomberman::scoreboard->UpdateScore(score);
     Bomberman::scoreboard->UpdateBombs(maxBombs);
     Bomberman::scoreboard->UpdatePower(bombPower);
@@ -97,88 +146,90 @@ void Player::Update()
 
     HandleBombs();
 
-    // anda para cima
-    if (window->KeyPress(VK_UP))
-    {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKUP);
-        else
+    if (stateBuffer.front() != DYING && stateBuffer.front() != LOSING) {
+        // anda para cima
+        if (window->KeyPress(VK_UP))
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKUP);
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKUP);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKUP);
+            }
         }
-    }
-    if (window->KeyUp(VK_UP))
-    {
-        stateBuffer.remove(WALKUP);
-    }
-
-
-    // anda para baixo
-    if (window->KeyPress(VK_DOWN))
-    {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKDOWN);
-        else
+        if (window->KeyUp(VK_UP))
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKDOWN);
+            stateBuffer.remove(WALKUP);
         }
-    }
-    if (window->KeyUp(VK_DOWN))
-    {
-        stateBuffer.remove(WALKDOWN);
-    }
 
 
-    // anda para esquerda
-    if (window->KeyPress(VK_LEFT))
-    {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKLEFT);
-        else
+        // anda para baixo
+        if (window->KeyPress(VK_DOWN))
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKLEFT);
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKDOWN);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKDOWN);
+            }
         }
-    }
-    if (window->KeyUp(VK_LEFT))
-    {
-        stateBuffer.remove(WALKLEFT);
-    }
-
-
-    // anda para direita
-    if (window->KeyPress(VK_RIGHT))
-    {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKRIGHT);
-        else
+        if (window->KeyUp(VK_DOWN))
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKRIGHT);
+            stateBuffer.remove(WALKDOWN);
         }
-    }
-    if (window->KeyUp(VK_RIGHT))
-    {
-        stateBuffer.remove(WALKRIGHT);
-    }
 
 
-    if (window->KeyPress(VK_SPACE))
-    {
-        timer.Reset();
-        CreateBomb(NORMAL);
-    }
-
-    if (stateBuffer.empty())
-    {
-        stateBuffer.push_front(STILL);
-    }
-    else {
-        if (stateBuffer.size() > 1)
+        // anda para esquerda
+        if (window->KeyPress(VK_LEFT))
         {
-            stateBuffer.remove(BORED);
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKLEFT);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKLEFT);
+            }
+        }
+        if (window->KeyUp(VK_LEFT))
+        {
+            stateBuffer.remove(WALKLEFT);
+        }
+
+
+        // anda para direita
+        if (window->KeyPress(VK_RIGHT))
+        {
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKRIGHT);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKRIGHT);
+            }
+        }
+        if (window->KeyUp(VK_RIGHT))
+        {
+            stateBuffer.remove(WALKRIGHT);
+        }
+
+
+        if (window->KeyPress(VK_SPACE))
+        {
+            timer.Reset();
+            CreateBomb(NORMAL);
+        }
+
+        if (stateBuffer.empty())
+        {
+            stateBuffer.push_front(STILL);
+        }
+        else {
+            if (stateBuffer.size() > 1)
+            {
+                stateBuffer.remove(BORED);
+            }
         }
     }
 
@@ -191,35 +242,30 @@ void Player::Update()
             stateBuffer.push_front(BORED);
         }
         break;
-    case BORED:
-
-        break;
     case WALKUP:
         timer.Reset();
         Translate(0, -speed * gameTime);
         break;
+
     case WALKDOWN:
         timer.Reset();
         Translate(0, speed * gameTime);
         break;
+
     case WALKLEFT:
         timer.Reset();
         Translate(-speed * gameTime, 0);
         break;
+
     case WALKRIGHT:
         timer.Reset();
         Translate(speed * gameTime, 0);
         break;
-    case WINNING:
-        timer.Reset();
-        score += 10;
-        break;
+
     case DYING:
-        if (anim->Inactive())
-        {
-            Bomberman::audio->Play(SE_PLAYERDEATH);
-            Bomberman::audio->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
+        if (anim->Inactive() && alive) {
             SoftReset();
+            lives -= 1;
         }
         break;
     }
@@ -293,6 +339,9 @@ void Player::HandleBombs()
 
 void Player::OnCollision(Object* obj)
 {
+    if (stateBuffer.front() == DYING)
+        return;
+
     Rect* objBox = (Rect*)obj->BBox();
     Rect* plrBox = (Rect*)BBox();
     float diffUp = objBox->Top() - plrBox->Bottom();
@@ -397,11 +446,7 @@ void Player::OnCollision(Object* obj)
     
     // --------------------------------------------------------------------------------------------
     case EXPLOSION:
-        if (stateBuffer.front() != DYING) {
-            stateBuffer.clear();
-            stateBuffer.push_front(DYING);
-            anim->ChangeLoop(FALSE);
-        }
+        Die();
         break;
 
     case POWERUPS:

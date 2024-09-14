@@ -108,7 +108,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     engine->window->Title("Bomberman");
     engine->window->Icon(IDI_ICON);
     //engine->window->Cursor(IDC_CURSOR);
-    //engine->graphics->VSync(true);
+    engine->graphics->VSync(true);
 
     // inicia o jogo
     engine->Start(new Bomberman());

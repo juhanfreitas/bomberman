@@ -38,7 +38,6 @@ private:
     Scoreboard* scoreboard = nullptr;   // placar do jogo
     Portal* portal = nullptr;           // portal do mapa atual
 
-
     Timer timer;
 
     bool viewBBox = false;              // visualiza as bounding box na cena
@@ -57,6 +56,7 @@ public:
     void CreateBlocks();
     void CreatePortal();
     void CreateExtraBoxes();
+    void PreparateStageFinalization();
 };
 
 
