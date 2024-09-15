@@ -48,18 +48,18 @@ public:
     Scoreboard();                             // construtor
     ~Scoreboard();                            // destrutor
 
-    static void UpdateScore(uint score);
-    static void UpdateTimer(uint timeLimit, uint gameTime);
-    static void UpdateLives(uint lives);
-	static void UpdateBombs(uint bombs);
-	static void UpdatePower(uint power);
+    static void UpdateScore(int score);
+    static void UpdateTimer(float timeLimit, float gameTime);
+    static void UpdateLives(int lives);
+	static void UpdateBombs(int bombs);
+	static void UpdatePower(int power);
 
     void Update();                      // atualização do objeto
     void Draw();                        // desenho do objeto
 
     uint Height() const;
-	static std::string SetBoardText(uint value, uint lenght);
-	static std::string SetBoardText(uint value, uint secondValue, string separator, uint lenght);
+	static std::string SetBoardText(int value, uint lenght);
+	static std::string SetBoardText(int value, int secondValue, string separator, uint lenght);
 };
 
 // ---------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ inline uint Scoreboard::Height() const
 }
 
 inline std::string Scoreboard::SetBoardText(
-	uint value,
+	int value,
 	uint lenght)
 {
 	std::stringstream ss;
@@ -82,8 +82,8 @@ inline std::string Scoreboard::SetBoardText(
 }
 
 inline std::string Scoreboard::SetBoardText(
-	uint firstValue,
-	uint secondValue,
+	int firstValue,
+	int secondValue,
 	string separator,
 	uint lenght)
 {
@@ -92,23 +92,23 @@ inline std::string Scoreboard::SetBoardText(
 	return ss.str();
 }
 
-inline void Scoreboard::UpdateScore(uint newScore)
+inline void Scoreboard::UpdateScore(int newScore)
 {
-	Scoreboard::score = SetBoardText(newScore, 5);
+	Scoreboard::score = SetBoardText(newScore, 6);
 }
-inline void Scoreboard::UpdateTimer(uint timeLimit, uint gameTime) {
-	uint remainingTime = timeLimit - gameTime;
-	uint minutes = remainingTime / 60;
-	uint seconds = remainingTime % 60;
+inline void Scoreboard::UpdateTimer(float timeLimit, float gameTime) {
+	int remainingTime = timeLimit - gameTime;
+	int minutes = remainingTime / 60;
+	int seconds = remainingTime % 60;
 	Scoreboard::timer = SetBoardText(minutes, seconds, ":", 2);
 }
-inline void Scoreboard::UpdateLives(uint lives) {
+inline void Scoreboard::UpdateLives(int lives) {
 	Scoreboard::lives = SetBoardText(lives, 2);
 }
-inline void Scoreboard::UpdateBombs(uint bombs) {
+inline void Scoreboard::UpdateBombs(int bombs) {
 	Scoreboard::bombs = SetBoardText(bombs, 1);
 }
-inline void Scoreboard::UpdatePower(uint power) {
+inline void Scoreboard::UpdatePower(int power) {
 	Scoreboard::power = SetBoardText(power, 1);
 }
 

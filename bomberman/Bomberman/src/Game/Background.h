@@ -23,7 +23,7 @@
 
 class Background : public Object
 {
-private: 
+private:
 
     list<Sprite*> backgs;                         // lista contendo todos os planos de fundo
     Sprite * activeSprite;                        // plano de fundo atual
@@ -51,11 +51,6 @@ public:
 }; 
 
 // --------------------------------------------------------------------------------
-
-inline void Background::Draw()                      // desenha plano de fundo ativo
-{
-    activeSprite->Draw(window->CenterX()/2.0f, window->CenterY()/2.0f + 16, Layer::BACK, 1.0f, 0.0f);
-}
 
 inline void Background::Update()
 {

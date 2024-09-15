@@ -33,8 +33,9 @@ void Stage1::Init()
 
     Bomberman::player->Reset();
 
-    Bomberman::audio->Play(MUS_WORLD1, true);
+    Bomberman::audio->Frequency(MUS_WORLD1, 1.0f);
     Bomberman::audio->Volume(MUS_WORLD1, Bomberman::MUSVolume);
+    Bomberman::audio->Play(MUS_WORLD1, true);
 }
 
 // ------------------------------------------------------------------------------

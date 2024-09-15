@@ -23,7 +23,7 @@ void Home::Init()
     sky = new Sprite("Resources/Sprites/title/BgTitle1.png");
     title = new Sprite("Resources/Sprites/title/BgTitle2.png");
 
-    bgSpeed = 3;
+    bgSpeed = 4;
 
     titleYOffset = window->Height() - (title->Height() * Bomberman::screenScale);
     screenBorder = 15 * Bomberman::screenScale;
@@ -39,21 +39,20 @@ void Home::Update()
 {
 
     // anima o título
-    if (yT < screenBorder - titleYOffset || yT > titleYOffset - screenBorder) {
+    if (yT + (bgSpeed * gameTime) < screenBorder - titleYOffset || yT + (bgSpeed * gameTime) > titleYOffset - screenBorder) {
         bgSpeed *= -1;
     }
     
-    yT += bgSpeed * gameTime;    
+    yT += bgSpeed * gameTime;
 
     // sai com pressionamento do ESC
     if (window->KeyPress(VK_ESCAPE))
-        Bomberman::NextLevel<Intro>();
+        window->Close();
 
     // avança com pressionamento do ENTER
     if (window->KeyPress(VK_RETURN)) {
         Bomberman::audio->Play(SE_SELECT);
         Bomberman::audio->Volume(SE_SELECT, Bomberman::SEVolume);
-        Bomberman::audio->Stop(MUS_TITLE);
         Bomberman::NextLevel<Stage1>();
     }
 }
@@ -76,6 +75,7 @@ void Home::Draw()
 
 void Home::Finalize()
 {
+    Bomberman::audio->Stop(MUS_TITLE);
     delete sky;
     delete title;
 }

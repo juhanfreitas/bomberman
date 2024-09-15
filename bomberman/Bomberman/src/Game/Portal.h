@@ -25,6 +25,6 @@ public:
 
 inline void Portal::Draw() 
 {
-	sprite->Draw(x, y, Layer::MIDDLE);
+	sprite->Draw(x, y, Layer::Layer::LOWER);
 }
 #endif // !_PORTAL_H

@@ -53,7 +53,6 @@ void GameOver::Init()
 
 void GameOver::Update()
 {
-    xPos = (window->CenterX() + 24 * (-1.0f + 2.0f * selected)) / Bomberman::screenScale;
 
     // sai com pressionamento do ESC
     if (choice == DEFEAT && window->KeyPress(VK_LEFT))
@@ -62,6 +61,7 @@ void GameOver::Update()
         selected = RIGHT;
 
     arrowAnimation->Select(selected);
+    xPos = (window->CenterX() + 24 * (-1.0f + 2.0f * selected)) / Bomberman::screenScale;
 
     // avança com pressionamento do ENTER
     if (choice == DEFEAT && window->KeyPress(VK_RETURN)) {
@@ -134,4 +134,6 @@ void GameOver::Finalize()
     delete bgImage;
     delete bombermanAsset;
     delete assetAnimation;
+    delete arrowAsset;
+    delete arrowAnimation;
 }

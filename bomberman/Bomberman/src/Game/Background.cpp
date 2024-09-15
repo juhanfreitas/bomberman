@@ -10,6 +10,7 @@
 **********************************************************************************/
 
 #include "Background.h"
+#include "Bomberman.h"
 #include <list>
 
 // ---------------------------------------------------------------------------------
@@ -17,7 +18,7 @@
 Background::Background()
 {
     Background::CreateGrid();
-    MoveTo(window->CenterX(), window->CenterY(), Layer::BACK);
+    MoveTo(window->CenterX() / Bomberman::screenScale, window->CenterY() / Bomberman::screenScale + 16, Layer::BACK);
     backgs = * new list<Sprite*>;
     backgs.push_back(new Sprite("Resources/stage/Stage 1.png"));
     list<Sprite*>::iterator it = backgs.begin();
@@ -29,6 +30,17 @@ Background::Background()
 Background::~Background()
 {
     backgs.clear();
+}
+
+
+
+void Background::Draw()
+{
+    activeSprite->Draw(
+        window->CenterX() / Bomberman::screenScale,
+        window->CenterY() / Bomberman::screenScale + 16,
+        Layer::BACK, 1.0f, 0.0f
+    );
 }
 
 // -------------------------------------------------------------------------------

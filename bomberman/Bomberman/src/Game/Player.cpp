@@ -29,7 +29,7 @@ Player::Player()
     type = PLAYER;
 
     bombPower = 1;
-    lives = 0;
+    lives = 2;
     maxBombs = 1;
     availableBombs = maxBombs;
 
@@ -76,6 +76,8 @@ void Player::Reset()
 {
     SoftReset();
     bombStack.clear();
+    availableBombs = maxBombs;
+
     // verifica se o player está vivo para o reset de game over
     if (!alive) {
         alive = true;
@@ -277,16 +279,16 @@ void Player::Update()
             MoveTo(40, y);
 
         // saída pela direita
-        if (x > window->Width() / 2.0f - 40)
-            MoveTo(window->Width() / 2.0f - 40, y);
+        if (x > window->Width() / Bomberman::screenScale - 40)
+            MoveTo(window->Width() / Bomberman::screenScale - 40, y);
 
         // saída por cima
         if (y < 49)
             MoveTo(x, 49);
 
         // saída por baixo
-        if (y > window->Height() / 2.0f - 31)
-            MoveTo(x, window->Height() / 2.0f - 31);
+        if (y > window->Height() / Bomberman::screenScale - 31)
+            MoveTo(x, window->Height() / Bomberman::screenScale - 31);
     }
 
     // atualiza animação
