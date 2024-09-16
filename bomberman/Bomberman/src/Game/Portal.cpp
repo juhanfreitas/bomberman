@@ -13,7 +13,7 @@ Portal::Portal(float x, float y)
 	anim->Select(0);
 
 	BBox(new Rect(-8,-8,8,8));
-	MoveTo(x+8, y+8, Layer::LOWER);
+	MoveTo(x+8, y+8);
 }
 
 Portal::~Portal()

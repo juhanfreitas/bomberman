@@ -325,8 +325,18 @@ void Player::OnCollision(Object* obj)
         break;
     // --------------------------------------------------------------------------------------------
     case POWERUPS:
-        Powerup* pwr = dynamic_cast<Powerup*>(obj);
-        pwr->PowerUpActions(this);
+
+        Rect* objBox = (Rect*)obj->BBox();
+        Rect* plrBox = (Rect*)BBox();
+        
+        int diffX = abs(plrBox->Left() - objBox->Left());
+        int diffY = abs(plrBox->Top() - objBox->Top());
+
+        if ((diffX == 0 && diffY <= 8) || (diffY == 0 && diffX <= 8))
+        {
+            Powerup* pwr = dynamic_cast<Powerup*>(obj);
+            pwr->PowerUpActions(this);
+        }
         break;
     // --------------------------------------------------------------------------------------------
     }

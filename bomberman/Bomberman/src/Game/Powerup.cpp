@@ -3,7 +3,7 @@
 
 Powerup::Powerup(float x, float y, PowerUpType pType)
 {
-	type = POWERUPS;
+	type = ObjTypes::POWERUPS;
 	powerUps = new TileSet("Resources/power-ups.png", 16, 16, 8, 48);
 	explosion = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(powerUps, .100f, true);
@@ -91,7 +91,7 @@ void Powerup::Update()
 	anim->NextFrame();
 
 	if (anim->Inactive())
-		Stage1::scene->Delete(this, STATIC);
+		Stage1::scene->Delete();
 }
 
 

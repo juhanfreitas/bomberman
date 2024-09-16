@@ -15,13 +15,14 @@
 #include "Bomberman.h"
 #include "Intro.h"
 
-Game*       Bomberman::level = nullptr;
-Player*     Bomberman::player = nullptr;
-Audio*      Bomberman::audio = nullptr;
-Scoreboard* Bomberman::scoreboard = nullptr;
-float       Bomberman::timeLimit = 0;
-float       Bomberman::screenScale = 2.0f;
-bool        Bomberman::viewBBox = false;
+TilesManager*   Bomberman::tiles = nullptr;
+Game*           Bomberman::level = nullptr;
+Player*         Bomberman::player = nullptr;
+Audio*          Bomberman::audio = nullptr;
+Scoreboard*     Bomberman::scoreboard = nullptr;
+float           Bomberman::timeLimit = 0;
+float           Bomberman::screenScale = 2.0f;
+bool            Bomberman::viewBBox = false;
 
 // -----------------------------------------------------------------------------
 
@@ -42,6 +43,7 @@ void Bomberman::Init()
 
     player = new Player();
     scoreboard = new Scoreboard();
+    tiles = new TilesManager();
 
     level = new Intro();
     level->Init();

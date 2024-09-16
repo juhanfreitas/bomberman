@@ -21,6 +21,7 @@
 #include "../Engine/Sprite.h"
 #include "../Engine/Scene.h"
 #include "../Engine/Timer.h"
+#include "TilesManager.h"
 #include "Background.h"
 #include "Player.h"
 #include "Scoreboard.h"
@@ -48,6 +49,7 @@ private:
     bool paused;
 
 public:
+    static TilesManager* tiles;
     static Player * player;
     static Audio * audio;
     static Scoreboard * scoreboard;

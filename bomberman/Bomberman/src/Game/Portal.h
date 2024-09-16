@@ -34,6 +34,6 @@ inline void Portal::Update()
 
 inline void Portal::Draw() 
 {
-	anim->Draw(x, y, Layer::MIDDLE);
+	anim->Draw(x, y, Layer::LOWER);
 }
 #endif // !_PORTAL_H

@@ -35,7 +35,7 @@ public:
 
 inline void Powerup::Draw()
 {
-	anim->Draw(x, y, Layer::UPPER);
+	anim->Draw(x, y, Layer::LOWER);
 }
 
 

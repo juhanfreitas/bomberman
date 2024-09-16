@@ -1,14 +1,16 @@
 #include "Explosion.h"
+#include "Bomberman.h"
 #include "Stage1.h"
 #include "Powerup.h"
 #include <iostream>
 
 Explosion::Explosion(float posX, float posY, ExplosionPart part)
 {
-	frames = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
-	anim = new Animation(frames, 0.090f, false);
+	type = ObjTypes::EXPLOSION;
 
-	type = EXPLOSION;
+	frames = Bomberman::tiles->GetTilesOf(TilesType::TS_EXPLOSION);
+	//frames = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
+	anim = new Animation(frames, 0.090f, false);
 
 	uint baseSeq[5] = { 24, 25, 26, 27, 28 };
 	uint bodyVSeq[5] = { 36, 37, 38, 39, 40 };
@@ -36,14 +38,13 @@ Explosion::Explosion(float posX, float posY, ExplosionPart part)
 Explosion::~Explosion()
 {
 	delete anim;
-	delete frames;
 }
 
 void Explosion::Update()
 {
 	anim->NextFrame();
 	if (anim->Inactive())
-		Stage1::scene->Delete(this, MOVING);
+		Stage1::scene->Delete();
 }
 
 void Explosion::OnCollision(Object * obj) {
@@ -58,7 +59,7 @@ void Explosion::OnCollision(Object * obj) {
 	case BLOCK:
 		Block* blk;
 		blk = static_cast<Block*>(obj);
-		blk->ChangeState(EXPLODING);
+		blk->ChangeState(BlockState::EXPLODING);
 		break;
 	}
 }

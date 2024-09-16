@@ -13,6 +13,8 @@ class Building : public Object
 private:
 	Sprite* building;
 	Sprite* shadow;
+	bool hasShadow = true;
+
 public:
 	Building(float x, float y);
 	~Building();
@@ -24,7 +26,7 @@ public:
 inline void Building::Draw()
 {
 	building->Draw(x, y, Layer::MIDDLE);
-	if (shadow != nullptr)
+	if (hasShadow)
 		shadow->Draw(x, y + 16, Layer::LOWER);
 }
 

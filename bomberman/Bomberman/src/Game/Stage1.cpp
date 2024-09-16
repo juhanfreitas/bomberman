@@ -115,9 +115,6 @@ void Stage1::CreateWalls()
             }
         }
     }
-    //backg->backGrid[1][2] = false;
-    //backg->backGrid[1][3] = false;
-    //backg->backGrid[2][2] = false;
     backg->OccupyGridPosition(1,2, WLL);
     backg->OccupyGridPosition(1,3, WLL);
     backg->OccupyGridPosition(2,2, WLL);
@@ -134,19 +131,12 @@ void Stage1::CreateExtraWalls()
         int numL = 4 + rand() % 8;
         int numC = 4 + rand() % 11;
 
-        //if (backg->backGrid[numL][numC])
         if (backg->CheckGridPosition(numL, numC, MPT))
         {
-            /*if ()
-            {
-
-            }*/
-
             float posX = numC * 16;
             float posY = (numL * 16) + 32;
             Building* build = new Building(posX, posY);
             scene->Add(build, STATIC);
-            //backg->backGrid[numL][numC] = false;
             backg->OccupyGridPosition(numL, numC, WLL);
         }
         else i--;
@@ -155,12 +145,6 @@ void Stage1::CreateExtraWalls()
 
 void Stage1::CreateBlocks()
 {
-    /*float posX = portal->X();
-    float posY = portal->Y();
-    Block* block = new Block(posX - 8, posY - 8);
-    scene->Add(block, STATIC);
-    backg->OccupyGridPosition(posX, posY);*/
-
     srand(static_cast<uint>(time(0)));
 
     for (auto i = 0; i < 39; i++)
@@ -168,8 +152,6 @@ void Stage1::CreateBlocks()
         int numLine = 1 + rand() % 11;
         int numColm = 2 + rand() % 13;
 
-
-        //if (backg->backGrid[numLine][numColm])
         if (backg->CheckGridPosition(numLine, numColm, MPT))
         {
             float posX = numColm * 16;
@@ -182,14 +164,10 @@ void Stage1::CreateBlocks()
                 Powerup* powerup = new Powerup(posX, posY, (PowerUpType)i);
                 scene->Add(powerup, STATIC);
             }
-            //backg->backGrid[numLine][numColm] = false;
             backg->OccupyGridPosition(numLine, numColm, FillType::BLK);
         }
         else i--;
     }
-    //backg->backGrid[1][2] = true;
-    //backg->backGrid[1][3] = true;
-    //backg->backGrid[2][2] = true;
     backg->ClearGridPosition(1, 2);
     backg->ClearGridPosition(1, 3);
     backg->ClearGridPosition(2, 2);
@@ -206,7 +184,6 @@ void Stage1::CreatePortal()
         numLine = 1 + rand() % 11;
         numColm = 2 + rand() % 13;
 
-        //if (backg->backGrid[numLine][numColm])
         if (backg->CheckGridPosition(numLine, numColm, MPT))
         {
             float posX = numColm * 16;
@@ -216,7 +193,6 @@ void Stage1::CreatePortal()
 
             Block* block = new Block(posX, posY);
             scene->Add(block, STATIC);
-            //backg->backGrid[numLine][numColm] = false;
             backg->OccupyGridPosition(posX, posY, FillType::PTL);
         }
         else i--;

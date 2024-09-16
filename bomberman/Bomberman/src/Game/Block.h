@@ -23,6 +23,7 @@ private:
 	Animation * anim;
 	BlockState blkState;
 	Sprite * shadow;
+	bool hasShadow = true;
 
 public:
 
@@ -37,8 +38,8 @@ public:
 inline void Block::Draw()
 {
 	anim->Draw(x, y, Layer::MIDDLE);
-	if (shadow != nullptr) 
-		shadow->Draw(x, y, Layer::LOWER);
+	if (hasShadow) 
+		shadow->Draw(x, y + 16, Layer::LOWER);
 }
 
 inline void Block::ChangeState(BlockState state)

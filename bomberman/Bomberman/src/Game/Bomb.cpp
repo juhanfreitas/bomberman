@@ -1,5 +1,6 @@
 #include "Bomb.h"
 #include "Stage1.h"
+#include "Bomberman.h"
 
 
 Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint power)
@@ -10,10 +11,11 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	bombKicked = false;
 	int gridX = (int)(playerX / 16);
 	int gridY = (int)((playerY + 8 - 32) / 16);
-	bombs = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
+	bombs = Bomberman::tiles->GetTilesOf(TS_BOMB);
+	//bombs = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(bombs, 0.250f, true);
 
-	type = BOMB;
+	type = ObjTypes::BOMB;
 	fuseTime = 3.0f;
 	state = FUSING;
 
@@ -27,13 +29,13 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	anim->Add(R_BOMB, redBomb, 4);
 	anim->Add(TIMED, timedBomb, 2);
 
-	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + 32, Layer::UPPER);
+	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + 32);
 }
 
 Bomb::~Bomb()
 {
 	delete anim;
-	delete bombs;
+	//delete bombs;
 }
 
 void Bomb::CheckPlayerPosition()
@@ -87,14 +89,7 @@ void Bomb::Explode()
 
 
 void Bomb::OnCollision(Object* obj)
-{
-	Rect* objBox = (Rect*)obj->BBox();
-	Rect* bmbBox = (Rect*)BBox();
-	float diffUp = objBox->Top() - bmbBox->Bottom();
-	float diffDn = bmbBox->Top() - objBox->Bottom();
-	float diffLt = objBox->Left() - bmbBox->Right();
-	float diffRt = bmbBox->Left() - objBox->Right();
-	
+{	
 	switch (obj->Type())
 	{
 	case EXPLOSION:
