@@ -906,6 +906,7 @@ bool Renderer::Initialize(Window * window, Graphics * graphics)
     float xScale = (graphics->viewport.Width  > 0) ? 2.0f / graphics->viewport.Width : 0.0f;
     float yScale = (graphics->viewport.Height > 0) ? 2.0f / graphics->viewport.Height : 0.0f;
 
+    // dobra a escala em ambos os eixos
     xScale *= 2.0f;
     yScale *= 2.0f;
     

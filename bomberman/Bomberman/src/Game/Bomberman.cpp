@@ -20,7 +20,7 @@ Player*     Bomberman::player = nullptr;
 Audio*      Bomberman::audio = nullptr;
 Scoreboard* Bomberman::scoreboard = nullptr;
 float       Bomberman::timeLimit = 0;
-float       Bomberman::screenScale = 2.0f;
+float       Bomberman::screenScale = 2.0f;          // define a escala inicial
 float       Bomberman::MUSVolume = 0.8f;
 float       Bomberman::SEVolume = 0.8f;
 bool        Bomberman::viewBBox = false;
@@ -68,6 +68,19 @@ void Bomberman::Update()
     if (window->KeyPress(VK_F2))
         viewScene = !viewScene;
 
+    if (window->KeyPress(VK_PRIOR)) {
+        if (screenScale < 5.0f) {
+            screenScale += 1.0f;
+            window->Size(272 * screenScale, 240 * screenScale);
+        }
+    }
+    if (window->KeyPress(VK_NEXT)) {
+        if (screenScale > 1.0f){
+            screenScale -= 1.0f;
+            window->Size(272 * screenScale, 240 * screenScale);
+        }
+    }
+
     level->Update();
 
 }
@@ -103,7 +116,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     // configura a engine
     engine->window->Mode(WINDOWED);
-    engine->window->Size(544, 480);
+    engine->window->Size(272 * Bomberman::screenScale, 240 * Bomberman::screenScale);
     engine->window->Color(0, 0, 0);
     engine->window->Title("Bomberman");
     engine->window->Icon(IDI_ICON);

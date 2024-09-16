@@ -74,6 +74,8 @@ void Window::Size(int width, int height)
     // ajusta a posição da janela para o centro da tela
     windowPosX = GetSystemMetrics(SM_CXSCREEN)/2 - windowWidth/2;
     windowPosY = GetSystemMetrics(SM_CYSCREEN)/2 - windowHeight/2;
+
+    SetWindowPos(windowHandle, HWND_TOP, windowPosX, windowPosY, width, height, SWP_SHOWWINDOW);
 }
 
 // -------------------------------------------------------------------------------
