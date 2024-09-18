@@ -80,7 +80,6 @@ void Player::Reset()
     ClearPowerUps();
     MoveTo(40, 48);
     stateBuffer.clear();
-    bombStack.clear();
     stateBuffer.push_front(STILL);
     anim->ChangeLoop(true);
 }
@@ -101,7 +100,7 @@ void Player::Update()
         CreateBomb(bombType);
     }
     // denota a bomba
-    if ((bombType == TIMED) && (window->KeyPress('D')))
+    if (window->KeyPress('D'))
         DetonateBombs();
 
 
@@ -281,8 +280,11 @@ void Player::DetonateBombs()
 {
     if (!bombStack.empty()) {
         Bomb * recentBomb = bombStack.front();
-        bombStack.pop_front();
-        recentBomb->Explode();
+        if (recentBomb->bombMode == TIMED)
+        {
+            bombStack.pop_front();
+            recentBomb->Explode();
+        }
     }
 }
 
@@ -325,17 +327,17 @@ void Player::OnCollision(Object* obj)
         break;
     // --------------------------------------------------------------------------------------------
     case POWERUPS:
-
-        Rect* objBox = (Rect*)obj->BBox();
-        Rect* plrBox = (Rect*)BBox();
-        
-        int diffX = abs(plrBox->Left() - objBox->Left());
-        int diffY = abs(plrBox->Top() - objBox->Top());
-
-        if ((diffX == 0 && diffY <= 8) || (diffY == 0 && diffX <= 8))
+        Powerup* pwr = dynamic_cast<Powerup*>(obj);
+        if (pwr->visible)
         {
-            Powerup* pwr = dynamic_cast<Powerup*>(obj);
-            pwr->PowerUpActions(this);
+            Rect* objBox = (Rect*)obj->BBox();
+            Rect* plrBox = (Rect*)BBox();
+        
+            int diffX = abs(plrBox->Left() - objBox->Left());
+            int diffY = abs(plrBox->Top() - objBox->Top());
+
+            if ((diffX == 0 && diffY <= 8) || (diffY == 0 && diffX <= 8))
+                pwr->PowerUpActions(this);
         }
         break;
     // --------------------------------------------------------------------------------------------
@@ -358,11 +360,12 @@ void Player::DefaultCollision(Object* obj)
     // colisão pela esquerda
     if (diffLt <= 0 && diffLt >= -1)
     {
+        // offset em cima
         if ((diffUp >= -4 && diffUp <= 0))
         {
             if (stateBuffer.front() == WALKRIGHT)
                 MoveTo(x, y + diffUp);
-        }
+        }// offset em baixo
         else if ((diffDn >= -4 && diffDn <= 0))
         {
             if (stateBuffer.front() == WALKRIGHT)
@@ -373,12 +376,12 @@ void Player::DefaultCollision(Object* obj)
 
     // colisão por cima
     if (diffUp <= 0 && diffUp >= -1)
-    {
+    {   // offset pela esquerda
         if (diffLt >= -4 && diffLt <= 0)
         {
             if (stateBuffer.front() == WALKDOWN)
                 MoveTo(x + diffLt, y);
-        }
+        }// offset pela direita
         else if (diffRt >= -4 && diffRt <= 0)
         {
             if (stateBuffer.front() == WALKDOWN)
@@ -389,12 +392,12 @@ void Player::DefaultCollision(Object* obj)
 
     // colisão pela direita
     if (diffRt <= 0 && diffRt >= -1)
-    {
+    {   // offset em cima
         if (diffUp >= -4 && diffUp <= 0)
         {
             if (stateBuffer.front() == WALKLEFT)
                 MoveTo(x, y + diffUp);
-        }
+        }// offset em baixo
         else if (diffDn >= -4 && diffDn <= 0)
         {
             if (stateBuffer.front() == WALKLEFT)
@@ -405,12 +408,12 @@ void Player::DefaultCollision(Object* obj)
 
     // colisão por baixo
     if (diffDn <= 0 && diffDn >= -1)
-    {
+    {   // offset pela esquerda
         if (diffLt >= -4 && diffLt <= 0)
         {
             if (stateBuffer.front() == WALKUP)
                 MoveTo(x + diffLt, y);
-        }
+        }// offset pela direita
         else if (diffRt >= -4 && diffRt <= 0)
         {
             if (stateBuffer.front() == WALKUP)

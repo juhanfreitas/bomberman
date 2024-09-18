@@ -9,7 +9,7 @@
 using std::unordered_map;
 using TilesHashTable = unordered_map<uint, TileSet*>;
 
-enum TilesType { TS_BLOCK, TS_BOMB, TS_EXPLOSION, TS_POWERUP };
+enum TilesType { TS_BLOCK, TS_BOMB, TS_EXPLOSION, TS_PORTAL, TS_POWERUP };
 
 class TilesManager
 {

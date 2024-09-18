@@ -13,14 +13,13 @@ class Powerup : public Object
 {
 private:
 	TileSet* powerUps;
-	TileSet* explosion;
 	Animation* anim;
 	Timer visibleTime;
-	uint PWRXPLD = 0;
+	uint powerXPD = 100;
 	
 public:
-	bool destroy_collect;
-	bool exploded;
+	bool visible = false;
+	bool exploded = false;
 	PowerUpType powerType;
 
 	Powerup(float x, float y, PowerUpType pType);
@@ -35,7 +34,8 @@ public:
 
 inline void Powerup::Draw()
 {
-	anim->Draw(x, y, Layer::LOWER);
+	if (visible)
+		anim->Draw(x, y, Layer::LOWER);
 }
 
 

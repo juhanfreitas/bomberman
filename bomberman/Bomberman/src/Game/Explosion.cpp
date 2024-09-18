@@ -9,16 +9,15 @@ Explosion::Explosion(float posX, float posY, ExplosionPart part)
 	type = ObjTypes::EXPLOSION;
 
 	frames = Bomberman::tiles->GetTilesOf(TilesType::TS_EXPLOSION);
-	//frames = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(frames, 0.090f, false);
 
-	uint baseSeq[5] = { 24, 25, 26, 27, 28 };
-	uint bodyVSeq[5] = { 36, 37, 38, 39, 40 };
-	uint bodyHSeq[5] = { 48, 49, 50, 51, 52 };
-	uint tipUpSeq[5] = { 60, 61, 62, 63, 64 };
-	uint tipDnSeq[5] = { 72, 73, 74, 75, 76 };
-	uint tipRtSeq[5] = { 84, 85, 86, 87, 88 };
-	uint tipLtSeq[5] = { 96, 97, 98, 99, 100};
+	uint baseSeq[5] = { 0, 1, 2, 3, 4 };
+	uint bodyVSeq[5] = { 5, 6, 7, 8, 9 };
+	uint bodyHSeq[5] = { 10, 11, 12, 13, 14 };
+	uint tipUpSeq[5] = { 15, 16, 17, 18, 19 };
+	uint tipDnSeq[5] = { 20, 21, 22, 23, 24 };
+	uint tipRtSeq[5] = { 25, 26, 27, 28, 29 };
+	uint tipLtSeq[5] = { 30, 31, 32, 33, 34 };
 
 	anim->Add(BASE,		baseSeq,	5);
 	anim->Add(BODY_V,	bodyVSeq,	5);

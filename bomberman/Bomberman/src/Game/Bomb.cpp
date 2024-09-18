@@ -12,7 +12,6 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	int gridX = (int)(playerX / 16);
 	int gridY = (int)((playerY + 8 - 32) / 16);
 	bombs = Bomberman::tiles->GetTilesOf(TS_BOMB);
-	//bombs = new TileSet("Resources/bombs.png", 16, 16, 12, 120);
 	anim = new Animation(bombs, 0.250f, true);
 
 	type = ObjTypes::BOMB;
@@ -22,8 +21,8 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	timer.Start();
 
 	uint normalBomb[4] = { 0, 1, 2, 3 };
-	uint redBomb[4] = { 12, 13, 14, 15 };
-	uint timedBomb[2] = { 10, 11 };
+	uint redBomb[4] = { 9, 10, 11, 12};
+	uint timedBomb[2] = { 5, 6 };
 
 	anim->Add(NORMAL, normalBomb, 4);
 	anim->Add(R_BOMB, redBomb, 4);
@@ -35,7 +34,6 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 Bomb::~Bomb()
 {
 	delete anim;
-	//delete bombs;
 }
 
 void Bomb::CheckPlayerPosition()
@@ -94,6 +92,33 @@ void Bomb::OnCollision(Object* obj)
 	{
 	case EXPLOSION:
 		Explode();
+		break;
+	case BOMB:
+		Rect* bmbBox = (Rect*)obj->BBox();
+		Rect* thisBox = (Rect*)BBox();
+		float diffUp = bmbBox->Top() - thisBox->Bottom();
+		float diffDn = thisBox->Top() - bmbBox->Bottom();
+		float diffLt = bmbBox->Left() - thisBox->Right();
+		float diffRt = thisBox->Left() - bmbBox->Right();
+
+		// colisão pela esquerda
+		if (diffLt <= 0 && diffLt >= -3)
+			obj->MoveTo(x + 16, y);
+		
+		// colisão por cima
+		if (diffUp <= 0 && diffUp >= -3)
+			obj->MoveTo(x, y + 16);
+		
+		// colisão pela direita
+		if (diffRt <= 0 && diffRt >= -3)
+			obj->MoveTo(x - 16, y);
+		
+		// colisão por baixo
+		if (diffDn <= 0 && diffDn >= -3)
+			obj->MoveTo(x, y - 16);
+
+		Bomb* bomb = dynamic_cast<Bomb*>(obj);
+		bomb->bombKicked = false;
 		break;
 	}
 }

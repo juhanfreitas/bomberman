@@ -1,4 +1,5 @@
 #include "Portal.h"
+#include "Stage1.h"
 #include "Enums.h"
 
 Portal::Portal(float x, float y)
@@ -12,7 +13,6 @@ Portal::Portal(float x, float y)
 	
 	anim->Select(0);
 
-	BBox(new Rect(-8,-8,8,8));
 	MoveTo(x+8, y+8);
 }
 
@@ -20,4 +20,17 @@ Portal::~Portal()
 {
 	delete anim;
 	delete frames;
+}
+
+void Portal::Update()
+{
+	if (Stage1::backg->CheckGridPosition(x, y, MPT))
+	{
+		BBox(new Rect(-8,-8,8,8));
+		Stage1::backg->OccupyGridPosition(x, y, PTL);
+		visible = true;
+	}
+
+	anim->Select(0);
+	anim->NextFrame();
 }

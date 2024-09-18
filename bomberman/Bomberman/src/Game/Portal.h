@@ -17,6 +17,7 @@ private:
 
 public:
 	bool canPass = false;
+	bool visible = false;
 
 	Portal(float x, float y);
 	~Portal();
@@ -25,15 +26,9 @@ public:
 	void Draw();
 };
 
-
-inline void Portal::Update()
-{
-	anim->Select(0);
-	anim->NextFrame();
-}
-
 inline void Portal::Draw() 
 {
-	anim->Draw(x, y, Layer::LOWER);
+	if (visible)
+		anim->Draw(x, y, Layer::LOWER);
 }
 #endif // !_PORTAL_H

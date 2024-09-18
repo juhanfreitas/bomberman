@@ -6,7 +6,6 @@ Block::Block(float x, float y)
 {
 	type = ObjTypes::BLOCK;
 	blockTiles = Bomberman::tiles->GetTilesOf(TS_BLOCK);
-	//blockTiles = new TileSet("Resources/stage/block1.png", 16, 16, 7, 14);
 	shadow = new Sprite("Resources/stage/block1_shadow.png");
 	anim = new Animation(blockTiles, .150f, true);
 	blkState = BlockState::DEFAULT;
@@ -26,14 +25,13 @@ Block::~Block()
 {
 	delete shadow;
 	delete anim;
-	//delete blockTiles;
 }
 
 void Block::Update()
 {
-	if ((y >= 16 * 13) || !(Stage1::backg->CheckGridPosition(x, y + 16, MPT)))
-		hasShadow = false;
-	else hasShadow = true;
+	if (Stage1::backg->CheckGridPosition(x, y + 16, MPT))
+		hasShadow = true;
+	else hasShadow = false;
 
 	if (blkState == BlockState::DEFAULT)
 		anim->ChangeLoop(true);

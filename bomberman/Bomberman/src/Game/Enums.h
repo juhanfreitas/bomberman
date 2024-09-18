@@ -41,11 +41,11 @@
 
     enum BlockState { DEFAULT, EXPLODING };
     enum FillType { 
-        MPT, 
-        PWR, 
-        PTL, 
-        BLK, 
-        WLL 
+        MPT, // empty  
+        PWR, // powerup
+        PTL, // portal
+        BLK, // block
+        WLL  // wall
     };
 
     enum ExplosionPart { 

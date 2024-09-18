@@ -105,7 +105,6 @@ void Stage1::CreateWalls()
     {
         for (auto j = 2; j < 15; j++)
         {
-            //if (!backg->backGrid[i][j])
             if (backg->CheckGridPosition(i, j, WLL))
             {
                 float posX = j * 16.0f;
@@ -133,6 +132,15 @@ void Stage1::CreateExtraWalls()
 
         if (backg->CheckGridPosition(numL, numC, MPT))
         {
+            if (numC % 2 == 0)
+            {
+                if (!(backg->CheckGridPosition(numL - 2, numC, MPT)) ||
+                    !(backg->CheckGridPosition(numL + 2, numC, MPT)))
+                {
+                    i--;
+                    continue;
+                }
+            }
             float posX = numC * 16;
             float posY = (numL * 16) + 32;
             Building* build = new Building(posX, posY);
@@ -193,7 +201,7 @@ void Stage1::CreatePortal()
 
             Block* block = new Block(posX, posY);
             scene->Add(block, STATIC);
-            backg->OccupyGridPosition(posX, posY, FillType::PTL);
+            backg->OccupyGridPosition(posX, posY, FillType::BLK);
         }
         else i--;
     }
