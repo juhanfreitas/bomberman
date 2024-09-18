@@ -126,6 +126,16 @@ void Audio::Volume(uint id, float level)
     selected->voices[selected->index]->SetVolume(level);
 }
 
+float Audio::Volume(uint id)
+{
+    Sound* selected = soundTable[id];
+
+    float volume = 1.0f;
+    selected->voices[selected->index]->GetVolume(&volume);
+
+    return volume;
+}
+
 // ---------------------------------------------------------------------------------
 
 void Audio::Frequency(uint id, float level)
@@ -144,3 +154,35 @@ void Audio::Frequency(uint id, float level)
 
 // ---------------------------------------------------------------------------------
 
+bool Audio::Playing(uint id)
+{
+    // recupera som da tabela
+    Sound* selected = soundTable[id];
+
+    // Verifica o estado de todas as vozes associadas ao som
+    for (uint i = 0; i < selected->tracks; ++i)
+    {
+        XAUDIO2_VOICE_STATE state;
+        selected->voices[i]->GetState(&state);
+
+        if (state.BuffersQueued > 0)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// ---------------------------------------------------------------------------------
+
+void Audio::Resume(uint id)
+{
+    // recupera som da tabela
+    Sound* selected = soundTable[id];
+
+    selected->voices[selected->index]->Start();
+
+    // seleciona nova trilha para reprodução do próximo som
+    selected->index = (selected->index + 1) % selected->tracks;
+}
