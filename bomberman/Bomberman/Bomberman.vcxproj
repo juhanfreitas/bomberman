@@ -171,6 +171,7 @@
     <ClCompile Include="src\Engine\Audio.cpp" />
     <ClCompile Include="src\Engine\Font.cpp" />
     <ClCompile Include="src\Engine\Sound.cpp" />
+    <ClCompile Include="src\Game\AudioManager.cpp" />
     <ClCompile Include="src\Game\Background.cpp" />
     <ClCompile Include="src\Game\Block.cpp" />
     <ClCompile Include="src\Game\Bomb.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="src\Engine\Audio.h" />
     <ClInclude Include="src\Engine\Font.h" />
     <ClInclude Include="src\Engine\Sound.h" />
+    <ClInclude Include="src\Game\AudioManager.h" />
     <ClInclude Include="src\Game\Background.h" />
     <ClInclude Include="src\Game\Block.h" />
     <ClInclude Include="src\Game\Bomb.h" />

@@ -29,8 +29,8 @@ void Home::Init()
     screenBorder = 15 * Bomberman::screenScale;
 
     // inicia tocando uma música 
-    Bomberman::audio->Play(MUS_TITLE, true);
-    Bomberman::audio->Volume(MUS_TITLE, Bomberman::MUSVolume);
+    Bomberman::audioManager->Play(MUS_TITLE, true);
+    Bomberman::audioManager->Volume(MUS_TITLE, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
@@ -51,10 +51,14 @@ void Home::Update()
 
     // avança com pressionamento do ENTER
     if (window->KeyPress(VK_RETURN)) {
-        Bomberman::audio->Play(SE_SELECT);
-        Bomberman::audio->Volume(SE_SELECT, Bomberman::SEVolume);
-        Bomberman::NextLevel<Stage1>();
+        Bomberman::audioManager->FadeOut(MUS_TITLE, 2.5f);
+        Bomberman::audioManager->Play(SE_SELECT);
+        Bomberman::audioManager->Volume(SE_SELECT, Bomberman::SEVolume);
+        readyForNextLevel = true;
     }
+
+    if (!Bomberman::audioManager->Playing(SE_SELECT) && readyForNextLevel)
+        Bomberman::NextLevel<Stage1>();
 }
 
 // ------------------------------------------------------------------------------
@@ -75,7 +79,7 @@ void Home::Draw()
 
 void Home::Finalize()
 {
-    Bomberman::audio->Stop(MUS_TITLE);
+    Bomberman::audioManager->Stop(MUS_TITLE);
     delete sky;
     delete title;
 }

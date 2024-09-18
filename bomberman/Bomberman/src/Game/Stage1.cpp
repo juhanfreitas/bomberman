@@ -33,9 +33,9 @@ void Stage1::Init()
 
     Bomberman::player->Reset();
 
-    Bomberman::audio->Frequency(MUS_WORLD1, 1.0f);
-    Bomberman::audio->Volume(MUS_WORLD1, Bomberman::MUSVolume);
-    Bomberman::audio->Play(MUS_WORLD1, true);
+    Bomberman::audioManager->Frequency(MUS_WORLD1, 1.0f);
+    Bomberman::audioManager->Volume(MUS_WORLD1, Bomberman::MUSVolume);
+    Bomberman::audioManager->Play(MUS_WORLD1, true);
 }
 
 // ------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ void Stage1::Update()
 
     // acelera a musica quando faltar 30 segundos
     if (timer.Elapsed(Bomberman::timeLimit - 30.0f))
-        Bomberman::audio->Frequency(MUS_WORLD1, 1.3f);
+        Bomberman::audioManager->Frequency(MUS_WORLD1, 1.3f);
 
     // toca um sinal de aviso quando o tempo esta acabando
     if (timer.Elapsed(Bomberman::timeLimit))
@@ -56,18 +56,15 @@ void Stage1::Update()
         timeUp = true;
         timer.Reset();
         Bomberman::player->Die(LOSING);
-        Bomberman::audio->Play(SE_TIMER);
+        Bomberman::audioManager->Play(SE_TIMER);
     }
 
     // encerra o jogo ao encerrar o tempo
-    if (timer.Elapsed(2.5f) && timeUp && Bomberman::player->IsAlive())
+    if (!Bomberman::audioManager->Playing(SE_TIMER) && timeUp && Bomberman::player->IsAlive())
         Bomberman::NextLevel<Stage1>();
 
     // verifica situações de game over
-    else if (!timeUp && !Bomberman::player->IsAlive()) {
-        Bomberman::NextLevel<GameOver>();
-    }
-    else if (!Bomberman::player->IsAlive() && timeUp && timer.Elapsed(2.5f))
+    else if (!Bomberman::player->IsAlive() && (!timeUp || !Bomberman::audioManager->Playing(SE_TIMER)))
         Bomberman::NextLevel<GameOver>();
 
     // sai com o pressionar do ESC
@@ -102,7 +99,7 @@ void Stage1::Draw()
 
 void Stage1::Finalize()
 {
-    Bomberman::audio->Stop(MUS_WORLD1);
+    Bomberman::audioManager->Stop(MUS_WORLD1);
     Bomberman::player->Reset();
     scene->Remove(Bomberman::player, MOVING);
     scene->Remove(Bomberman::scoreboard, STATIC);

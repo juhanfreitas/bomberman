@@ -15,40 +15,25 @@
 #include "Bomberman.h"
 #include "Intro.h"
 
-Game*       Bomberman::level = nullptr;
-Player*     Bomberman::player = nullptr;
-Audio*      Bomberman::audio = nullptr;
-Scoreboard* Bomberman::scoreboard = nullptr;
-float       Bomberman::timeLimit = 0;
-float       Bomberman::screenScale = 2.0f;          // define a escala inicial
-float       Bomberman::MUSVolume = 0.8f;
-float       Bomberman::SEVolume = 0.8f;
-bool        Bomberman::viewBBox = false;
-bool        Bomberman::viewScene = true;
+Game*           Bomberman::level = nullptr;
+Player*         Bomberman::player = nullptr;
+AudioManager*   Bomberman::audioManager = nullptr;
+Scoreboard*     Bomberman::scoreboard = nullptr;
+float           Bomberman::timeLimit = 0;
+float           Bomberman::screenScale = 2.0f;          // define a escala inicial
+float           Bomberman::MUSVolume = 0.8f;
+float           Bomberman::SEVolume = 0.8f;
+bool            Bomberman::viewBBox = false;
+bool            Bomberman::viewScene = true;
 
 // -----------------------------------------------------------------------------
 
 void Bomberman::Init()
 {
-    audio = new Audio();
-
-    audio->Add(VO_INTRO, "Resources/Sounds/Voices/By Hudson.wav");
-
-    audio->Add(MUS_TITLE, "Resources/Sounds/Music/Title Theme.wav");
-    audio->Add(MUS_WORLD1, "Resources/Sounds/Music/World 1.wav");
-    audio->Add(MUS_GAMEOVER, "Resources/Sounds/Music/Game Over.wav");
-    audio->Add(MUS_PASSWORD, "Resources/Sounds/Music/Password.wav");
-    audio->Add(MUS_STAGESTART, "Resources/Sounds/Music/Stage Start.wav");
-    audio->Add(MUS_STAGECLEAR, "Resources/Sounds/Music/Stage Clear.wav");
-    
-    audio->Add(SE_TIMER, "Resources/Sounds/Sound Effects/Timer.wav");
-    audio->Add(SE_SELECT, "Resources/Sounds/Sound Effects/Menu Select.wav");
-    audio->Add(SE_BOMBEXPLOSION, "Resources/Sounds/Sound Effects/Bomb Explodes.wav");
-    audio->Add(SE_BOMBPLACE, "Resources/Sounds/Sound Effects/Place Bomb.wav");
-    audio->Add(SE_PLAYERDEATH, "Resources/Sounds/Sound Effects/Player Death.wav");
+    audioManager = new AudioManager();
 
     viewBBox = false;
-
+    
     timeLimit = 180.0f;
 
     player = new Player();
@@ -81,6 +66,8 @@ void Bomberman::Update()
         }
     }
 
+    audioManager->HandleAudio();
+
     level->Update();
 
 }
@@ -99,7 +86,7 @@ void Bomberman::Finalize()
     level->Finalize();
 
     delete player;
-    delete audio;
+    delete audioManager;
     delete level;
 }
 

@@ -102,8 +102,8 @@ void Player::Die()
     if (stateBuffer.front() != DYING) {
         stateBuffer.clear();
         stateBuffer.push_front(DYING);
-        Bomberman::audio->Play(SE_PLAYERDEATH);
-        Bomberman::audio->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
+        Bomberman::audioManager->Play(SE_PLAYERDEATH);
+        Bomberman::audioManager->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
         anim->ChangeLoop(false);
     }
 }
@@ -119,8 +119,8 @@ void Player::Die(uint type)
     {
     case DYING:
         stateBuffer.push_front(DYING);
-        Bomberman::audio->Play(SE_PLAYERDEATH);
-        Bomberman::audio->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
+        Bomberman::audioManager->Play(SE_PLAYERDEATH);
+        Bomberman::audioManager->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
         anim->ChangeLoop(false);
         break;
     case LOSING:
@@ -314,8 +314,8 @@ void Player::CreateBomb(BombType bombType)
 {
     if (availableBombs > 0) {
         availableBombs -= 1;
-        Bomberman::audio->Play(SE_BOMBPLACE);
-        Bomberman::audio->Volume(SE_BOMBPLACE, Bomberman::SEVolume);
+        Bomberman::audioManager->Play(SE_BOMBPLACE);
+        Bomberman::audioManager->Volume(SE_BOMBPLACE, Bomberman::SEVolume);
         Bomb* bomb = new Bomb(bombType, x, y, bombPower);
         Stage1::scene->Add(bomb, STATIC);
         bombStack.push_back(bomb);

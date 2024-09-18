@@ -23,8 +23,8 @@ void Intro::Init()
     timer.Start();
 
     // inicia tocando uma música 
-    Bomberman::audio->Play(VO_INTRO);
-    Bomberman::audio->Volume(VO_INTRO, Bomberman::MUSVolume);
+    Bomberman::audioManager->Play(VO_INTRO);
+    Bomberman::audioManager->Volume(VO_INTRO, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ void Intro::Update()
         window->Close();
 
     // avança ao fim do som
-    if (timer.Elapsed(1))
+    if (Bomberman::audioManager->Playing(VO_INTRO))
         Bomberman::NextLevel<Home>();
 }
 

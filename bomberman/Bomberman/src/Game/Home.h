@@ -38,6 +38,8 @@ private:
     float yT = 0;
     float screenBorder = 0;
 
+    bool readyForNextLevel = false;
+
 public:
     void Init();                    // inicialização
     void Update();                  // atualização

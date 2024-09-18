@@ -15,32 +15,17 @@
 // ---------------------------------------------------------------------------------
 // Inclusões
 
-#include "../Engine/Audio.h"
 #include "../Engine/Font.h"
 #include "../Engine/Game.h"
 #include "../Engine/Sprite.h"
 #include "../Engine/Scene.h"
 #include "../Engine/Timer.h"
+#include "AudioManager.h"
 #include "Background.h"
 #include "Player.h"
 #include "Scoreboard.h"
 
 // ------------------------------------------------------------------------------
-
-enum Sounds {
-    VO_INTRO,
-    MUS_TITLE,
-    MUS_STAGESTART,
-    MUS_STAGECLEAR,
-    MUS_WORLD1,
-    MUS_GAMEOVER,
-    MUS_PASSWORD,
-    SE_SELECT,
-    SE_TIMER,
-    SE_BOMBEXPLOSION,
-    SE_BOMBPLACE,
-    SE_PLAYERDEATH
-};
 
 enum ObjTypes { 
     PLAYER,
@@ -62,7 +47,7 @@ private:
 
 public:
     static Player * player;
-    static Audio * audio;
+    static AudioManager * audioManager;
     static Scoreboard * scoreboard;
     static bool viewBBox;
     static bool viewScene;

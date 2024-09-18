@@ -45,8 +45,8 @@ void GameOver::Init()
     yPos = (window->CenterY() + 2.5f * bombermanAsset->Height()) / Bomberman::screenScale;
 
     // inicia tocando uma música 
-    Bomberman::audio->Play(MUS_GAMEOVER, true);
-    Bomberman::audio->Volume(MUS_GAMEOVER, Bomberman::MUSVolume);
+    Bomberman::audioManager->Play(MUS_GAMEOVER, true);
+    Bomberman::audioManager->Volume(MUS_GAMEOVER, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ void GameOver::Draw()
 
 void GameOver::Finalize()
 {
-    Bomberman::audio->Stop(MUS_GAMEOVER);
+    Bomberman::audioManager->Stop(MUS_GAMEOVER);
     delete bgImage;
     delete bombermanAsset;
     delete assetAnimation;
