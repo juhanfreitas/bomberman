@@ -37,7 +37,7 @@ void Intro::Update()
         window->Close();
 
     // avança ao fim do som
-    if (Bomberman::audioManager->Playing(VO_INTRO))
+    if (timer.Elapsed(1))
         Bomberman::NextLevel<Home>();
 }
 
