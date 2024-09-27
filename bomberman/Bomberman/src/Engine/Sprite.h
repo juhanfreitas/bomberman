@@ -72,8 +72,8 @@ class Sprite
 {
 private:
     SpriteData sprite;              // dados do sprite 
-    bool localImage;                // imagem local ou externa
     const Image * image;            // ponteiro para uma imagem
+    bool localImage;                // imagem local ou externa
 
 public:
     Sprite(string filename);        // constroi sprite a partir de um arquivo

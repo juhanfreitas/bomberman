@@ -1,6 +1,6 @@
 /**********************************************************************************
 // Sound (Código Fonte)
-//
+// 
 // Criação:     14 Out 2011
 // Atualização: 28 Ago 2023
 // Compilador:  Visual C++ 2022
@@ -31,7 +31,7 @@ Sound::Sound(string fileName, uint nTracks)
     index = 0;
 
     // vetor de ponteiros para vozes
-    voices = new IXAudio2SourceVoice * [tracks] {nullptr};
+    voices = new IXAudio2SourceVoice*[tracks] {nullptr};
 
     // abre o arquivo de som para leitura
     HANDLE hFile = CreateFile(fileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
@@ -53,7 +53,7 @@ Sound::Sound(string fileName, uint nTracks)
 
     // localiza o bloco 'data' e lê seu conteúdo para o registro XAUDIO2_BUFFER
     FindChunk(hFile, fourccDATA, dwChunkSize, dwChunkPosition);
-    BYTE* pDataBuffer = new BYTE[dwChunkSize];
+    BYTE * pDataBuffer = new BYTE[dwChunkSize];
     ReadChunkData(hFile, pDataBuffer, dwChunkSize, dwChunkPosition);
 
     // preenche o registro XAUDIO2_BUFFER
@@ -69,17 +69,17 @@ Sound::Sound(string fileName, uint nTracks)
 
 Sound::~Sound()
 {
-    delete[] buffer.pAudioData;
-    delete[] voices;
+    delete [] buffer.pAudioData;    
+    delete [] voices;
 }
 
 // ---------------------------------------------------------------------------------
 
-HRESULT Sound::FindChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, DWORD& dwChunkDataPosition)
+HRESULT Sound::FindChunk(HANDLE hFile, DWORD fourcc, DWORD & dwChunkSize, DWORD & dwChunkDataPosition)
 {
     HRESULT hr = S_OK;
-    if (INVALID_SET_FILE_POINTER == SetFilePointer(hFile, 0, NULL, FILE_BEGIN))
-        return HRESULT_FROM_WIN32(GetLastError());
+    if( INVALID_SET_FILE_POINTER == SetFilePointer( hFile, 0, NULL, FILE_BEGIN ) )
+        return HRESULT_FROM_WIN32( GetLastError() );
 
     DWORD dwChunkType;
     DWORD dwChunkDataSize;
@@ -91,28 +91,28 @@ HRESULT Sound::FindChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, DWORD& 
     while (hr == S_OK)
     {
         DWORD dwRead;
-        if (0 == ReadFile(hFile, &dwChunkType, sizeof(DWORD), &dwRead, NULL))
-            hr = HRESULT_FROM_WIN32(GetLastError());
+        if( 0 == ReadFile( hFile, &dwChunkType, sizeof(DWORD), &dwRead, NULL ) )
+            hr = HRESULT_FROM_WIN32( GetLastError() );
 
-        if (0 == ReadFile(hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, NULL))
-            hr = HRESULT_FROM_WIN32(GetLastError());
+        if( 0 == ReadFile( hFile, &dwChunkDataSize, sizeof(DWORD), &dwRead, NULL ) )
+            hr = HRESULT_FROM_WIN32( GetLastError() );
 
         switch (dwChunkType)
         {
         case fourccRIFF:
             dwRIFFDataSize = dwChunkDataSize;
             dwChunkDataSize = 4;
-            if (0 == ReadFile(hFile, &dwFileType, sizeof(DWORD), &dwRead, NULL))
-                hr = HRESULT_FROM_WIN32(GetLastError());
+            if( 0 == ReadFile( hFile, &dwFileType, sizeof(DWORD), &dwRead, NULL ) )
+                hr = HRESULT_FROM_WIN32( GetLastError() );
             break;
 
         default:
-            if (INVALID_SET_FILE_POINTER == SetFilePointer(hFile, dwChunkDataSize, NULL, FILE_CURRENT))
-                return HRESULT_FROM_WIN32(GetLastError());
+            if( INVALID_SET_FILE_POINTER == SetFilePointer( hFile, dwChunkDataSize, NULL, FILE_CURRENT ) )
+            return HRESULT_FROM_WIN32( GetLastError() );            
         }
 
         dwOffset += sizeof(DWORD) * 2;
-
+        
         if (dwChunkType == fourcc)
         {
             dwChunkSize = dwChunkDataSize;
@@ -121,26 +121,26 @@ HRESULT Sound::FindChunk(HANDLE hFile, DWORD fourcc, DWORD& dwChunkSize, DWORD& 
         }
 
         dwOffset += dwChunkDataSize;
-
+        
         if (bytesRead >= dwRIFFDataSize) return S_FALSE;
 
     }
 
-
+    
     return S_OK;
-
+    
 }
 
 // ---------------------------------------------------------------------------------
 
-HRESULT Sound::ReadChunkData(HANDLE hFile, void* buffer, DWORD buffersize, DWORD bufferoffset)
+HRESULT Sound::ReadChunkData(HANDLE hFile, void * buffer, DWORD buffersize, DWORD bufferoffset)
 {
     HRESULT hr = S_OK;
-    if (INVALID_SET_FILE_POINTER == SetFilePointer(hFile, bufferoffset, NULL, FILE_BEGIN))
-        return HRESULT_FROM_WIN32(GetLastError());
+    if( INVALID_SET_FILE_POINTER == SetFilePointer( hFile, bufferoffset, NULL, FILE_BEGIN ) )
+        return HRESULT_FROM_WIN32( GetLastError() );
     DWORD dwRead;
-    if (0 == ReadFile(hFile, buffer, buffersize, &dwRead, NULL))
-        hr = HRESULT_FROM_WIN32(GetLastError());
+    if( 0 == ReadFile( hFile, buffer, buffersize, &dwRead, NULL ) )
+        hr = HRESULT_FROM_WIN32( GetLastError() );
     return hr;
 }
 

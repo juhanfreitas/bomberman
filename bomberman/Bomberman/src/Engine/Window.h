@@ -2,7 +2,7 @@
 // Window (Arquivo de Cabeçalho)
 // 
 // Criação:     19 Mai 2007
-// Atualização: 23 Ago 2023
+// Atualização: 31 Ago 2023
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   A classe abstrai todos os detalhes de configuração de
@@ -50,6 +50,7 @@ private:
     static bool windowCtrl[256];                            // controle da liberação de teclas
     static int  windowMouseX;                               // posição do mouse eixo x
     static int  windowMouseY;                               // posição do mouse eixo y
+    static int  windowMouseWheel;                           // giro da roda do mouse
     
 public:
     Window();                                               // construtor de Window
@@ -73,11 +74,13 @@ public:
     void HideCursor(bool hide);                             // habilita ou desabilita a exbição do cursor
     void Close();                                           // fecha janela imediatamente
 
-    bool KeyDown(int vkcode);                               // verifica se uma tecla/botão está pressionado
-    bool KeyUp(int vkcode);                                 // verifica se uma tecla/botão está liberado
-    bool KeyPress(int vkcode);                              // registra um pressionamento por vez
-    int  MouseX();                                          // retorna posição x do mouse
-    int  MouseY();                                          // retorna posição y do mouse
+    bool  KeyDown(int vkcode);                              // verifica se uma tecla/botão está pressionado
+    bool  KeyUp(int vkcode);                                // verifica se uma tecla/botão está liberado
+    bool  KeyPress(int vkcode);                             // registra um pressionamento por vez
+
+    float MouseX();                                         // retorna posição x do mouse
+    float MouseY();                                         // retorna posição y do mouse
+    int   MouseWheel();                                     // retorna giro da roda do mouse
 
     COLORREF Color();                                       // retorna a cor de fundo da janela
     void Color(int r, int g, int b);                        // define a cor de fundo da janela
@@ -158,12 +161,16 @@ inline bool Window::KeyUp(int vkcode)
 { return !(windowKeys[vkcode]); }
 
 // retorna a posição do mouse no eixo x
-inline int Window::MouseX()
-{ return windowMouseX; }
+inline float Window::MouseX()
+{ return float(windowMouseX); }
 
 // retorna a posição do mouse no eixo y
-inline int Window::MouseY()
-{ return windowMouseY; }
+inline float Window::MouseY()
+{ return float(windowMouseY); }
+
+// retorna giro da roda do mouse
+inline int Window::MouseWheel()
+{ return windowMouseWheel; }
 
 // -----------------------------------------------------------
 

@@ -72,11 +72,8 @@
     <ClCompile Include="src\Engine\Window.cpp">
       <Filter>Engine\Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Bomberman.cpp">
-      <Filter>Game\Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Player.cpp">
-      <Filter>Game\Arquivos de Origem</Filter>
+    <ClCompile Include="src\Engine\Random.cpp">
+      <Filter>Engine\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Audio.cpp">
       <Filter>Engine\Arquivos de Origem</Filter>
@@ -86,6 +83,18 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Sound.cpp">
       <Filter>Engine\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Controller.cpp">
+      <Filter>Engine\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Vector.cpp">
+      <Filter>Engine\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Bomberman.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Player.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Scoreboard.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
@@ -173,15 +182,6 @@
     <ClInclude Include="src\Game\Resources.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Bomberman.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Player.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Scoreboard.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Audio.h">
       <Filter>Engine\Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -190,6 +190,24 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Sound.h">
       <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Random.h">
+      <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Controller.h">
+      <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Vector.h">
+      <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Bomberman.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Player.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Scoreboard.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\Intro.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>

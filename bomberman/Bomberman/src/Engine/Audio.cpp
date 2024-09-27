@@ -1,6 +1,6 @@
 /**********************************************************************************
 // Audio (Código Fonte)
-//
+// 
 // Criação:     14 Out 2011
 // Atualização: 28 Ago 2023
 // Compilador:  Visual C++ 2022
@@ -36,7 +36,7 @@ Audio::Audio()
 Audio::~Audio()
 {
     // deleta todos os sons da coleção
-    for (const auto& [id, sound] : soundTable)
+    for (const auto & [id, sound] : soundTable)
     {
         // destroi todas as vozes criadas para este som
         for (uint k = 0; k < sound->tracks; ++k)
@@ -61,7 +61,7 @@ Audio::~Audio()
 void Audio::Add(uint id, string filename, uint nVoices)
 {
     // cria novo som
-    Sound* sound = new Sound(filename, nVoices);
+    Sound * sound = new Sound(filename, nVoices);
 
     // cria o número de vozes requisitadas para o som
     for (uint i = 0; i < nVoices; ++i)
@@ -74,9 +74,9 @@ void Audio::Add(uint id, string filename, uint nVoices)
 // ---------------------------------------------------------------------------------
 
 void Audio::Play(uint id, bool repeat)
-{
+{ 
     // recupera som da tabela
-    Sound* selected = soundTable[id];
+    Sound * selected = soundTable[id];
 
     // toca áudio em loop ou apenas uma vez
     if (repeat)
@@ -100,7 +100,7 @@ void Audio::Play(uint id, bool repeat)
 void Audio::Stop(uint id)
 {
     // recupera som da tabela
-    Sound* selected = soundTable[id];
+    Sound * selected = soundTable[id];
 
     // encerra todas as trilhas desse som
     for (uint i = 0; i < selected->tracks; ++i)
@@ -119,7 +119,7 @@ void Audio::Volume(uint id, float level)
         level = XAUDIO2_MAX_VOLUME_LEVEL;
 
     // recupera som da tabela
-    Sound* selected = soundTable[id];
+    Sound * selected = soundTable[id];
 
     // ajusta o volume
     selected->volume = level;
@@ -145,7 +145,7 @@ void Audio::Frequency(uint id, float level)
         level = XAUDIO2_MIN_FREQ_RATIO;
 
     // recupera som da tabela
-    Sound* selected = soundTable[id];
+    Sound * selected = soundTable[id];
 
     // ajusta a frequencia
     selected->frequency = level;
@@ -157,7 +157,7 @@ void Audio::Frequency(uint id, float level)
 bool Audio::Playing(uint id)
 {
     // recupera som da tabela
-    Sound* selected = soundTable[id];
+    Sound * selected = soundTable[id];
 
     // Verifica o estado de todas as vozes associadas ao som
     for (uint i = 0; i < selected->tracks; ++i)
@@ -179,7 +179,7 @@ bool Audio::Playing(uint id)
 void Audio::Resume(uint id)
 {
     // recupera som da tabela
-    Sound* selected = soundTable[id];
+    Sound * selected = soundTable[id];
 
     selected->voices[selected->index]->Start();
 
