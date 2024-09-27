@@ -103,11 +103,11 @@ inline bool Scene::Collision(Circle* c, Point* p)
 
 // colisão entre círculo e retângulo
 inline bool Scene::Collision(Circle* c, Rect* r)
-{     return Collision(r, c); }
+{ return Collision(r, c); }
 
 // colisão entre geometria mista e uma forma qualquer
 inline bool Scene::Collision(Geometry* s, Mixed* m)
-{     return Collision(m, s); }
+{ return Collision(m, s); }
 
 // ---------------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 /**********************************************************************************
 // Audio (Arquivo de Cabeçalho)
-//
+// 
 // Criação:     14 Out 2011
 // Atualização: 28 Ago 2023
 // Compilador:  Visual C++ 2022
@@ -44,7 +44,7 @@ public:
     bool Playing(uint id);                                  // verifica se um som está sendo tocado
 
     float Volume(uint id);                                  // retorna o volume do som
-};
+}; 
 
 // ---------------------------------------------------------------------------------
 

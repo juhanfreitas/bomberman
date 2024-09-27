@@ -66,7 +66,7 @@ void Sprite::Draw(float x, float y, float z, float scale, float rotation, Color 
     sprite.y = y;
     sprite.depth = z;
     sprite.scale = scale;
-    sprite.rotation = rotation;
+    sprite.rotation = rotation * XM_PI / 180.0f;
     sprite.color = color;
 
     // adiciona o sprite na lista de desenho
