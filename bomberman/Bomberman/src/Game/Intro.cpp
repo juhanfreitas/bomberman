@@ -37,7 +37,7 @@ void Intro::Update()
         window->Close();
 
     // avança ao fim do som
-    if (timer.Elapsed(1))
+    if (timer.Elapsed(1.0f))
         Bomberman::NextLevel<Home>();
 }
 
