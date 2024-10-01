@@ -5,16 +5,19 @@
 
 // ---------------------------------------------------
 
-#include "../Engine/Sprite.h"
 #include "../Engine/Object.h"
+#include "../Engine/TileSet.h"
+#include "../Engine/Animation.h"
 
 class Portal : public Object
 {
 private:
-	Sprite* sprite = nullptr;
+	TileSet* frames;
+	Animation* anim;
 
 public:
 	bool canPass = false;
+	bool visible = false;
 
 	Portal(float x, float y);
 	~Portal();
@@ -25,6 +28,7 @@ public:
 
 inline void Portal::Draw() 
 {
-	sprite->Draw(x, y, Layer::MIDDLE);
+	if (visible)
+		anim->Draw(x, y, Layer::LOWER);
 }
 #endif // !_PORTAL_H

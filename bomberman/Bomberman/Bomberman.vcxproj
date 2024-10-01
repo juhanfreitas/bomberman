@@ -181,7 +181,7 @@
     <ClCompile Include="src\Engine\Graphics.cpp" />
     <ClCompile Include="src\Engine\Image.cpp" />
     <ClCompile Include="src\Game\Explosion.cpp" />
-    <ClCompile Include="src\Game\building.cpp" />
+    <ClCompile Include="src\Game\Building.cpp" />
     <ClCompile Include="src\Game\Intro.cpp" />
     <ClCompile Include="src\Game\Player.cpp" />
     <ClCompile Include="src\Engine\Object.cpp" />
@@ -193,9 +193,11 @@
     <ClCompile Include="src\Engine\Timer.cpp" />
     <ClCompile Include="src\Engine\Window.cpp" />
     <ClCompile Include="src\Game\Portal.cpp" />
+    <ClCompile Include="src\Game\Powerup.cpp" />
     <ClCompile Include="src\Game\Scoreboard.cpp" />
     <ClCompile Include="src\Game\Home.cpp" />
     <ClCompile Include="src\Game\Stage1.cpp" />
+    <ClCompile Include="src\Game\TilesManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Animation.h" />
@@ -211,6 +213,7 @@
     <ClInclude Include="src\Engine\Geometry.h" />
     <ClInclude Include="src\Engine\Graphics.h" />
     <ClInclude Include="src\Engine\Image.h" />
+    <ClInclude Include="src\Game\Enums.h" />
     <ClInclude Include="src\Game\Explosion.h" />
     <ClInclude Include="src\Game\Building.h" />
     <ClInclude Include="src\Game\Intro.h" />
@@ -218,6 +221,7 @@
     <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Renderer.h" />
     <ClInclude Include="src\Game\Portal.h" />
+    <ClInclude Include="src\Game\Powerup.h" />
     <ClInclude Include="src\Game\Resources.h" />
     <ClInclude Include="src\Engine\Scene.h" />
     <ClInclude Include="src\Engine\Sprite.h" />
@@ -229,6 +233,7 @@
     <ClInclude Include="src\Game\Scoreboard.h" />
     <ClInclude Include="src\Game\Home.h" />
     <ClInclude Include="src\Game\Stage1.h" />
+    <ClInclude Include="src\Game\TilesManager.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\Engine\Pixel.hlsl">

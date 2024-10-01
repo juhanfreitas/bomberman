@@ -21,6 +21,7 @@
 #include "../Engine/Sprite.h"
 #include "../Engine/Scene.h"
 #include "../Engine/Timer.h"
+#include "TilesManager.h"
 #include "Background.h"
 #include "Player.h"
 #include "Scoreboard.h"
@@ -28,16 +29,16 @@
 // ------------------------------------------------------------------------------
 
 enum Sounds { VO_INTRO, MUS_MENU, SE_SELECT, MUS_STAGE1, SE_TIMER };
-enum ObjTypes { 
-    PLAYER,
-    BOMB,
-    BUILDING,
-    BLOCK,
-    EXPLOSION,
-    PORTAL,
-    POWERUPS,
-    ENEMY
-};
+//enum ObjTypes { 
+//    PLAYER,
+//    BOMB,
+//    BUILDING,
+//    BLOCK,
+//    EXPLOSION,
+//    PORTAL,
+//    POWERUPS,
+//    ENEMY
+//};
 
 // ------------------------------------------------------------------------------
 
@@ -45,8 +46,10 @@ class Bomberman : public Game
 {
 private:
     static Game * level;
+    bool paused;
 
 public:
+    static TilesManager* tiles;
     static Player * player;
     static Audio * audio;
     static Scoreboard * scoreboard;

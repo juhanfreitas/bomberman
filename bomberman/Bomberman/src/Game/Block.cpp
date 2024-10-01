@@ -4,48 +4,49 @@
 
 Block::Block(float x, float y)
 {
-	type = BLOCK;
-	blockTiles = new TileSet("Resources/stage/block1.png", 16, 16, 6, 10);
+	type = ObjTypes::BLOCK;
+	blockTiles = Bomberman::tiles->GetTilesOf(TS_BLOCK);
 	shadow = new Sprite("Resources/stage/block1_shadow.png");
-	anim = new Animation(blockTiles, .120f, true);
-	blkState = DEFAULT;
+	anim = new Animation(blockTiles, .150f, true);
+	blkState = BlockState::DEFAULT;
 
 	uint stillseq[4] = { 0, 1, 2, 3 };
-	uint explodeseq[6] = { 6, 7, 8, 9, 10, 11 };
+	uint explodeseq[7] = { 7, 8, 9, 10, 11, 12, 13 };
 
 	anim->Add(DEFAULT, stillseq, 4);
-	anim->Add(EXPLODING, explodeseq, 6);
+	anim->Add(EXPLODING, explodeseq, 7);
 
 	BBox(new Rect(-8, -8, 8, 8));
-	MoveTo(x + 8, y + 8, Layer::MIDDLE);
+	MoveTo(x + 8, y + 8);
+
 }
 
 Block::~Block()
 {
 	delete shadow;
 	delete anim;
-	delete blockTiles;
 }
 
 void Block::Update()
 {
-	if (blkState == DEFAULT)
+	if (Stage1::backg->CheckGridPosition(x, y + 16, MPT))
+		hasShadow = true;
+	else hasShadow = false;
+
+	if (blkState == BlockState::DEFAULT)
 		anim->ChangeLoop(true);
 
-
-	if (blkState == EXPLODING)
-		anim->ChangeLoop(false);
-
-
-	if (y >= 16 * 13)
+	if (blkState == BlockState::EXPLODING)
 	{
-		shadow = nullptr;
+		anim->ChangeDelay(.120f);
+		anim->ChangeLoop(false);
 	}
 
 	if (anim->Inactive())
 	{
+		Bomberman::player->IncreaseScore(10);
 		Stage1::backg->ClearGridPosition(x, y);
-		Stage1::scene->Delete(this, STATIC);
+		Stage1::scene->Delete();
 	}
 
 	anim->Select(blkState);

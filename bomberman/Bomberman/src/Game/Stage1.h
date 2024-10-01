@@ -38,6 +38,8 @@ private:
     Scoreboard* scoreboard = nullptr;   // placar do jogo
     Portal* portal = nullptr;           // portal do mapa atual
 
+    Image* buildingImage = nullptr;
+    Image* shadowImage = nullptr;
 
     Timer timer;
 
@@ -53,10 +55,10 @@ public:
     void Update();                      // atualização
     void Draw();                        // desenho
     void Finalize();                    // finalização
-    void CreateBoxes();
+    void CreateWalls();
     void CreateBlocks();
     void CreatePortal();
-    void CreateExtraBoxes();
+    void CreateExtraWalls();
 };
 
 

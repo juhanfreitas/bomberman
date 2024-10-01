@@ -1,11 +1,11 @@
 /**********************************************************************************
-// Player (Arquivo de Cabeçalho)
+// Player (Arquivo de Cabeï¿½alho)
 //
-// Criação:     27 Jan 2013
-// Atualização: 12 Mar 2023
+// Criaï¿½ï¿½o:     27 Jan 2013
+// Atualizaï¿½ï¿½o: 12 Mar 2023
 // Compilador:  Visual C++ 2022
 //
-// Descrição:   Objeto animado
+// Descriï¿½ï¿½o:   Objeto animado
 //
 **********************************************************************************/
 #pragma once
@@ -13,64 +13,69 @@
 #define _PLAYER_H_
 
 // ---------------------------------------------------------------------------------
-// Inclusões
+// Inclusï¿½es
 
 #include <stack>
-#include "../Engine/Types.h"                      // tipos específicos da engine
+#include "../Engine/Types.h"                      // tipos especï¿½ficos da engine
 #include "../Engine/Object.h"                     // interface de Object
-#include "../Engine/Animation.h"                  // animação de sprites
-#include "../Engine/Timer.h"                      // animação de sprites
+#include "../Engine/Animation.h"                  // animaï¿½ï¿½o de sprites
+#include "../Engine/Timer.h"                      // animaï¿½ï¿½o de sprites
 #include "../Engine/Scene.h"
-#include "Bomb.h"
 #include "Explosion.h"
+#include "Bomb.h"
 
 using namespace std;
 
 // ------------------------------------------------------------------------------
 
-enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING, DYING };
+//enum PlayerState { STILL, BORED, WALKUP, WALKDOWN, WALKLEFT, WALKRIGHT, WINNING, DYING };
 
 // ---------------------------------------------------------------------------------
 
 class Player : public Object
 {
 private:
-    TileSet* playerTiles;                // folha de sprites do personagem
-    Animation* anim;                       // animação do personagem
-    Timer timer;                            // medidor de tempo entre quadros da animação
-    list<Bomb*> bombStack;
-    list<Explosion*> explosionStack;
+    TileSet* playerTiles;                   // folha de sprites do personagem
+    Animation* anim;                        // animaï¿½ï¿½o do personagem
+    Timer timer;                            // medidor de tempo entre quadros da animaï¿½ï¿½o
     list<PlayerState> stateBuffer;
     float       bored_timing;               // tempo para ficar entediado
-
     uint startX, startY;
 
+
+public:
+    list<Bomb*> bombStack;
     uint score;
     uint maxBombs;
     uint bombPower;
     uint lives;
+    BombType bombType;
+    bool bombKick;
+    bool bombPass;
+    bool blockPass;
+    float speed;                            // velocidade do personagem
     uint availableBombs;
-    float       speed;                      // velocidade do personagem
-
-public:
 
     Player();                               // construtor
     ~Player();                              // destrutor
 
     void Draw();                            // desenho do objeto
-    void Update();                          // atualização do objeto
+    void Update();                          // atualizaï¿½ï¿½o do objeto
     void OnCollision(Object* obj);
+    void DefaultCollision(Object* obj);
 
     Geometry* CreateBBox();
     void CreateBomb(BombType bombType);
-    void HandleBombs();
     void IncreaseScore(int points);
+    void DetonateBombs();
+    void ClearPowerUps();
     void Reset();
     void SoftReset();
+    Directions CollisionDirection(Object* obj);
 };
 
 // ---------------------------------------------------------------------------------
-// Função Membro Inline
+// Funï¿½ï¿½o Membro Inline
 
 inline void Player::Draw()
 {
@@ -80,6 +85,14 @@ inline void Player::Draw()
 inline void Player::IncreaseScore(int points)
 {
     score += points;
+}
+
+inline void Player::ClearPowerUps() 
+{
+    bombType = NORMAL;
+    bombPass = false;
+    bombKick = false;
+    blockPass = false;   
 }
 
 // ---------------------------------------------------------------------------------

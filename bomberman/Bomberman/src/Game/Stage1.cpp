@@ -4,6 +4,7 @@
 #include "Bomberman.h"
 #include "Home.h"
 #include "Stage1.h"
+#include "Powerup.h"
 #include <iostream>
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
@@ -17,15 +18,16 @@ Background* Stage1::backg = nullptr;
 void Stage1::Init()
 {
     scene = new Scene();
+    
+    buildingImage = new Image("Resources/stage/building1.png");
+    shadowImage = new Image("Resources/stage/building1_shadow.png");
 
     backg = new Background();
     scoreboard = new Scoreboard();
-
-    CreateBoxes();
+    
+    CreateWalls();
     CreatePortal();
     CreateBlocks();
-
-    timer.Start();
 
     scene->Add(backg, STATIC);
     scene->Add(Bomberman::player, MOVING);
@@ -35,6 +37,8 @@ void Stage1::Init()
 
     Bomberman::audio->Play(MUS_STAGE1, true);
     Bomberman::audio->Volume(MUS_STAGE1, Bomberman::MUSVolume);
+    
+    timer.Start();
 }
 
 // ------------------------------------------------------------------------------
@@ -48,6 +52,19 @@ void Stage1::Update()
     // acelera a musica quando faltar 30 segundos
     if (timer.Elapsed(Bomberman::timeLimit - 30.0f))
         Bomberman::audio->Frequency(MUS_STAGE1, 1.3f);
+
+    // sai com o pressionar do ESC
+    if (window->KeyDown(VK_ESCAPE))
+        window->Close();
+
+    if (window->KeyPress(VK_F1))
+        viewBBox = !viewBBox;
+
+    if (window->KeyPress(VK_F2))
+        viewScene = !viewScene;
+
+    if (window->KeyPress(VK_F3))
+        Bomberman::NextLevel<Home>();
 
     // toca um sinal de aviso quando o tempo esta acabando
     if (timer.Elapsed(Bomberman::timeLimit))
@@ -106,29 +123,37 @@ void Stage1::Finalize()
 
 // -------------------------------------------------------------------------------
 
-void Stage1::CreateBoxes()
+void Stage1::CreateWalls()
 {
-    for (auto i = 1; i < 12; i++)
+    for (auto i = 0; i <= 12; i++)
     {
-        for (auto j = 2; j < 15; j++)
+        for (auto j = 1; j <= 15; j++)
         {
-            if (!backg->CheckGridPosition(i, j))
+            Image* buildingImg = nullptr;
+            Image* shadowImg = nullptr;
+
+            if (i != 0 && i != 12 && j != 1 && j != 15) {
+                buildingImg = buildingImage;
+                shadowImg = shadowImage;
+            }
+
+            if (backg->CheckGridPosition(i, j, WLL))
             {
                 float posX = j * 16.0f;
                 float posY = (i * 16.0f) + 32;
-                Building* build = new Building(posX, posY);
+                Building* build = new Building(posX, posY, buildingImg, shadowImg);
                 scene->Add(build, STATIC);
             }
         }
     }
-    backg->OccupyGridPosition(1, 2);
-    backg->OccupyGridPosition(1, 3);
-    backg->OccupyGridPosition(2, 2);
+    backg->OccupyGridPosition(1,2, WLL);
+    backg->OccupyGridPosition(1,3, WLL);
+    backg->OccupyGridPosition(2,2, WLL);
 
-    CreateExtraBoxes();
+    CreateExtraWalls();
 }
 
-void Stage1::CreateExtraBoxes()
+void Stage1::CreateExtraWalls()
 {
     srand(static_cast<uint>(time(0)));
 
@@ -137,13 +162,22 @@ void Stage1::CreateExtraBoxes()
         int numL = 4 + rand() % 8;
         int numC = 4 + rand() % 11;
 
-        if (backg->backGrid[numL][numC])
+        if (backg->CheckGridPosition(numL, numC, MPT))
         {
+            if (numC % 2 == 0)
+            {
+                if (!(backg->CheckGridPosition(numL - 2, numC, MPT)) ||
+                    !(backg->CheckGridPosition(numL + 2, numC, MPT)))
+                {
+                    i--;
+                    continue;
+                }
+            }
             float posX = numC * 16;
             float posY = (numL * 16) + 32;
-            Building* build = new Building(posX, posY);
+            Building* build = new Building(posX, posY, buildingImage, shadowImage);
             scene->Add(build, STATIC);
-            backg->OccupyGridPosition(numL, numC);
+            backg->OccupyGridPosition(numL, numC, WLL);
         }
         else i--;
     }
@@ -151,12 +185,6 @@ void Stage1::CreateExtraBoxes()
 
 void Stage1::CreateBlocks()
 {
-    float posX = portal->X();
-    float posY = portal->Y();
-    Block* block = new Block(posX - 8, posY - 8);
-    scene->Add(block, STATIC);
-    backg->OccupyGridPosition(posX, posY);
-
     srand(static_cast<uint>(time(0)));
 
     for (auto i = 0; i < 39; i++)
@@ -164,17 +192,22 @@ void Stage1::CreateBlocks()
         int numLine = 1 + rand() % 11;
         int numColm = 2 + rand() % 13;
 
-        if (backg->CheckGridPosition(numLine, numColm))
+        if (backg->CheckGridPosition(numLine, numColm, MPT))
         {
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
+            
             Block* block = new Block(posX, posY);
             scene->Add(block, STATIC);
-            backg->OccupyGridPosition(numLine, numColm);
+            if (i < 20)
+            {
+                Powerup* powerup = new Powerup(posX, posY, (PowerUpType)i);
+                scene->Add(powerup, STATIC);
+            }
+            backg->OccupyGridPosition(numLine, numColm, FillType::BLK);
         }
         else i--;
     }
-
     backg->ClearGridPosition(1, 2);
     backg->ClearGridPosition(1, 3);
     backg->ClearGridPosition(2, 2);
@@ -191,12 +224,16 @@ void Stage1::CreatePortal()
         numLine = 1 + rand() % 11;
         numColm = 2 + rand() % 13;
 
-        if (backg->CheckGridPosition(numLine, numColm))
+        if (backg->CheckGridPosition(numLine, numColm, MPT))
         {
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
             portal = new Portal(posX, posY);
             scene->Add(portal, STATIC);
+
+            Block* block = new Block(posX, posY);
+            scene->Add(block, STATIC);
+            backg->OccupyGridPosition(posX, posY, FillType::BLK);
         }
     }
 }

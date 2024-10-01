@@ -14,30 +14,32 @@
 
 // ---------------------------------------------------------
 
-enum BombType { NORMAL, SPIKE };
-enum BombState { FUSING, READY };
+//enum BombType { NORMAL, R_BOMB, TIMED };
+//enum BombState { FUSING, READY };
+//enum Directions { UP, DOWN, LEFT, RIGHT };
+
+class Player;
 
 class Bomb : public Object
 {
 private:
+	const float speed = 120.f;
 	TileSet * bombs = nullptr;
 	Animation * anim = nullptr;
 
 	float fuseTime;
 	bool playerIn = true;
 	uint explosionPWR;
-
-	list<Explosion*> expUp;
-	list<Explosion*> expDn;
-	list<Explosion*> expLt;
-	list<Explosion*> expRt;
+	Player* playerOwner;
 
 public:
 	Timer timer;
 	BombType bombMode;
 	BombState state;
+	bool bombKicked;
+	Directions dirKicked;
 
-	Bomb(BombType Bombtype, float playerX, float playerY, uint power = 1);
+	Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint power = 1);
 	~Bomb();
 
 	void Update();
@@ -47,6 +49,7 @@ public:
 	void CheckPlayerPosition();
 	void CreateExplosionRange();
 	void Explode();
+	void MoveBomb();
 };
 
 inline void Bomb::Draw() 
