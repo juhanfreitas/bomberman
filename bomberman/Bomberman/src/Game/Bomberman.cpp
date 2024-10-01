@@ -17,11 +17,12 @@
 
 Game*           Bomberman::level = nullptr;
 Player*         Bomberman::player = nullptr;
-Audio*          Bomberman::audio = nullptr;
+AudioManager*   Bomberman::audioManager = nullptr;
 Scoreboard*     Bomberman::scoreboard = nullptr;
 TilesManager*   Bomberman::tiles = nullptr;
+EnemyFactory*   Bomberman::enemyFactory = nullptr;
 float           Bomberman::timeLimit = 0;
-float           Bomberman::screenScale = 2.0f;
+float           Bomberman::screenScale = 2.0f;          // define a escala inicial
 float           Bomberman::MUSVolume = 0.8f;
 float           Bomberman::SEVolume = 0.8f;
 bool            Bomberman::viewBBox = false;
@@ -31,22 +32,16 @@ bool            Bomberman::viewScene = true;
 
 void Bomberman::Init()
 {
-    audio = new Audio();
-    paused = false;
-
-    audio->Add(VO_INTRO, "Resources/Sounds/Voices/By Hudson.wav");
-    audio->Add(MUS_MENU, "Resources/Sounds/Music/Title Theme.wav");
-    audio->Add(MUS_STAGE1, "Resources/Sounds/Music/Stage 1.wav");
-    audio->Add(SE_TIMER, "Resources/Sounds/Sound Effects/Timer.wav");
-    audio->Add(SE_SELECT, "Resources/Sounds/Sound Effects/Menu Select.wav");
+    audioManager = new AudioManager();
 
     viewBBox = false;
-
-    timeLimit = 40.0f;
+    
+    timeLimit = 180.0f;
 
     player = new Player();
     scoreboard = new Scoreboard();
     tiles = new TilesManager();
+    enemyFactory = new EnemyFactory();
 
     level = new Intro();
     level->Init();
@@ -62,6 +57,21 @@ void Bomberman::Update()
     if (window->KeyPress(VK_F2))
         viewScene = !viewScene;
     
+    if (window->KeyPress(VK_PRIOR)) {
+        if (screenScale < 5.0f) {
+            screenScale += 1.0f;
+            window->Size(272 * screenScale, 240 * screenScale);
+        }
+    }
+    if (window->KeyPress(VK_NEXT)) {
+        if (screenScale > 1.0f){
+            screenScale -= 1.0f;
+            window->Size(272 * screenScale, 240 * screenScale);
+        }
+    }
+
+    audioManager->HandleAudio();
+
     if (window->KeyPress('P'))
         paused = !paused;
     
@@ -86,7 +96,7 @@ void Bomberman::Finalize()
     level->Finalize();
 
     delete player;
-    delete audio;
+    delete audioManager;
     delete level;
 }
 
@@ -103,7 +113,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     // configura a engine
     engine->window->Mode(WINDOWED);
-    engine->window->Size(544, 480);
+    engine->window->Size(272 * Bomberman::screenScale, 240 * Bomberman::screenScale);
     engine->window->Color(0, 0, 0);
     engine->window->Title("Bomberman");
     engine->window->Icon(IDI_ICON);

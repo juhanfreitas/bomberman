@@ -2,7 +2,7 @@
 // Window (Código Fonte)
 // 
 // Criação:     19 Mai 2007
-// Atualização: 23 Ago 2023
+// Atualização: 31 Ago 2023
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   A classe abstrai todos os detalhes de configuração de
@@ -19,6 +19,7 @@ bool Window::windowKeys[256] = { 0 };                       // estado do teclado
 bool Window::windowCtrl[256] = { 0 };                       // controle de teclado/mouse
 int  Window::windowMouseX = 0;                              // posição do mouse no eixo x
 int  Window::windowMouseY = 0;                              // posição do mouse no eixo y
+int  Window::windowMouseWheel = 0;                          // giro da roda do mouse
 
 // -------------------------------------------------------------------------------
 // Construtor
@@ -74,6 +75,8 @@ void Window::Size(int width, int height)
     // ajusta a posição da janela para o centro da tela
     windowPosX = GetSystemMetrics(SM_CXSCREEN)/2 - windowWidth/2;
     windowPosY = GetSystemMetrics(SM_CYSCREEN)/2 - windowHeight/2;
+
+    SetWindowPos(windowHandle, HWND_TOP, windowPosX, windowPosY, width, height, SWP_SHOWWINDOW);
 }
 
 // -------------------------------------------------------------------------------
@@ -173,21 +176,21 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 {
     switch (msg)
     {
-        // tecla pressionada
-    case WM_KEYDOWN:
-        windowKeys[wParam] = true;
-        return 0;
-
-        // tecla liberada
-    case WM_KEYUP:
-        windowKeys[wParam] = false;
-        return 0;
-
         // movimento do mouse
     case WM_MOUSEMOVE:
         windowMouseX = GET_X_LPARAM(lParam);
         windowMouseY = GET_Y_LPARAM(lParam);
         return 0;
+
+    case WM_MOUSEWHEEL:
+        windowMouseWheel = GET_WHEEL_DELTA_WPARAM(wParam);
+        return 0;
+
+        // tecla pressionada
+    case WM_KEYDOWN:
+        windowKeys[wParam] = true;
+        return 0;
+
 
         // botão esquerdo do mouse pressionado
     case WM_LBUTTONDOWN:
@@ -205,6 +208,11 @@ LRESULT CALLBACK Window::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
     case WM_RBUTTONDOWN:
     case WM_RBUTTONDBLCLK:
         windowKeys[VK_RBUTTON] = true;
+        return 0;
+
+        // tecla liberada
+    case WM_KEYUP:
+        windowKeys[wParam] = false;
         return 0;
 
         // botão esquerdo do mouse liberado

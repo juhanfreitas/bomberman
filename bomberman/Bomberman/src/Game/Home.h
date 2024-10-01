@@ -32,11 +32,15 @@ private:
     Sprite * sky = nullptr;
     Sprite * title = nullptr;
 
+    Timer timer;
+
     float titleYOffset = 0;
 
     int bgSpeed = 0;
     float yT = 0;
     float screenBorder = 0;
+
+    bool readyForNextLevel = false;
 
 public:
     void Init();                    // inicialização

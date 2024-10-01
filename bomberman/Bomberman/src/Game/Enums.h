@@ -21,7 +21,8 @@
         WALKDOWN, 
         WALKLEFT, 
         WALKRIGHT, 
-        WINNING, 
+        WINNING,
+        LOSING,
         DYING 
     };
 

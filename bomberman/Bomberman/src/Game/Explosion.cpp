@@ -48,18 +48,23 @@ void Explosion::Update()
 
 void Explosion::OnCollision(Object * obj) {
 	switch (obj->Type()) {
-	case PORTAL:
-		break;
 	case POWERUPS:
 		Powerup* pwr;
 		pwr = dynamic_cast<Powerup*>(obj);
 		pwr->ExplosionState();
 		break;
-	case BLOCK:
+	case BLOCK: {
 		Block* blk;
 		blk = static_cast<Block*>(obj);
 		blk->ChangeState(BlockState::EXPLODING);
 		break;
+	}
+	case PORTAL: {
+		Portal* portal;
+		portal = dynamic_cast<Portal*>(obj);
+		portal->HandleCollision(this);
+		break;
+	}
 	}
 }
 

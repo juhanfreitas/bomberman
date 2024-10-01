@@ -10,7 +10,7 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	bombMode = bombType;
 	bombKicked = false;
 	int gridX = (int)(playerX / 16);
-	int gridY = (int)((playerY + 8 - 32) / 16);
+	int gridY = (int)((playerY + 8 - Bomberman::scoreboard->Height()) / 16);
 	bombs = Bomberman::tiles->GetTilesOf(TS_BOMB);
 	anim = new Animation(bombs, 0.250f, true);
 
@@ -28,7 +28,7 @@ Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint 
 	anim->Add(R_BOMB, redBomb, 4);
 	anim->Add(TIMED, timedBomb, 2);
 
-	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + 32);
+	MoveTo((gridX * 16) + 8, (gridY * 16) + 8 + Bomberman::scoreboard->Height());
 }
 
 Bomb::~Bomb()
@@ -78,6 +78,8 @@ void Bomb::Explode()
 {
 	Explosion* explosion = new Explosion(x, y, BASE);
 	Stage1::scene->Add(explosion, MOVING);
+	Bomberman::audioManager->Play(SE_BOMBEXPLOSION);
+	Bomberman::audioManager->Volume(SE_BOMBEXPLOSION, Bomberman::SEVolume);
 	CreateExplosionRange();
 	playerOwner->bombStack.remove(this);
 	playerOwner->availableBombs += 1;
@@ -163,8 +165,8 @@ void Bomb::CreateExplosionRange()
 	{
 		xpsY = posY - (i * 16); xpsX = posX;
 
-		if ((Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT)) ||
-			((bombMode == R_BOMB) && !(Stage1::backg->CheckGridPosition(xpsX, xpsY, WLL))))
+		if ((Stage1::backg->CheckGridPosition(xpsX, xpsY, MPT) || Stage1::backg->CheckGridPosition(xpsX, xpsY, PTL))
+			|| ((bombMode == R_BOMB) && !(Stage1::backg->CheckGridPosition(xpsX, xpsY, WLL))))
 		{
 			Explosion* explo;
 			if (i == explosionPWR)

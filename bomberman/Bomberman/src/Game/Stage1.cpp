@@ -1,8 +1,9 @@
 #include "../Engine/Engine.h"
-#include "Resources.h"
-#include "Player.h"
+#include "../Engine/Random.h"
 #include "Bomberman.h"
+#include "Player.h"
 #include "Home.h"
+#include "GameOver.h"
 #include "Stage1.h"
 #include "Powerup.h"
 #include <iostream>
@@ -23,83 +24,94 @@ void Stage1::Init()
     shadowImage = new Image("Resources/stage/building1_shadow.png");
 
     backg = new Background();
-    scoreboard = new Scoreboard();
+
+    enemypool = { PUROPEN, DENKYUN };
     
     CreateWalls();
     CreatePortal();
+    CreateEnemies(PUROPEN, 3);
+    CreateEnemies(DENKYUN, 2);
     CreateBlocks();
+
+    // Limpa as posições no fundo
+    for (const auto& position : enemyPositions) {
+        int column = position.first;
+        int line = position.second;
+        backg->ClearGridPosition(line, column);
+    }
+
+    timer.Start();
 
     scene->Add(backg, STATIC);
     scene->Add(Bomberman::player, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
-    Bomberman::player->SoftReset();
+    Bomberman::player->Reset();
 
-    Bomberman::audio->Play(MUS_STAGE1, true);
-    Bomberman::audio->Volume(MUS_STAGE1, Bomberman::MUSVolume);
-    
-    timer.Start();
+    Bomberman::audioManager->Frequency(MUS_WORLD1, 1.0f);
+    Bomberman::audioManager->Volume(MUS_WORLD1, Bomberman::MUSVolume);
+    Bomberman::audioManager->Play(MUS_WORLD1, true);
 }
 
 // ------------------------------------------------------------------------------
 
 void Stage1::Update()
 {
+    // verifica se todos os inimigos foram derrotados
+    ValidateEnemyStatus();
+
+    // ativa o portal caso não haja mais inimigos na tela
+    portal->Activate(enemiesCleared);
+
     // atualiza o timer do scoreboard se o tempo não tiver esgotado
     if (!timeUp)
         Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
 
     // acelera a musica quando faltar 30 segundos
     if (timer.Elapsed(Bomberman::timeLimit - 30.0f))
-        Bomberman::audio->Frequency(MUS_STAGE1, 1.3f);
-
-    // sai com o pressionar do ESC
-    if (window->KeyDown(VK_ESCAPE))
-        window->Close();
-
-    if (window->KeyPress(VK_F1))
-        viewBBox = !viewBBox;
-
-    if (window->KeyPress(VK_F2))
-        viewScene = !viewScene;
-
-    if (window->KeyPress(VK_F3))
-        Bomberman::NextLevel<Home>();
+        Bomberman::audioManager->Frequency(MUS_WORLD1, 1.3f);
 
     // toca um sinal de aviso quando o tempo esta acabando
     if (timer.Elapsed(Bomberman::timeLimit))
     {
         timeUp = true;
         timer.Reset();
-        Bomberman::audio->Play(SE_TIMER);
+        Bomberman::player->State(LOSING);
+        Bomberman::audioManager->Play(SE_TIMER);
     }
+
+    // verifica se o player pode passar de fase
+    if (portal->Transition() && !transitioning) {
+        transitioning = true;
+        transitionTimer.Start();
+        Bomberman::player->State(WINNING);
+    }
+
+    // ------------------------------------------------
+    // mudança de tela
+    // ------------------------------------------------
 
     // encerra o jogo ao encerrar o tempo
-    if (timer.Elapsed(2) && timeUp)
-        window->Close();
+    if (!Bomberman::audioManager->Playing(SE_TIMER) && timeUp && Bomberman::player->IsAlive())
+        Bomberman::NextLevel<Stage1>();
 
-    // sai com o pressionar do ESC
-    if (window->KeyPress(VK_ESCAPE)) {
-        Bomberman::audio->Stop(MUS_STAGE1);
-        Bomberman::NextLevel<Home>();
-        Bomberman::player->Reset();
-    }
+    // verifica situações de game over
+    else if (!Bomberman::player->IsAlive() && (!timeUp || !Bomberman::audioManager->Playing(SE_TIMER)))
+        Bomberman::NextLevel<GameOver>();
 
-    else if (window->KeyPress(VK_F3)) {
-        Bomberman::audio->Stop(MUS_STAGE1);
+    else if (transitionTimer.Elapsed(2.0f) && transitioning)
+        Bomberman::NextLevel<GameOver>();
+
+    else if (window->KeyPress(VK_F3))
         Bomberman::NextLevel<Home>();
-        Bomberman::player->Reset();
-    }
 
     else {
-
         // atualiza a cena do jogo;
         scene->Update();
 
         // detecta as colisões na cena
         scene->CollisionDetection();
     }
-
 }
 
 // ------------------------------------------------------------------------------
@@ -116,12 +128,20 @@ void Stage1::Draw()
 
 void Stage1::Finalize()
 {
+    Bomberman::audioManager->Stop(MUS_WORLD1);
+    Bomberman::player->Reset();
     scene->Remove(Bomberman::player, MOVING);
     scene->Remove(Bomberman::scoreboard, STATIC);
     delete scene;
 }
 
 // -------------------------------------------------------------------------------
+
+void Stage1::ValidateEnemyStatus()
+{
+    if (scene->MovingSize() == 1 && !enemiesCleared)
+        enemiesCleared = true;
+}
 
 void Stage1::CreateWalls()
 {
@@ -183,6 +203,32 @@ void Stage1::CreateExtraWalls()
     }
 }
 
+void Stage1::CreateEnemies(uint enemyType, int ammount)
+{
+    int count = 0;
+    RandI lineDist{ 1, 8 };
+    RandI columnDist{ 1, 11 };
+    enemyType = EnemyTypes(enemyType);
+
+    while (count < ammount) {
+        int line = lineDist.Rand();
+        int column = columnDist.Rand();
+
+        if (backg->CheckGridPosition(line, column, MPT))
+        {
+            count++;
+
+            float posX = column * 16 + 8;
+            float posY = line * 16 + 32;
+
+            Bomberman::enemyFactory->CreateEnemy(enemyType, posX, posY, this->scene);
+
+            backg->OccupyGridPosition(line, column, WLL);
+            enemyPositions.push_back(pair(column, line));
+        }
+    }
+}
+
 void Stage1::CreateBlocks()
 {
     srand(static_cast<uint>(time(0)));
@@ -228,7 +274,7 @@ void Stage1::CreatePortal()
         {
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
-            portal = new Portal(posX, posY);
+            portal = new Portal(posX, posY, this->scene, &enemypool);
             scene->Add(portal, STATIC);
 
             Block* block = new Block(posX, posY);

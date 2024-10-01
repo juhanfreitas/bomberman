@@ -4,10 +4,10 @@
 TilesManager::TilesManager()
 {
 	TileSet* blockTiles = new TileSet("Resources/stage/block1.png", 16, 16, 7, 14);
-	TileSet* powerTiles = new TileSet("Resources/power-ups.png", 16, 16, 8, 48);
-	TileSet* expldTiles = new TileSet("Resources/explosions.png", 16, 16, 5, 35);
-	TileSet* bombTiles = new TileSet("Resources/bombs.png", 16, 16, 9, 81);
-	TileSet* portTiles = new TileSet("Resources/portal.png", 16, 16, 4, 4);
+	TileSet* powerTiles = new TileSet("Resources/Sprites/general/power-ups.png", 16, 16, 8, 48);
+	TileSet* expldTiles = new TileSet("Resources/Sprites/general/explosions.png", 16, 16, 5, 35);
+	TileSet* bombTiles = new TileSet("Resources/Sprites/general/bombs.png", 16, 16, 9, 81);
+	TileSet* portTiles = new TileSet("Resources/Sprites/general/portal.png", 16, 16, 4, 4);
 
 	Add(TilesType::TS_BLOCK, blockTiles);
 	Add(TilesType::TS_BOMB, bombTiles);

@@ -1,11 +1,11 @@
 /**********************************************************************************
-// AnimaWalk (Arquivo de Cabeçalho)
+// AnimaWalk (Arquivo de Cabeï¿½alho)
 //
-// Criação:     18 Abr 2012
-// Atualização: 12 Mar 2023
+// Criaï¿½ï¿½o:     18 Abr 2012
+// Atualizaï¿½ï¿½o: 12 Mar 2023
 // Compilador:  Visual C++ 2022
 //
-// Descrição:   Usando a classe Animation para animar um personagem
+// Descriï¿½ï¿½o:   Usando a classe Animation para animar um personagem
 //
 **********************************************************************************/
 #pragma once
@@ -13,32 +13,21 @@
 #define _BOMBERMAN_H_
 
 // ---------------------------------------------------------------------------------
-// Inclusões
+// Inclusï¿½es
 
-#include "../Engine/Audio.h"
 #include "../Engine/Font.h"
 #include "../Engine/Game.h"
 #include "../Engine/Sprite.h"
 #include "../Engine/Scene.h"
 #include "../Engine/Timer.h"
+#include "AudioManager.h"
 #include "TilesManager.h"
 #include "Background.h"
 #include "Player.h"
 #include "Scoreboard.h"
+#include "EnemyFactory.h"
 
 // ------------------------------------------------------------------------------
-
-enum Sounds { VO_INTRO, MUS_MENU, SE_SELECT, MUS_STAGE1, SE_TIMER };
-//enum ObjTypes { 
-//    PLAYER,
-//    BOMB,
-//    BUILDING,
-//    BLOCK,
-//    EXPLOSION,
-//    PORTAL,
-//    POWERUPS,
-//    ENEMY
-//};
 
 // ------------------------------------------------------------------------------
 
@@ -51,8 +40,9 @@ private:
 public:
     static TilesManager* tiles;
     static Player * player;
-    static Audio * audio;
+    static AudioManager * audioManager;
     static Scoreboard * scoreboard;
+    static EnemyFactory * enemyFactory;
     static bool viewBBox;
     static bool viewScene;
     static float timeLimit;
@@ -61,10 +51,10 @@ public:
     static float SEVolume;
 
 
-    void Init();                        // inicialização
-    void Update();                      // atualização
+    void Init();                        // inicializaï¿½ï¿½o
+    void Update();                      // atualizaï¿½ï¿½o
     void Draw();                        // desenho
-    void Finalize();                    // finalização
+    void Finalize();                    // finalizaï¿½ï¿½o
 
     template<class T>
     static void NextLevel()

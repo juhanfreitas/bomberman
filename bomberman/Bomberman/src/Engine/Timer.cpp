@@ -2,7 +2,7 @@
 // Timer (Código Fonte)
 // 
 // Criação:     02 Abr 2011
-// Atualização: 10 Ago 2021
+// Atualização: 18 Out 2021
 // Compilador:  Visual C++ 2022
 //
 // Descrição:   Usa um contador de alta precisão para medir o tempo.
@@ -153,6 +153,38 @@ float Timer::Elapsed()
 
         // calcula tempo transcorrido (em ciclos)
         elapsed = end.QuadPart - start.QuadPart;
+    }
+
+    // converte tempo para segundos
+    return float(elapsed / double(freq.QuadPart));
+}
+// ------------------------------------------------------------------------------
+
+llong Timer::Stamp()
+{
+    QueryPerformanceCounter(&end);
+    return end.QuadPart;
+}
+
+// -------------------------------------------------------------------------------
+
+float Timer::Elapsed(llong stamp)
+{
+    llong elapsed;
+
+    if (stoped)
+    {
+        // pega tempo transcorrido até a pausa
+        elapsed = end.QuadPart - stamp;
+
+    }
+    else
+    {
+        // finaliza contagem do tempo
+        QueryPerformanceCounter(&end);
+
+        // calcula tempo transcorrido (em ciclos)
+        elapsed = end.QuadPart - stamp;
     }
 
     // converte tempo para segundos

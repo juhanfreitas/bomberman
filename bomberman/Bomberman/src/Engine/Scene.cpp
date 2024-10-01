@@ -93,6 +93,16 @@ uint Scene::Size()
     return uint(moving.size() + statics.size());
 }
 
+uint Scene::MovingSize()
+{
+    return uint(moving.size());
+}
+
+uint Scene::StaticsSize()
+{
+    return uint(statics.size());
+}
+
 // ---------------------------------------------------------------------------------
 
 void Scene::ClearDeleted()
@@ -239,7 +249,7 @@ bool Scene::Collision(Point * p, Circle * c)
 {
     // se a distância entre o ponto e o centro do círculo
     // for menor que o raio do círculo então há colisão
-    if (p->Distance(Point(c->CenterX(), c->CenterY())) <= c->radius)
+    if (p->Distance(Point(c->CenterX(), c->CenterY())) <= c->Radius())
         return true;
     else
         return false;
@@ -303,7 +313,7 @@ bool Scene::Collision(Circle * ca, Circle * cb)
 
     // se a distância é menor que a soma dos raios
     // existe colisão entre os círculos
-    if (distance <= (ca->radius + cb->radius))
+    if (distance <= (ca->Radius() + cb->Radius()))
         return true;
 
     // nenhum colisão detectada

@@ -72,11 +72,8 @@
     <ClCompile Include="src\Engine\Window.cpp">
       <Filter>Engine\Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\Bomberman.cpp">
-      <Filter>Game\Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Player.cpp">
-      <Filter>Game\Arquivos de Origem</Filter>
+    <ClCompile Include="src\Engine\Random.cpp">
+      <Filter>Engine\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Audio.cpp">
       <Filter>Engine\Arquivos de Origem</Filter>
@@ -86,6 +83,15 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Sound.cpp">
       <Filter>Engine\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Vector.cpp">
+      <Filter>Engine\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Bomberman.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Player.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Scoreboard.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
@@ -121,6 +127,27 @@
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\TilesManager.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GameOver.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\AudioManager.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Enemy.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Puropen.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Controller.cpp">
+      <Filter>Engine\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Denkyun.cpp">
+      <Filter>Game\Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\EnemyFactory.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,15 +200,6 @@
     <ClInclude Include="src\Game\Resources.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\Bomberman.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Player.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Scoreboard.h">
-      <Filter>Game\Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Audio.h">
       <Filter>Engine\Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -190,6 +208,21 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Sound.h">
       <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Random.h">
+      <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Vector.h">
+      <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Bomberman.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Player.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Scoreboard.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\Intro.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
@@ -225,6 +258,27 @@
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\TilesManager.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\GameOver.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\AudioManager.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Enemy.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Puropen.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Controller.h">
+      <Filter>Engine\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Denkyun.h">
+      <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\EnemyFactory.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>

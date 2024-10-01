@@ -10,6 +10,7 @@
 **********************************************************************************/
 
 // ------------------------------------------------------------------------------
+#include <math.h>
 
 #include "Home.h"
 #include "Intro.h"
@@ -20,17 +21,19 @@
 
 void Home::Init()
 {
-    sky = new Sprite("Resources/BgTitle1.png");
-    title = new Sprite("Resources/BgTitle2.png");
+    sky = new Sprite("Resources/Sprites/title/BgTitle1.png");
+    title = new Sprite("Resources/Sprites/title/BgTitle2.png");
 
-    bgSpeed = 3;
+    timer.Start();
+
+    bgSpeed = 4;
 
     titleYOffset = window->Height() - (title->Height() * Bomberman::screenScale);
     screenBorder = 15 * Bomberman::screenScale;
 
     // inicia tocando uma música 
-    Bomberman::audio->Play(MUS_MENU, true);
-    Bomberman::audio->Volume(MUS_MENU, Bomberman::MUSVolume);
+    Bomberman::audioManager->Play(MUS_TITLE, true);
+    Bomberman::audioManager->Volume(MUS_TITLE, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
@@ -39,11 +42,7 @@ void Home::Update()
 {
 
     // anima o título
-    if (yT < screenBorder - titleYOffset || yT > titleYOffset - screenBorder) {
-        bgSpeed *= -1;
-    }
-    
-    yT += bgSpeed * gameTime;    
+    yT = sin(timer.Elapsed() * 1.0f) * bgSpeed;
 
     // sai com pressionamento do ESC
     if (window->KeyPress(VK_ESCAPE))
@@ -51,10 +50,14 @@ void Home::Update()
 
     // avança com pressionamento do ENTER
     if (window->KeyPress(VK_RETURN)) {
-        Bomberman::audio->Play(SE_SELECT);
-        Bomberman::audio->Stop(MUS_MENU);
-        Bomberman::NextLevel<Stage1>();
+        Bomberman::audioManager->FadeOut(MUS_TITLE, 2.5f);
+        Bomberman::audioManager->Play(SE_SELECT);
+        Bomberman::audioManager->Volume(SE_SELECT, Bomberman::SEVolume);
+        readyForNextLevel = true;
     }
+
+    if (!Bomberman::audioManager->Playing(SE_SELECT) && readyForNextLevel)
+        Bomberman::NextLevel<Stage1>();
 }
 
 // ------------------------------------------------------------------------------
@@ -75,6 +78,7 @@ void Home::Draw()
 
 void Home::Finalize()
 {
+    Bomberman::audioManager->Stop(MUS_TITLE);
     delete sky;
     delete title;
 }

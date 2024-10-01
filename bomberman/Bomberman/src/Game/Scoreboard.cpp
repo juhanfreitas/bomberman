@@ -10,6 +10,7 @@
 **********************************************************************************/
 
 #include "Scoreboard.h"
+#include "Bomberman.h"
 
 string Scoreboard::score;
 string Scoreboard::timer;
@@ -20,7 +21,7 @@ string Scoreboard::power;
 
 Scoreboard::Scoreboard()
 {
-	scoreboard = new TileSet("Resources/scoreboard.png", 272, 32, 2, 6);
+	scoreboard = new TileSet("Resources/Sprites/general/scoreboard.png", 272, 32, 2, 6);
 	anim = new Animation(scoreboard, 0.750f, true);
 
 	string timer;
@@ -38,8 +39,8 @@ Scoreboard::Scoreboard()
 	state = RUNNING;
 
 	MoveTo(
-		window->CenterX(),
-		scoreboard->TileHeight() / 2.0f
+		window->CenterX() / Bomberman::screenScale,
+		scoreboard->TileHeight() / 2.0f 
 	);
 
 	font = new Font("Resources/Tahoma10.png");
@@ -61,11 +62,11 @@ void Scoreboard::Update()
 void Scoreboard::Draw()
 {
 	anim->Draw(
-		window->CenterX() - scoreboard->TileWidth() / 2.0f,
+		window->CenterX() / Bomberman::screenScale,
 		scoreboard->TileHeight() / 2.0f,
 		Layer::UPPER
 	);
-	font->Draw(59, scoreboardHeight / 2.0f + 9, Scoreboard::score);
+	font->Draw(55, scoreboardHeight / 2.0f + 9, Scoreboard::score);
 	font->Draw((scoreboard->TileWidth() / 2.0f) - 6, scoreboardHeight / 2.0f + 9, Scoreboard::timer);
 	font->Draw((scoreboard->TileWidth() / 2.0f) + 50, scoreboardHeight / 2.0f + 9, Scoreboard::lives);
 	font->Draw((scoreboard->TileWidth() / 2.0f) + 90, scoreboardHeight / 2.0f + 9, Scoreboard::bombs);

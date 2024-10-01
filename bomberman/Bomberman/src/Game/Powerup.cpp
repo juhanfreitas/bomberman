@@ -128,6 +128,7 @@ void Powerup::PowerUpActions(Player* player)
             player->IncreaseScore(-150);
             break;
         case INVINCIBLE:
+            player->transparencyTimer.Reset();
             break;
         case T_BOMB:
             player->bombType = TIMED;

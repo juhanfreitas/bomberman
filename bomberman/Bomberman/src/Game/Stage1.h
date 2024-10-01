@@ -1,11 +1,11 @@
 /**********************************************************************************
-// AnimaWalk (Arquivo de Cabeçalho)
+// AnimaWalk (Arquivo de Cabeï¿½alho)
 //
-// Criação:     18 Abr 2012
-// Atualização: 12 Mar 2023
+// Criaï¿½ï¿½o:     18 Abr 2012
+// Atualizaï¿½ï¿½o: 12 Mar 2023
 // Compilador:  Visual C++ 2022
 //
-// Descrição:   Usando a classe Animation para animar um personagem
+// Descriï¿½ï¿½o:   Usando a classe Animation para animar um personagem
 //
 **********************************************************************************/
 #pragma once
@@ -13,7 +13,7 @@
 #define _STAGE1_H_
 
 // ---------------------------------------------------------------------------------
-// Inclusões
+// Inclusï¿½es
 
 #include <stack>
 #include "../Engine/Audio.h"
@@ -42,23 +42,31 @@ private:
     Image* shadowImage = nullptr;
 
     Timer timer;
-
-    bool viewBBox = false;              // visualiza as bounding box na cena
-    bool viewScene = true;              // visualiza os sprites em cena
+    Timer transitionTimer;
+    
     bool timeUp = false;
+    bool enemiesCleared = false;
+    bool transitioning = false;
+
+    std::list<pair<int, int>> enemyPositions;
+    std::vector<uint> enemypool;
 
 public:
     static Scene* scene;                // cena do jogo
-    static Background* backg;                  // plano de fundo do jogo
+    static Background* backg;           // plano de fundo do jogo
 
-    void Init();                        // inicialização
-    void Update();                      // atualização
+    void Init();                        // inicializaï¿½ï¿½o
+    void Update();                      // atualizaï¿½ï¿½o
     void Draw();                        // desenho
-    void Finalize();                    // finalização
+    void Finalize();                    // finalizaï¿½ï¿½o
+
     void CreateWalls();
     void CreateBlocks();
     void CreatePortal();
     void CreateExtraWalls();
+    void ValidateEnemyStatus();
+
+    void CreateEnemies(uint enemyType, int ammount);
 };
 
 

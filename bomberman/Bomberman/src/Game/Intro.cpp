@@ -19,11 +19,12 @@
 
 void Intro::Init()
 {
-    bgImage = new Sprite("Resources/HudsonGroup.png");
+    bgImage = new Sprite("Resources/Sprites/title/HudsonGroup.png");
     timer.Start();
 
     // inicia tocando uma música 
-    Bomberman::audio->Play(VO_INTRO);
+    Bomberman::audioManager->Play(VO_INTRO);
+    Bomberman::audioManager->Volume(VO_INTRO, Bomberman::MUSVolume);
 }
 
 // ------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ void Intro::Update()
         window->Close();
 
     // avança ao fim do som
-    if (timer.Elapsed(1))
+    if (timer.Elapsed(1.0f))
         Bomberman::NextLevel<Home>();
 }
 

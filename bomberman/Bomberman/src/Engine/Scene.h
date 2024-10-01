@@ -78,6 +78,8 @@ public:
     void Delete(Object * obj, int type);        // deleta objeto da lista indicada (STATIC ou MOVING)
     void Delete();                              // deleta o objeto cujo Update/Draw está sendo executado
     uint Size();                                // retorna a quantidade de objetos na cena
+    uint MovingSize();                          // retorna a quantidade de objetos do tipo MOVING na cena
+    uint StaticsSize();                         // retorna a quantidade de objetos do tipo STATIC na cena
 
     void Begin();                               // inicia percurso na lista de objetos
     Object * Next();                            // retorna próximo objeto da lista
@@ -103,11 +105,11 @@ inline bool Scene::Collision(Circle* c, Point* p)
 
 // colisão entre círculo e retângulo
 inline bool Scene::Collision(Circle* c, Rect* r)
-{     return Collision(r, c); }
+{ return Collision(r, c); }
 
 // colisão entre geometria mista e uma forma qualquer
 inline bool Scene::Collision(Geometry* s, Mixed* m)
-{     return Collision(m, s); }
+{ return Collision(m, s); }
 
 // ---------------------------------------------------------------------------------
 
