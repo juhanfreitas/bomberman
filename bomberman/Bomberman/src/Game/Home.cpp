@@ -10,6 +10,7 @@
 **********************************************************************************/
 
 // ------------------------------------------------------------------------------
+#include <math.h>
 
 #include "Home.h"
 #include "Intro.h"
@@ -22,6 +23,8 @@ void Home::Init()
 {
     sky = new Sprite("Resources/Sprites/title/BgTitle1.png");
     title = new Sprite("Resources/Sprites/title/BgTitle2.png");
+
+    timer.Start();
 
     bgSpeed = 4;
 
@@ -39,11 +42,7 @@ void Home::Update()
 {
 
     // anima o título
-    if (yT + (bgSpeed * gameTime) < screenBorder - titleYOffset || yT + (bgSpeed * gameTime) > titleYOffset - screenBorder) {
-        bgSpeed *= -1;
-    }
-    
-    yT += bgSpeed * gameTime;
+    yT = sin(timer.Elapsed() * 1.0f) * bgSpeed;
 
     // sai com pressionamento do ESC
     if (window->KeyPress(VK_ESCAPE))
