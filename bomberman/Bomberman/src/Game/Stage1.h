@@ -38,6 +38,8 @@ private:
     Scoreboard* scoreboard = nullptr;   // placar do jogo
     Portal* portal = nullptr;           // portal do mapa atual
 
+    Image* buildingImage = nullptr;
+    Image* shadowImage = nullptr;
 
     Timer timer;
 

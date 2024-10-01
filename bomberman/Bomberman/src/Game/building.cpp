@@ -2,11 +2,15 @@
 #include "Stage1.h"
 
 
-Building::Building(float x, float y)
+Building::Building(float x, float y, Image* buildingImage, Image* shadowImage) :
+	buildingImage(buildingImage),
+	shadowImage(shadowImage)
 {
 	type = BUILDING;
-	building = new Sprite("Resources/stage/building1.png");
-	shadow = new Sprite("Resources/stage/building1_shadow.png");
+	if (buildingImage != nullptr) {
+		building = new Sprite(buildingImage);
+		shadow = new Sprite(shadowImage);
+	}
 
 	BBox(new Rect(-8, -8, 8, 8));
 	MoveTo(x + 8, y + 8);

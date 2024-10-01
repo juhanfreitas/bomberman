@@ -18,6 +18,9 @@ Background* Stage1::backg = nullptr;
 void Stage1::Init()
 {
     scene = new Scene();
+    
+    buildingImage = new Image("Resources/stage/building1.png");
+    shadowImage = new Image("Resources/stage/building1_shadow.png");
 
     backg = new Background();
     scoreboard = new Scoreboard();
@@ -101,15 +104,23 @@ void Stage1::Finalize()
 
 void Stage1::CreateWalls()
 {
-    for (auto i = 1; i < 12; i++)
+    for (auto i = 0; i <= 12; i++)
     {
-        for (auto j = 2; j < 15; j++)
+        for (auto j = 1; j <= 15; j++)
         {
+            Image* buildingImg = nullptr;
+            Image* shadowImg = nullptr;
+
+            if (i != 0 && i != 12 && j != 1 && j != 15) {
+                buildingImg = buildingImage;
+                shadowImg = shadowImage;
+            }
+
             if (backg->CheckGridPosition(i, j, WLL))
             {
                 float posX = j * 16.0f;
                 float posY = (i * 16.0f) + 32;
-                Building* build = new Building(posX, posY);
+                Building* build = new Building(posX, posY, buildingImg, shadowImg);
                 scene->Add(build, STATIC);
             }
         }
@@ -153,7 +164,7 @@ void Stage1::CreateExtraWalls()
             }
             float posX = numC * 16;
             float posY = (numL * 16) + 32;
-            Building* build = new Building(posX, posY);
+            Building* build = new Building(posX, posY, buildingImage, shadowImage);
             scene->Add(build, STATIC);
             backg->OccupyGridPosition(numL, numC, WLL);
         }
