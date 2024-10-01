@@ -103,6 +103,12 @@ void Player::Update()
     if (window->KeyPress('D'))
         DetonateBombs();
 
+    if (invincible && invcbTimer.Elapsed(10.f))
+    {
+        invincible = false;
+        invcbTimer.Reset();
+        invcbTimer.Stop();
+    }
 
     // anda para cima
     if (window->KeyPress(VK_UP))
@@ -319,11 +325,14 @@ void Player::OnCollision(Object* obj)
         break; 
     // --------------------------------------------------------------------------------------------
     case EXPLOSION:
-        if (stateBuffer.front() != DYING) {
-            stateBuffer.clear();
-            stateBuffer.push_front(DYING);
-            anim->ChangeLoop(FALSE);
-        }        
+        if (!invincible)
+        {
+            if (stateBuffer.front() != DYING) {
+                stateBuffer.clear();
+                stateBuffer.push_front(DYING);
+                anim->ChangeLoop(FALSE);
+            }        
+        }
         break;
     // --------------------------------------------------------------------------------------------
     case POWERUPS:
@@ -358,7 +367,7 @@ void Player::DefaultCollision(Object* obj)
     float height = plrBox->Bottom() - plrBox->Top();
 
     // colisão pela esquerda
-    if (diffLt <= 0 && diffLt >= -1)
+    if (diffLt <= 0 && diffLt >= -5)
     {
         // offset em cima
         if ((diffUp >= -4 && diffUp <= 0))
@@ -375,7 +384,7 @@ void Player::DefaultCollision(Object* obj)
     }
 
     // colisão por cima
-    if (diffUp <= 0 && diffUp >= -1)
+    if (diffUp <= 0 && diffUp >= -5)
     {   // offset pela esquerda
         if (diffLt >= -4 && diffLt <= 0)
         {
@@ -391,7 +400,7 @@ void Player::DefaultCollision(Object* obj)
     }
 
     // colisão pela direita
-    if (diffRt <= 0 && diffRt >= -1)
+    if (diffRt <= 0 && diffRt >= -5)
     {   // offset em cima
         if (diffUp >= -4 && diffUp <= 0)
         {
@@ -407,7 +416,7 @@ void Player::DefaultCollision(Object* obj)
     }
 
     // colisão por baixo
-    if (diffDn <= 0 && diffDn >= -1)
+    if (diffDn <= 0 && diffDn >= -5)
     {   // offset pela esquerda
         if (diffLt >= -4 && diffLt <= 0)
         {

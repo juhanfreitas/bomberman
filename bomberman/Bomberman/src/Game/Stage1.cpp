@@ -134,6 +134,16 @@ void Stage1::CreateExtraWalls()
         {
             if (numC % 2 == 0)
             {
+                if (numL % 2 != 0)
+                {
+                    if (!(backg->CheckGridPosition(numL, numC - 2, MPT)) || 
+                        !(backg->CheckGridPosition(numL, numC + 2, MPT)))
+                    {
+                        i--;
+                        continue;
+                    }
+                }
+
                 if (!(backg->CheckGridPosition(numL - 2, numC, MPT)) ||
                     !(backg->CheckGridPosition(numL + 2, numC, MPT)))
                 {
@@ -167,11 +177,9 @@ void Stage1::CreateBlocks()
             
             Block* block = new Block(posX, posY);
             scene->Add(block, STATIC);
-            if (i < 20)
-            {
-                Powerup* powerup = new Powerup(posX, posY, (PowerUpType)i);
-                scene->Add(powerup, STATIC);
-            }
+            if (i < 4)
+                CreatePowerUp(posX, posY);
+            
             backg->OccupyGridPosition(numLine, numColm, FillType::BLK);
         }
         else i--;
@@ -205,4 +213,18 @@ void Stage1::CreatePortal()
         }
         else i--;
     }
+}
+
+void Stage1::CreatePowerUp(float posX, float posY)
+{
+    PowerUpType type;
+    uint val = rand() % 3;
+    if (val == 0)
+        type = BOMBS;
+    if (val == 1)
+        type = FIRE;
+    if (val == 2)
+        type = SPD_UP;
+    Powerup* powerup = new Powerup(posX, posY, type);
+    scene->Add(powerup, STATIC);
 }

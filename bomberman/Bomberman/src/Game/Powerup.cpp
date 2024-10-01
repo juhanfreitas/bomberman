@@ -128,6 +128,8 @@ void Powerup::PowerUpActions(Player* player)
             player->IncreaseScore(-150);
             break;
         case INVINCIBLE:
+            player->invincible = true;
+            player->invcbTimer.Start();
             break;
         case T_BOMB:
             player->bombType = TIMED;
@@ -152,11 +154,13 @@ void Powerup::PowerUpActions(Player* player)
             Bomberman::timeLimit += 60;
             break;
         case LIVES:
-            if (player->lives != 9)
+            if (player->lives < 9)
                 player->lives++;
             break;
         case CAKE:
             player->lives += 4;
+            if (player->lives > 9)
+                player->lives = 9;
             player->IncreaseScore(100000);
             break;
         case RANDOM:
@@ -176,6 +180,8 @@ void Powerup::PowerUpActions(Player* player)
             break;
         case ICE_CREAM:
             player->lives += 4;
+            if (player->lives > 9)
+                player->lives = 9;
             player->IncreaseScore(50000);
             break;
         }

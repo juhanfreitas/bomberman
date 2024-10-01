@@ -57,6 +57,7 @@ public:
     void CreateBlocks();
     void CreatePortal();
     void CreateExtraWalls();
+    void CreatePowerUp(float posX, float posY);
 };
 
 

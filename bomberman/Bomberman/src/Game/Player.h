@@ -50,6 +50,8 @@ public:
     uint bombPower;
     uint lives;
     BombType bombType;
+    Timer invcbTimer;
+    bool invincible;
     bool bombKick;
     bool bombPass;
     bool blockPass;
@@ -77,14 +79,10 @@ public:
 // Função Membro Inline
 
 inline void Player::Draw()
-{
-    anim->Draw(x, y, Layer::FRONT);
-}
+{anim->Draw(x, y, Layer::FRONT);}
 
 inline void Player::IncreaseScore(int points)
-{
-    score += points;
-}
+{score += points;}
 
 inline void Player::ClearPowerUps() 
 {
@@ -92,6 +90,7 @@ inline void Player::ClearPowerUps()
     bombPass = false;
     bombKick = false;
     blockPass = false;   
+    invincible = false;
 }
 
 // ---------------------------------------------------------------------------------
