@@ -184,6 +184,9 @@
     <ClCompile Include="src\Engine\Geometry.cpp" />
     <ClCompile Include="src\Engine\Graphics.cpp" />
     <ClCompile Include="src\Engine\Image.cpp" />
+    <ClCompile Include="src\Game\Denkyun.cpp" />
+    <ClCompile Include="src\Game\Enemy.cpp" />
+    <ClCompile Include="src\Game\EnemyFactory.cpp" />
     <ClCompile Include="src\Game\Explosion.cpp" />
     <ClCompile Include="src\Game\building.cpp" />
     <ClCompile Include="src\Game\GameOver.cpp" />
@@ -198,6 +201,7 @@
     <ClCompile Include="src\Engine\Timer.cpp" />
     <ClCompile Include="src\Engine\Window.cpp" />
     <ClCompile Include="src\Game\Portal.cpp" />
+    <ClCompile Include="src\Game\Puropen.cpp" />
     <ClCompile Include="src\Game\Scoreboard.cpp" />
     <ClCompile Include="src\Game\Home.cpp" />
     <ClCompile Include="src\Game\Stage1.cpp" />
@@ -220,6 +224,9 @@
     <ClInclude Include="src\Engine\Geometry.h" />
     <ClInclude Include="src\Engine\Graphics.h" />
     <ClInclude Include="src\Engine\Image.h" />
+    <ClInclude Include="src\Game\Denkyun.h" />
+    <ClInclude Include="src\Game\Enemy.h" />
+    <ClInclude Include="src\Game\EnemyFactory.h" />
     <ClInclude Include="src\Game\Explosion.h" />
     <ClInclude Include="src\Game\Building.h" />
     <ClInclude Include="src\Game\GameOver.h" />
@@ -228,6 +235,7 @@
     <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Renderer.h" />
     <ClInclude Include="src\Game\Portal.h" />
+    <ClInclude Include="src\Game\Puropen.h" />
     <ClInclude Include="src\Game\Resources.h" />
     <ClInclude Include="src\Engine\Scene.h" />
     <ClInclude Include="src\Engine\Sprite.h" />
