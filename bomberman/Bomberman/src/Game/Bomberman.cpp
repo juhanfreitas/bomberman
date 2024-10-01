@@ -19,6 +19,7 @@ Game*           Bomberman::level = nullptr;
 Player*         Bomberman::player = nullptr;
 AudioManager*   Bomberman::audioManager = nullptr;
 Scoreboard*     Bomberman::scoreboard = nullptr;
+EnemyFactory*   Bomberman::enemyFactory = nullptr;
 float           Bomberman::timeLimit = 0;
 float           Bomberman::screenScale = 2.0f;          // define a escala inicial
 float           Bomberman::MUSVolume = 0.8f;
@@ -38,6 +39,7 @@ void Bomberman::Init()
 
     player = new Player();
     scoreboard = new Scoreboard();
+    enemyFactory = new EnemyFactory();
 
     level = new Intro();
     level->Init();

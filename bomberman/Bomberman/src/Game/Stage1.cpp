@@ -1,7 +1,7 @@
 #include "../Engine/Engine.h"
-#include "Resources.h"
-#include "Player.h"
+#include "../Engine/Random.h"
 #include "Bomberman.h"
+#include "Player.h"
 #include "Home.h"
 #include "GameOver.h"
 #include "Stage1.h"
@@ -21,9 +21,20 @@ void Stage1::Init()
 
     backg = new Background();
 
+    enemypool = { PUROPEN, DENKYUN };
+
     CreateBoxes();
     CreatePortal();
     CreateBlocks();
+    CreateEnemies(PUROPEN, 3);
+    CreateEnemies(DENKYUN, 2);
+
+    // Limpa as posições no fundo
+    for (const auto& position : enemyPositions) {
+        int column = position.first;
+        int line = position.second;
+        backg->ClearGridPosition(line, column);
+    }
 
     timer.Start();
 
@@ -42,6 +53,12 @@ void Stage1::Init()
 
 void Stage1::Update()
 {
+    // verifica se todos os inimigos foram derrotados
+    ValidateEnemyStatus();
+
+    // ativa o portal caso não haja mais inimigos na tela
+    portal->Activate(enemiesCleared);
+
     // atualiza o timer do scoreboard se o tempo não tiver esgotado
     if (!timeUp)
         Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
@@ -66,6 +83,9 @@ void Stage1::Update()
     // verifica situações de game over
     else if (!Bomberman::player->IsAlive() && (!timeUp || !Bomberman::audioManager->Playing(SE_TIMER)))
         Bomberman::NextLevel<GameOver>();
+
+    else if (portal->Transition())
+        OutputDebugString("");
 
     // sai com o pressionar do ESC
     else if (window->KeyPress(VK_ESCAPE))
@@ -108,11 +128,17 @@ void Stage1::Finalize()
 
 // -------------------------------------------------------------------------------
 
+void Stage1::ValidateEnemyStatus()
+{
+    if (scene->MovingSize() == 1 && !enemiesCleared)
+        enemiesCleared = true;
+}
+
 void Stage1::CreateBoxes()
 {
-    for (auto i = 1; i < 12; i++)
+    for (auto i = 0; i < 13; i++)
     {
-        for (auto j = 2; j < 15; j++)
+        for (auto j = 1; j < 16; j++)
         {
             if (!backg->CheckGridPosition(i, j))
             {
@@ -148,6 +174,32 @@ void Stage1::CreateExtraBoxes()
             backg->OccupyGridPosition(numL, numC);
         }
         else i--;
+    }
+}
+
+void Stage1::CreateEnemies(uint enemyType, int ammount)
+{
+    int count = 0;
+    RandI lineDist{ 1, 8 };
+    RandI columnDist{ 1, 11 };
+    enemyType = EnemyTypes(enemyType);
+
+    while (count < ammount) {
+        int line = lineDist.Rand();
+        int column = columnDist.Rand();
+
+        if (backg->CheckGridPosition(line, column))
+        {
+            count++;
+
+            float posX = column * 16 + 8;
+            float posY = line * 16 + 32;
+
+            Bomberman::enemyFactory->CreateEnemy(enemyType, posX, posY, this->scene);
+
+            backg->OccupyGridPosition(line, column);
+            enemyPositions.push_back(pair(column, line));
+        }
     }
 }
 
@@ -197,7 +249,7 @@ void Stage1::CreatePortal()
         {
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
-            portal = new Portal(posX, posY);
+            portal = new Portal(posX, posY, this->scene, &enemypool);
             scene->Add(portal, STATIC);
         }
     }

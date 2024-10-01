@@ -43,6 +43,7 @@ AudioManager::AudioManager() : audioRefreshRate(0.1f)
     audio->Add(SE_BOMBEXPLOSION, "Resources/Sounds/Sound Effects/Bomb Explodes.wav");
     audio->Add(SE_BOMBPLACE, "Resources/Sounds/Sound Effects/Place Bomb.wav");
     audio->Add(SE_PLAYERDEATH, "Resources/Sounds/Sound Effects/Player Death.wav");
+    audio->Add(SE_ENEMYDEATH, "Resources/Sounds/Sound Effects/Enemy Death.wav");
 }
 
 AudioManager::~AudioManager()

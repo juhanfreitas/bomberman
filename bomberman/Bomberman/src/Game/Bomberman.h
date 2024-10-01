@@ -24,6 +24,7 @@
 #include "Background.h"
 #include "Player.h"
 #include "Scoreboard.h"
+#include "EnemyFactory.h"
 
 // ------------------------------------------------------------------------------
 
@@ -49,6 +50,7 @@ public:
     static Player * player;
     static AudioManager * audioManager;
     static Scoreboard * scoreboard;
+    static EnemyFactory * enemyFactory;
     static bool viewBBox;
     static bool viewScene;
     static float timeLimit;

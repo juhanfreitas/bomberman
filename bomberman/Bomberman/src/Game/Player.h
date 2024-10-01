@@ -21,6 +21,7 @@
 #include "../Engine/Animation.h"                  // animação de sprites
 #include "../Engine/Timer.h"                      // animação de sprites
 #include "../Engine/Scene.h"
+#include "../Engine/Random.h"
 #include "Bomb.h"
 #include "Explosion.h"
 
@@ -37,10 +38,15 @@ class Player : public Object
 private:
     TileSet* playerTiles;                   // folha de sprites do personagem
     Animation* anim;                        // animação do personagem
+
     Timer timer;                            // medidor de tempo entre quadros da animação
+    Timer transparencyTimer;
+
     list<Bomb*> bombStack;
     list<PlayerState> stateBuffer;
-    float bored_timing;                     // tempo para ficar entediado
+
+    float bored_timing = 5.0f;              // tempo para ficar entediado
+    float transparencyDuration = 2.0f;      // duração da invulnerabilidade
 
     // coordenadas iniciais do player no mapa
     float startX = 40;
@@ -67,10 +73,12 @@ public:
     void CreateBomb(BombType bombType);
     void HandleBombs();
     void IncreaseScore(int points);
+
     void Reset();
     void SoftReset();
     void Die();
     void Die(uint type);
+
     bool IsAlive() const;
 };
 
@@ -79,7 +87,17 @@ public:
 
 inline void Player::Draw()
 {
-    anim->Draw(x, y, Layer::FRONT);
+    Color color = { 1, 1, 1, 1 };
+
+    // aplica uma transparência aleatória no player caso este esteja no timer de transparência
+    if (!transparencyTimer.Elapsed(transparencyDuration)) {
+        RandF alphaDist{ .5f, 0.8f };
+        RandI BWDist{ 0, 1 };
+        float isWhite = BWDist.Rand();
+        color = { isWhite, isWhite, isWhite, alphaDist.Rand() };
+    }
+
+    anim->Draw(x, y, Layer::FRONT, scale, rotation, color);
 }
 
 inline void Player::IncreaseScore(int points)

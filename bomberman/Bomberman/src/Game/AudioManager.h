@@ -38,7 +38,8 @@ enum Sounds {
     SE_TIMER,
     SE_BOMBEXPLOSION,
     SE_BOMBPLACE,
-    SE_PLAYERDEATH
+    SE_PLAYERDEATH,
+    SE_ENEMYDEATH
 };
 
 // ------------------------------------------------------------------------------

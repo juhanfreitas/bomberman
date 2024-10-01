@@ -54,8 +54,9 @@ Player::Player()
     anim->Add(STILL,        SeqStill,   1);
 
     speed = 50.0f;
-    bored_timing = 5.0f;
+
     timer.Start();
+    transparencyTimer.Start();
 
     BBox(CreateBBox());
     MoveTo(startX, startY);
@@ -92,6 +93,7 @@ void Player::SoftReset()
     stateBuffer.clear();
     stateBuffer.push_front(STILL);
     timer.Reset();
+    transparencyTimer.Reset();
     anim->ChangeLoop(true);
 }
 
@@ -99,7 +101,7 @@ void Player::SoftReset()
 
 void Player::Die()
 {
-    if (stateBuffer.front() != DYING) {
+    if (stateBuffer.front() != DYING && transparencyTimer.Elapsed(transparencyDuration)) {
         stateBuffer.clear();
         stateBuffer.push_front(DYING);
         Bomberman::audioManager->Play(SE_PLAYERDEATH);
@@ -148,7 +150,7 @@ void Player::Update()
 
     HandleBombs();
 
-    if (stateBuffer.front() != DYING && stateBuffer.front() != LOSING) {
+    if (stateBuffer.front() != DYING && stateBuffer.front() != LOSING && stateBuffer.front() != WINNING) {
         // anda para cima
         if (window->KeyPress(VK_UP))
         {
@@ -341,8 +343,10 @@ void Player::HandleBombs()
 
 void Player::OnCollision(Object* obj)
 {
-    if (stateBuffer.front() == DYING)
-        return;
+    if (stateBuffer.front() == DYING || 
+        stateBuffer.front() == LOSING ||
+        stateBuffer.front() == WINNING)
+    { return; }
 
     Rect* objBox = (Rect*)obj->BBox();
     Rect* plrBox = (Rect*)BBox();
@@ -452,8 +456,10 @@ void Player::OnCollision(Object* obj)
         break;
 
     case POWERUPS:
-
         break;
+    case PORTAL:
+        Portal * portal = (Portal*) obj;
+        portal->HandleCollision(this);
     }
 }
 

@@ -39,24 +39,30 @@ private:
     Portal* portal = nullptr;           // portal do mapa atual
 
     Timer timer;
-
-    bool viewBBox = false;              // visualiza as bounding box na cena
-    bool viewScene = true;              // visualiza os sprites em cena
+    Timer transitionTimer;
+    
     bool timeUp = false;
+    bool enemiesCleared = false;
+
+    std::list<pair<int, int>> enemyPositions;
+    std::vector<uint> enemypool;
 
 public:
     static Scene* scene;                // cena do jogo
-    static Background* backg;                  // plano de fundo do jogo
+    static Background* backg;           // plano de fundo do jogo
 
     void Init();                        // inicialização
     void Update();                      // atualização
     void Draw();                        // desenho
     void Finalize();                    // finalização
+
     void CreateBoxes();
     void CreateBlocks();
     void CreatePortal();
     void CreateExtraBoxes();
-    void PreparateStageFinalization();
+    void ValidateEnemyStatus();
+
+    void CreateEnemies(uint enemyType, int ammount);
 };
 
 
