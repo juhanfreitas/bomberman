@@ -108,7 +108,7 @@
     <ClCompile Include="src\Game\Explosion.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\building.cpp">
+    <ClCompile Include="src\Game\Building.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="src\Game\Block.cpp">

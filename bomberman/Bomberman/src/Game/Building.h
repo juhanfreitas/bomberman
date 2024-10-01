@@ -11,12 +11,14 @@
 class Building : public Object
 {
 private:
-	Sprite* building;
-	Sprite* shadow;
+	Image* buildingImage = nullptr;
+	Image* shadowImage = nullptr;
+	Sprite* building = nullptr;
+	Sprite* shadow = nullptr;
 	bool hasShadow = true;
 
 public:
-	Building(float x, float y);
+	Building(float x, float y, Image* buildingImage = nullptr, Image* shadowImage = nullptr);
 	~Building();
 
 	void Draw();
@@ -25,8 +27,10 @@ public:
 
 inline void Building::Draw()
 {
-	building->Draw(x, y, Layer::MIDDLE);
-	if (hasShadow)
+	if (building != nullptr)
+		building->Draw(x, y, Layer::MIDDLE);
+
+	if (hasShadow && shadow != nullptr)
 		shadow->Draw(x, y + 16, Layer::LOWER);
 }
 
