@@ -15,21 +15,27 @@
 #include "Bomberman.h"
 #include "Intro.h"
 
+Controller*     Bomberman::gamepad = nullptr;
 TilesManager*   Bomberman::tiles = nullptr;
 Game*           Bomberman::level = nullptr;
-Player*         Bomberman::player = nullptr;
+Player*         Bomberman::player1 = nullptr;
+Player*         Bomberman::player2 = nullptr;
+Player*         Bomberman::player3 = nullptr;
+Player*         Bomberman::player4 = nullptr;
 Audio*          Bomberman::audio = nullptr;
 Scoreboard*     Bomberman::scoreboard = nullptr;
 float           Bomberman::timeLimit = 0;
 float           Bomberman::screenScale = 2.0f;
 bool            Bomberman::viewBBox = false;
+bool            Bomberman::ctrlActive = false;
+list<bool>      Bomberman::players = {false, false, false, false};
 
 // -----------------------------------------------------------------------------
 
 void Bomberman::Init()
 {
     audio = new Audio();
-    paused = false;
+    gamePaused = false;
 
     audio->Add(VO_INTRO, "Resources/Sounds/Voices/By Hudson.wav");
     audio->Add(MUS_MENU, "Resources/Sounds/Music/Title Theme.wav");
@@ -41,9 +47,14 @@ void Bomberman::Init()
 
     timeLimit = 180.0f;
 
-    player = new Player();
+    player1 = new Player(playerCount++);
     scoreboard = new Scoreboard();
     tiles = new TilesManager();
+    gamepad = new Controller();
+
+
+    CheckControllers();
+    ctrlInitializer.Start();
 
     level = new Intro();
     level->Init();
@@ -53,13 +64,24 @@ void Bomberman::Init()
 
 void Bomberman::Update()
 {
-    if (window->KeyPress('P'))
-        paused = !paused;
+    if (ctrlInitializer.Elapsed(2.5))
+    {
+        CheckControllers();
+        ctrlInitializer.Reset();
+    }
     
-    if (paused)
+
+    if (window->KeyPress('P'))
+        gamePaused = !gamePaused;
+    
+    if (gamePaused) 
+    {
         level->OnPause();
+    }
     else 
+    {
         level->Update();
+    }
 
 }
 
@@ -76,10 +98,43 @@ void Bomberman::Finalize()
 {
     level->Finalize();
 
-    delete player;
+    delete player1;
+    delete player2;
+    delete player3;
+    delete player4;
+    delete gamepad;
     delete audio;
     delete level;
 }
+
+// ------------------------------------------------------------------------------
+
+
+void Bomberman::CheckControllers() 
+{
+    bool fstCtrl;
+    bool sndCtrl;
+    bool trdCtrl;
+    bool fthCtrl;
+    ctrlActive = false;
+
+    fstCtrl = gamepad->XboxInitialize(0);
+    if (fstCtrl == false)
+        return;
+    sndCtrl = gamepad->XboxInitialize(1);
+    trdCtrl = gamepad->XboxInitialize(2);
+    fthCtrl = gamepad->XboxInitialize(3);
+
+    auto it = players.begin();
+
+    *it++ = fstCtrl;
+    *it++ = sndCtrl;
+    *it++ = trdCtrl;
+    *it = fthCtrl;
+
+    ctrlActive = (fstCtrl || sndCtrl || trdCtrl || fthCtrl);
+}
+
 
 
 // ------------------------------------------------------------------------------

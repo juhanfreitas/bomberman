@@ -37,6 +37,15 @@ void Home::Init()
 
 void Home::Update()
 {
+    bool controllerOn = Bomberman::ctrlActive;
+    bool pressedStart;
+    if (controllerOn)
+    {
+        Bomberman::gamepad->XboxUpdateState();
+        pressedStart = Bomberman::gamepad->XboxButton(ButtonStart);
+    }
+
+
 
     if (yT < screenBorder - titleYOffset || yT > titleYOffset - screenBorder) {
         bgSpeed *= -1;
@@ -49,7 +58,7 @@ void Home::Update()
         window->Close();
 
     // avança com pressionamento do ENTER
-    if (window->KeyDown(VK_RETURN)) {
+    if (window->KeyDown(VK_RETURN) || (controllerOn && pressedStart)) {
         Bomberman::audio->Play(SE_SELECT);
         Bomberman::audio->Stop(MUS_MENU);
         Bomberman::NextLevel<Stage1>();

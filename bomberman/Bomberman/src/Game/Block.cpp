@@ -38,13 +38,14 @@ void Block::Update()
 
 	if (blkState == BlockState::EXPLODING)
 	{
+		hasShadow = false;
 		anim->ChangeDelay(.120f);
 		anim->ChangeLoop(false);
 	}
 
 	if (anim->Inactive())
 	{
-		Bomberman::player->IncreaseScore(10);
+		Bomberman::player1->IncreaseScore(10);
 		Stage1::backg->ClearGridPosition(x, y);
 		Stage1::scene->Delete();
 	}

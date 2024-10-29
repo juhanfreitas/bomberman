@@ -123,6 +123,9 @@
     <ClCompile Include="src\Game\TilesManager.cpp">
       <Filter>Game\Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Controller.cpp">
+      <Filter>Engine\Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Animation.h">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="src\Game\TilesManager.h">
       <Filter>Game\Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Controller.h">
+      <Filter>Engine\Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

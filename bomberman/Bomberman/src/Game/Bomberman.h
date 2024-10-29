@@ -18,6 +18,7 @@
 #include "../Engine/Audio.h"
 #include "../Engine/Font.h"
 #include "../Engine/Game.h"
+#include "../Engine/Controller.h"
 #include "../Engine/Sprite.h"
 #include "../Engine/Scene.h"
 #include "../Engine/Timer.h"
@@ -46,22 +47,32 @@ class Bomberman : public Game
 {
 private:
     static Game * level;
-    bool paused;
+    bool gamePaused;
+    Timer ctrlInitializer;
+    int playerCount = 0;
 
 public:
+    static Controller* gamepad;
+    static Audio* audio;
+    static Player* player1;
+    static Player* player2;
+    static Player* player3;
+    static Player* player4;
+    static Scoreboard* scoreboard;
     static TilesManager* tiles;
-    static Player * player;
-    static Audio * audio;
-    static Scoreboard * scoreboard;
+    static bool ctrlActive;
     static bool viewBBox;
     static float timeLimit;
     static float screenScale;
+    static list<bool> players;
 
 
-    void Init();                        // inicialização
-    void Update();                      // atualização
-    void Draw();                        // desenho
-    void Finalize();                    // finalização
+    void Init();                                // inicialização
+    void Update();                              // atualização
+    void Draw();                                // desenho
+    void Finalize();                            // finalização
+    void CheckControllers();                    // verifica a situação dos controles
+    static bool PlayerActive(int playerNum);    // verifica se determinado Player está ativo
 
     template<class T>
     static void NextLevel()
@@ -72,6 +83,16 @@ public:
         level->Init();
     }
 };
+
+
+inline bool Bomberman::PlayerActive(int playerNum) 
+{
+    auto plrIt = players.begin();
+    std::advance(plrIt, playerNum);
+    
+    return *plrIt;
+}
+
 
 // ---------------------------------------------------------------------------------
 

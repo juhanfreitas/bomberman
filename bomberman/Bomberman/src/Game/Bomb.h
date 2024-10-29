@@ -11,6 +11,7 @@
 #include "../Engine/Animation.h"
 #include "../Engine/Timer.h"
 #include "Explosion.h"
+#include "Enums.h"
 
 // ---------------------------------------------------------
 
@@ -26,18 +27,18 @@ private:
 	const float speed = 120.f;
 	TileSet * bombs = nullptr;
 	Animation * anim = nullptr;
+	Player* playerOwner;
 
 	float fuseTime;
 	bool playerIn = true;
 	uint explosionPWR;
-	Player* playerOwner;
 
 public:
 	Timer timer;
 	BombType bombMode;
 	BombState state;
+	Directions dirKicked = Directions::UP;
 	bool bombKicked;
-	Directions dirKicked;
 
 	Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint power = 1);
 	~Bomb();

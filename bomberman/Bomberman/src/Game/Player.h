@@ -41,7 +41,9 @@ private:
     list<PlayerState> stateBuffer;
     float       bored_timing;               // tempo para ficar entediado
     uint startX, startY;
-
+    bool createBomb;
+    bool createBombPrev;
+    const int playerNumber;
 
 public:
     list<Bomb*> bombStack;
@@ -58,7 +60,7 @@ public:
     float speed;                            // velocidade do personagem
     uint availableBombs;
 
-    Player();                               // construtor
+    Player(int plrNum);                     // construtor
     ~Player();                              // destrutor
 
     void Draw();                            // desenho do objeto
@@ -67,8 +69,8 @@ public:
     void DefaultCollision(Object* obj);
 
     Geometry* CreateBBox();
-    void CreateBomb(BombType bombType);
     Directions CollisionDirection(Object* obj);
+    void CreateBomb(BombType bombType);
     void DetonateBombs();
     void IncreaseScore(int points);
     void Reset();

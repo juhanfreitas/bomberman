@@ -3,10 +3,9 @@
 #include "Bomberman.h"
 
 
-Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint power)
+Bomb::Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint power) : playerOwner(owner)
 {
 	explosionPWR = power;
-	playerOwner = owner;
 	bombMode = bombType;
 	bombKicked = false;
 	int gridX = (int)(playerX / 16);

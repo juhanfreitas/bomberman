@@ -18,7 +18,7 @@
 
 // ---------------------------------------------------------------------------------
 
-Player::Player()
+Player::Player(int plrNum) : playerNumber(plrNum)
 {
     type = PLAYER;
     playerTiles = new TileSet("Resources/bomberman.png", 24, 32, 12, 72);
@@ -36,6 +36,8 @@ Player::Player()
     maxBombs = 2;
     availableBombs = maxBombs;
     // ---------------------------
+
+    createBomb = createBombPrev = false;
 
     uint SeqStill[1] = { 0 };
     uint SeqUp[4] = { 9, 10, 9, 11 };
@@ -93,15 +95,45 @@ void Player::Update()
     Bomberman::scoreboard->UpdatePower(bombPower);
     Bomberman::scoreboard->UpdateLives(lives);
 
+    bool moveUp = false;
+    bool moveRt = false;
+    bool moveDn = false;
+    bool moveLt = false;
+    bool conOn = Bomberman::ctrlActive;
+    bool dtnBmb = false;
+
+    if (conOn) 
+    {
+        bool isActive = Bomberman::PlayerActive(playerNumber);
+        if (isActive)
+        {
+            Bomberman::gamepad->XboxUpdateState(playerNumber);
+            createBomb = Bomberman::gamepad->XboxButton(ButtonB);
+            dtnBmb = Bomberman::gamepad->XboxButton(ButtonA);
+
+            moveUp = (Bomberman::gamepad->XboxButton(DpadUp));
+            moveRt = (Bomberman::gamepad->XboxButton(DpadRight));
+            moveDn = (Bomberman::gamepad->XboxButton(DpadDown));
+            moveLt = (Bomberman::gamepad->XboxButton(DpadLeft));
+        }
+    }
+
+
+    // ====================== controle da bomba ====================== //
+
     // cria nova bomba
-    if (window->KeyPress(VK_SPACE))
+    if ((window->KeyPress(VK_SPACE) && !conOn) || (conOn && (createBomb && createBomb != createBombPrev)))
     {
         timer.Reset();
         CreateBomb(bombType);
-    }
+    } 
+    
     // denota a bomba
-    if (window->KeyPress('D'))
+    if ((window->KeyPress('D') && !conOn) || (conOn && dtnBmb))
         DetonateBombs();
+
+    // =============================================================== //
+
 
     if (invincible && invcbTimer.Elapsed(10.f))
     {
@@ -110,8 +142,12 @@ void Player::Update()
         invcbTimer.Stop();
     }
 
+
+    // ==================== controle da movimentação ==================== //
+
+
     // anda para cima
-    if (window->KeyPress(VK_UP))
+    if ((window->KeyPress(VK_UP) && !conOn) || (conOn && moveUp))
     {
         if (stateBuffer.size() < 3)
             stateBuffer.push_front(WALKUP);
@@ -121,14 +157,17 @@ void Player::Update()
             stateBuffer.push_front(WALKUP);
         }
     }
-    if (window->KeyUp(VK_UP))
+    if ((window->KeyUp(VK_UP) && !conOn) || (conOn && !moveUp))
     {
         stateBuffer.remove(WALKUP);
     }
-    // --------------------------------------------------------------
+
+
+    // ************************************************************
+
 
     // anda para baixo
-    if (window->KeyPress(VK_DOWN))
+    if ((window->KeyPress(VK_DOWN) && !conOn) || (conOn && moveDn))
     {
         if (stateBuffer.size() < 3)
             stateBuffer.push_front(WALKDOWN);
@@ -138,14 +177,17 @@ void Player::Update()
             stateBuffer.push_front(WALKDOWN);
         }
     }
-    if (window->KeyUp(VK_DOWN))
+    if ((window->KeyUp(VK_DOWN) && !conOn) || (conOn && !moveDn))
     {
         stateBuffer.remove(WALKDOWN);
     }
-    // --------------------------------------------------------------
+
+
+    // ************************************************************
+
 
     // anda para esquerda
-    if (window->KeyPress(VK_LEFT))
+    if ((window->KeyPress(VK_LEFT) && !conOn) || (conOn && moveLt))
     {
         if (stateBuffer.size() < 3)
             stateBuffer.push_front(WALKLEFT);
@@ -155,14 +197,17 @@ void Player::Update()
             stateBuffer.push_front(WALKLEFT);
         }
     }
-    if (window->KeyUp(VK_LEFT))
+    if ((window->KeyUp(VK_LEFT) && !conOn) || (conOn && !moveLt))
     {
         stateBuffer.remove(WALKLEFT);
     }
-    // --------------------------------------------------------------
+
+
+    // ************************************************************
+
 
     // anda para direita
-    if (window->KeyPress(VK_RIGHT))
+    if ((window->KeyPress(VK_RIGHT) && !conOn) || (conOn && moveRt))
     {
         if (stateBuffer.size() < 3)
             stateBuffer.push_front(WALKRIGHT);
@@ -172,83 +217,72 @@ void Player::Update()
             stateBuffer.push_front(WALKRIGHT);
         }
     }
-    if (window->KeyUp(VK_RIGHT))
+    if ((window->KeyUp(VK_RIGHT) && !conOn) || (conOn && !moveRt))
     {
         stateBuffer.remove(WALKRIGHT);
     }
-    // --------------------------------------------------------------
+
+
+    // ************************************************************
+
 
     // player parado
     if (stateBuffer.empty())
     {
+        stateBuffer.clear();
         stateBuffer.push_front(STILL);
     }
     else {
         if (stateBuffer.size() > 1)
-        {
             stateBuffer.remove(BORED);
-        }
     }
-    // --------------------------------------------------------------
+
+
+    // ************************************************************
+
 
     // trata o input
     switch (stateBuffer.front())
     {
-    case STILL:
-        if (timer.Elapsed(bored_timing))
-        {
-            stateBuffer.clear();
-            stateBuffer.push_front(BORED);
-        }
-        break;
-    case BORED:
-        
-        break;
-    case WALKUP:
-        timer.Reset();
-        Translate(0, -speed * gameTime);
-        break;
-    case WALKDOWN:
-        timer.Reset();
-        Translate(0, speed * gameTime);
-        break;
-    case WALKLEFT:
-        timer.Reset();
-        Translate(-speed * gameTime, 0);
-        break;
-    case WALKRIGHT:
-        timer.Reset();
-        Translate(speed * gameTime, 0);
-        break;
-    case WINNING:
-        timer.Reset();
-        score += 10;
-        break;
-    case DYING:
-        if (anim->Inactive())
-            Reset();
-        
-        break;
+        case STILL:
+            if (timer.Elapsed(bored_timing))
+            {
+                stateBuffer.clear();
+                stateBuffer.push_front(BORED);
+            }
+            break;
+        case BORED:
+            break;
+        case WALKUP:
+            timer.Reset();
+            Translate(0, -speed * gameTime);
+            break;
+        case WALKDOWN:
+            timer.Reset();
+            Translate(0, speed * gameTime);
+            break;
+        case WALKLEFT:
+            timer.Reset();
+            Translate(-speed * gameTime, 0);
+            break;
+        case WALKRIGHT:
+            timer.Reset();
+            Translate(speed * gameTime, 0);
+            break;
+        case WINNING:
+            timer.Reset();
+            score += 10;
+            break;
+        case DYING:
+            if (anim->Inactive())
+                Reset();
+            break;
     }
-    // --------------------------------------------------------------
 
-    // mantém personagem dentro da tela
-    {
-        // saída pela esquerda
-        if (x < 40)
-            MoveTo(40, y);
+    // ================================================================== //
 
-        // saída pela direita
-        if (x > window->Width() / 2.0f - 40)
-            MoveTo(window->Width() / 2.0f - 40, y);
 
-        if (y < 49)
-            MoveTo(x, 49);
-
-        // saída por baixo
-        if (y > window->Height() / 2.0f - 31)
-            MoveTo(x, window->Height() / 2.0f - 31);
-    }
+    createBombPrev = createBomb;
 
     // atualiza animação
     anim->Select(stateBuffer.front());
@@ -370,12 +404,12 @@ void Player::DefaultCollision(Object* obj)
     if (diffLt <= 0 && diffLt >= -5)
     {
         // offset em cima
-        if ((diffUp >= -4 && diffUp <= 0))
+        if ((diffUp >= -7 && diffUp <= 0))
         {
             if (stateBuffer.front() == WALKRIGHT)
                 MoveTo(x, y + diffUp);
         }// offset em baixo
-        else if ((diffDn >= -4 && diffDn <= 0))
+        else if ((diffDn >= -7 && diffDn <= 0))
         {
             if (stateBuffer.front() == WALKRIGHT)
                 MoveTo(x, y - diffDn);
@@ -386,12 +420,12 @@ void Player::DefaultCollision(Object* obj)
     // colisão por cima
     if (diffUp <= 0 && diffUp >= -5)
     {   // offset pela esquerda
-        if (diffLt >= -4 && diffLt <= 0)
+        if (diffLt >= -7 && diffLt <= 1)
         {
             if (stateBuffer.front() == WALKDOWN)
                 MoveTo(x + diffLt, y);
         }// offset pela direita
-        else if (diffRt >= -4 && diffRt <= 0)
+        else if (diffRt >= -7 && diffRt <= 1)
         {
             if (stateBuffer.front() == WALKDOWN)
                 MoveTo(x - diffRt, y);
@@ -402,12 +436,12 @@ void Player::DefaultCollision(Object* obj)
     // colisão pela direita
     if (diffRt <= 0 && diffRt >= -5)
     {   // offset em cima
-        if (diffUp >= -4 && diffUp <= 0)
+        if (diffUp >= -7 && diffUp <= 0)
         {
             if (stateBuffer.front() == WALKLEFT)
                 MoveTo(x, y + diffUp);
         }// offset em baixo
-        else if (diffDn >= -4 && diffDn <= 0)
+        else if (diffDn >= -7 && diffDn <= 0)
         {
             if (stateBuffer.front() == WALKLEFT)
                 MoveTo(x, y - diffDn);
@@ -418,12 +452,12 @@ void Player::DefaultCollision(Object* obj)
     // colisão por baixo
     if (diffDn <= 0 && diffDn >= -5)
     {   // offset pela esquerda
-        if (diffLt >= -4 && diffLt <= 0)
+        if (diffLt >= -7 && diffLt <= 0)
         {
             if (stateBuffer.front() == WALKUP)
                 MoveTo(x + diffLt, y);
         }// offset pela direita
-        else if (diffRt >= -4 && diffRt <= 0)
+        else if (diffRt >= -7 && diffRt <= 0)
         {
             if (stateBuffer.front() == WALKUP)
                 MoveTo(x - diffRt, y);

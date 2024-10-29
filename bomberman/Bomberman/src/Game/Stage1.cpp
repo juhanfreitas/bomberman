@@ -29,10 +29,10 @@ void Stage1::Init()
     CreateBlocks();
 
     scene->Add(backg, STATIC);
-    scene->Add(Bomberman::player, MOVING);
+    scene->Add(Bomberman::player1, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
-    //Bomberman::audio->Play(MUS_STAGE1);
+    Bomberman::audio->Play(MUS_STAGE1);
     
     timer.Start();
 }
@@ -95,7 +95,7 @@ void Stage1::Finalize()
 {
     scene->Remove(backg, STATIC);
     scene->Remove(portal, STATIC);
-    scene->Remove(Bomberman::player, MOVING);
+    scene->Remove(Bomberman::player1, MOVING);
     scene->Remove(Bomberman::scoreboard, STATIC);
     delete scene;
 }
@@ -108,19 +108,19 @@ void Stage1::CreateWalls()
     {
         for (auto j = 1; j <= 15; j++)
         {
-            Image* buildingImg = nullptr;
-            Image* shadowImg = nullptr;
+            Image* bImg = nullptr;
+            Image* sImg = nullptr;
 
             if (i != 0 && i != 12 && j != 1 && j != 15) {
-                buildingImg = buildingImage;
-                shadowImg = shadowImage;
+                bImg = buildingImage;
+                sImg = shadowImage;
             }
 
             if (backg->CheckGridPosition(i, j, WLL))
             {
                 float posX = j * 16.0f;
                 float posY = (i * 16.0f) + 32;
-                Building* build = new Building(posX, posY, buildingImg, shadowImg);
+                Building* build = new Building(posX, posY, bImg, sImg);
                 scene->Add(build, STATIC);
             }
         }

@@ -4,6 +4,7 @@
 #include "Powerup.h"
 #include <iostream>
 
+
 Explosion::Explosion(float posX, float posY, ExplosionPart part)
 {
 	type = ObjTypes::EXPLOSION;
@@ -59,13 +60,14 @@ void Explosion::OnCollision(Object * obj) {
 		Block* blk;
 		blk = static_cast<Block*>(obj);
 		blk->ChangeState(BlockState::EXPLODING);
+		//bombOrigin->playerOwner->IncreaseScore(10);
 		break;
 	}
 }
 
 Mixed* Explosion::createCollision(ExplosionPart part)
 {
-	Mixed * mixed = new Mixed();
+	Mixed* mixed = new Mixed();
 
 	switch (part)
 	{
@@ -92,6 +94,5 @@ Mixed* Explosion::createCollision(ExplosionPart part)
 		mixed->Insert(new Rect(-8, -6, 6, 6));
 		break;
 	}
-
 	return mixed;
 }
