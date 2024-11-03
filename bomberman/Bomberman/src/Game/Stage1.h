@@ -68,7 +68,9 @@ public:
     void CreateBlocks();
     void CreatePortal();
     void CreateExtraWalls();
+    void CreateEnemies(uint enemyType, int ammount);
     void CreatePowerUp(float posX, float posY);
+    void ValidateEnemyStatus();
 };
 
 

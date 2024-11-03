@@ -30,8 +30,7 @@ Enemy::Enemy() :
     speed = Vector(270.0f, speedThreshold[speedLevel]);
 }
 
-Enemy::~Enemy() {
-}
+Enemy::~Enemy() {}
 
 void Enemy::Draw() {
     float posX = x;
@@ -88,7 +87,7 @@ void Enemy::OnCollision(Object* obj)
 }
 
 void Enemy::Wander() {
-	Translate(speed.XComponent() * gameTime, -speed.YComponent() * gameTime);
+    Translate((speed.XComponent() * gameTime) + Bomberman::xdiff, -speed.YComponent() * gameTime);
 }
 
 void Enemy::Speed(uint speedLevel)
@@ -139,7 +138,7 @@ void Enemy::Die()
         state = DYING;
         Bomberman::audioManager->Play(SE_ENEMYDEATH);
         Bomberman::audioManager->Volume(SE_ENEMYDEATH, Bomberman::SEVolume);
-        Bomberman::player->IncreaseScore(score);
+        Bomberman::player1->IncreaseScore(score);
         enemyAnimation->ChangeLoop(false);
         enemyAnimation->Delay(0.24f);
     }

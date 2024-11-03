@@ -30,17 +30,6 @@ Background::~Background()
     backgs.clear();
 }
 
-
-
-void Background::Draw()
-{
-    activeSprite->Draw(
-        window->CenterX() / Bomberman::screenScale,
-        window->CenterY() / Bomberman::screenScale + 16,
-        Layer::BACK, 1.0f, 0.0f
-    );
-}
-
 // -------------------------------------------------------------------------------
 
 void Background::ChangeTo(uint value) 

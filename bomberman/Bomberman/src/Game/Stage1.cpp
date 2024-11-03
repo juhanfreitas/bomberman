@@ -47,21 +47,17 @@ void Stage1::Init()
         int line = position.second;
         bGrid->ClearGridPosition(line, column);
     }
-
-    timer.Start();
-    scene->Add(backg, STATIC);
     
     scene->Add(Bomberman::player1, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
     Size(backg->Width(), backg->Height());
-    
 
     Bomberman::audioManager->Frequency(MUS_WORLD1, 1.0f);
     Bomberman::audioManager->Volume(MUS_WORLD1, Bomberman::MUSVolume);
     Bomberman::audioManager->Play(MUS_WORLD1, true);
     Bomberman::levelTime.Start();
-    Bomberman::player->Reset();
+    Bomberman::player1->Reset();
 }
 
 // ------------------------------------------------------------------------------
@@ -79,17 +75,17 @@ void Stage1::Update()
 
     // atualiza o timer do scoreboard se o tempo não tiver esgotado
     if (!timeUp)
-        Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
+        Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, Bomberman::levelTime.Elapsed());
 
     // acelera a musica quando faltar 30 segundos
-    if (timer.Elapsed(Bomberman::timeLimit - 30.0f))
+    if (Bomberman::levelTime.Elapsed(Bomberman::timeLimit - 30.0f))
         Bomberman::audioManager->Frequency(MUS_WORLD1, 1.3f);
 
     if (window->KeyPress(VK_F1))
-        viewBBox = !viewBBox;
+        Bomberman::viewBBox = !Bomberman::viewBBox;
 
     if (window->KeyPress(VK_F2))
-        viewScene = !viewScene;
+        Bomberman::viewScene = !Bomberman::viewScene;
 
     if (window->KeyPress(VK_F3))
         Bomberman::NextLevel<Home>();
@@ -99,7 +95,6 @@ void Stage1::Update()
     {
         timeUp = true;
         Bomberman::levelTime.Stop();
-        Bomberman::audio->Play(SE_TIMER);
         Bomberman::player1->State(LOSING);
         Bomberman::audioManager->Play(SE_TIMER);
     }
@@ -108,7 +103,7 @@ void Stage1::Update()
     if (portal->Transition() && !transitioning) {
         transitioning = true;
         transitionTimer.Start();
-        Bomberman::player->State(WINNING);
+        Bomberman::player1->State(WINNING);
     }
 
     // ------------------------------------------------
@@ -116,11 +111,11 @@ void Stage1::Update()
     // ------------------------------------------------
 
     // encerra o jogo ao encerrar o tempo
-    if (!Bomberman::audioManager->Playing(SE_TIMER) && timeUp && Bomberman::player->IsAlive())
+    if (!Bomberman::audioManager->Playing(SE_TIMER) && timeUp && Bomberman::player1->IsAlive())
         Bomberman::NextLevel<Stage1>();
 
     // verifica situações de game over
-    else if (!Bomberman::player->IsAlive() && (!timeUp || !Bomberman::audioManager->Playing(SE_TIMER)))
+    else if (!Bomberman::player1->IsAlive() && (!timeUp || !Bomberman::audioManager->Playing(SE_TIMER)))
         Bomberman::NextLevel<GameOver>();
 
     else if (transitionTimer.Elapsed(2.0f) && transitioning)
@@ -304,16 +299,16 @@ void Stage1::CreateEnemies(uint enemyType, int ammount)
         int line = lineDist.Rand();
         int column = columnDist.Rand();
 
-        if (backg->CheckGridPosition(line, column, MPT))
+        if (bGrid->CheckGridPosition(line, column, MPT))
         {
             count++;
 
-            float posX = column * 16 + 8;
+            float posX = (column * 16 + 8) + 16;
             float posY = line * 16 + 32;
 
             Bomberman::enemyFactory->CreateEnemy(enemyType, posX, posY, this->scene);
 
-            backg->OccupyGridPosition(line, column, WLL);
+            bGrid->OccupyGridPosition(line, column, WLL);
             enemyPositions.push_back(pair(column, line));
         }
     }

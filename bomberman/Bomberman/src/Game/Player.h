@@ -42,8 +42,6 @@ private:
     Timer timer;                            // medidor de tempo entre quadros da anima��o
 
     list<PlayerState> stateBuffer;
-    float bored_timing;                     // tempo para ficar entediado
-    uint startX, startY;
     bool createBomb, createBombPrev;
     const int playerNumber;
 
@@ -55,16 +53,11 @@ private:
     bool moveRt, notmoveRt;        bool moveLt, notmoveLt;
 
     // coordenadas iniciais do player no mapa
-    float startX = 40;
-    float startY = 48;
+    float startX = 40, startY = 48;
 
 
 public:
     list<Bomb*> bombStack;
-    int score;
-    int maxBombs;
-    int bombPower;
-    int lives;
     BombType bombType;
     uint availableBombs;
     uint score;             uint lives;
@@ -73,7 +66,6 @@ public:
     bool bombPass;          bool blockPass;
     float speed;                            // velocidade do personagem
     bool alive = true;
-    int availableBombs;
 
     // temporário até encontrar solução melhor
     Timer transparencyTimer;

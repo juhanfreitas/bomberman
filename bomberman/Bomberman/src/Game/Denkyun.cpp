@@ -58,4 +58,6 @@ void Denkyun::Update() {
         enemyAnimation->Select(DOWN);
     else
         enemyAnimation->Select(state);
+
+    //Translate(Bomberman::xdiff, 0);
 }

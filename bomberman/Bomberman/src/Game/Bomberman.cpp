@@ -22,14 +22,18 @@ Player*         Bomberman::player1 = nullptr;
 Player*         Bomberman::player2 = nullptr;
 Player*         Bomberman::player3 = nullptr;
 Player*         Bomberman::player4 = nullptr;
-Audio*          Bomberman::audio = nullptr;
 Scoreboard*     Bomberman::scoreboard = nullptr;
+AudioManager*   Bomberman::audioManager = nullptr;
+EnemyFactory*   Bomberman::enemyFactory = nullptr;
 Timer           Bomberman::levelTime = Timer();
 float           Bomberman::timeLimit = 0;
 float           Bomberman::screenScale = 2.0f;
 float           Bomberman::xdiff = 0;
 float           Bomberman::ydiff = 0;
+float           Bomberman::MUSVolume = 80.f;
+float           Bomberman::SEVolume = 80.f;
 bool            Bomberman::viewBBox = false;
+bool            Bomberman::viewScene = true;
 bool            Bomberman::ctrlActive = false;
 list<bool>      Bomberman::players = {false, false, false, false};
 
@@ -51,6 +55,7 @@ void Bomberman::Init()
     enemyFactory = new EnemyFactory();
 
     CheckControllers();
+    ctrlInitializer = Timer();
     ctrlInitializer.Start();
 
     level = new Intro();
@@ -82,7 +87,7 @@ void Bomberman::Update()
 
     audioManager->HandleAudio();
 
-    if (ctrlInitializer.Elapsed(2.5))
+    if (ctrlInitializer.Elapsed() >= 2.5f)
     {
         CheckControllers();
         ctrlInitializer.Reset();

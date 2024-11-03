@@ -41,6 +41,8 @@ private:
     int playerCount = 0;
 
 public:
+    static float MUSVolume;
+    static float SEVolume;
     static Controller* gamepad;
     static Player* player1;
     static Player* player2;

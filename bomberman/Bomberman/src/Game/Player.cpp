@@ -225,11 +225,11 @@ void Player::Update()
     }
     
 
-    if (invincible && invcbTimer.Elapsed(10.f))
+    if (invincible && transparencyTimer.Elapsed(10.f))
     {
         invincible = false;
-        invcbTimer.Reset();
-        invcbTimer.Stop();
+        transparencyTimer.Reset();
+        transparencyTimer.Stop();
     }
 
 
