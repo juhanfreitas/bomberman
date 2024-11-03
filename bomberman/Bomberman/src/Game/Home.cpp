@@ -40,6 +40,15 @@ void Home::Init()
 
 void Home::Update()
 {
+    bool controllerOn = Bomberman::ctrlActive;
+    bool pressedStart;
+    if (controllerOn)
+    {
+        Bomberman::gamepad->XboxUpdateState();
+        pressedStart = Bomberman::gamepad->XboxButton(ButtonStart);
+    }
+
+
 
     // anima o título
     yT = sin(timer.Elapsed() * 1.0f) * bgSpeed;
@@ -48,8 +57,14 @@ void Home::Update()
     if (window->KeyPress(VK_ESCAPE))
         window->Close();
 
+    // verifica se a duração da musica ja passou e toca novamente
+    if (timer.Elapsed(21.0f)) {
+        Bomberman::audio->Play(MUS_MENU);
+        timer.Reset();
+    }
+
     // avança com pressionamento do ENTER
-    if (window->KeyPress(VK_RETURN)) {
+    if (window->KeyPress(VK_RETURN) || (controllerOn && pressedStart)) {
         Bomberman::audioManager->FadeOut(MUS_TITLE, 2.5f);
         Bomberman::audioManager->Play(SE_SELECT);
         Bomberman::audioManager->Volume(SE_SELECT, Bomberman::SEVolume);

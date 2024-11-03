@@ -11,6 +11,7 @@
 #include "../Engine/Animation.h"
 #include "../Engine/Timer.h"
 #include "Explosion.h"
+#include "Enums.h"
 
 // ---------------------------------------------------------
 
@@ -30,14 +31,14 @@ private:
 	float fuseTime;
 	bool playerIn = true;
 	uint explosionPWR;
-	Player* playerOwner;
 
 public:
+	Player* playerOwner;
 	Timer timer;
 	BombType bombMode;
 	BombState state;
+	Directions dirKicked = Directions::UP;
 	bool bombKicked;
-	Directions dirKicked;
 
 	Bomb(Player* owner, BombType bombType, float playerX, float playerY, uint power = 1);
 	~Bomb();

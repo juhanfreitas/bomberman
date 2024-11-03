@@ -1,4 +1,5 @@
 #include "Building.h"
+#include "Bomberman.h"
 #include "Stage1.h"
 
 
@@ -24,8 +25,10 @@ Building::~Building()
 
 void Building::Update() 
 {
+	Translate(Bomberman::xdiff, 0);
+
 	// verificação para o desenho da sombra
-	FillType fill = Stage1::backg->CheckGridPosition(x, y+16);
+	FillType fill = Stage1::bGrid->CheckGridPosition(x, y+16);
 	if (fill == BLK || fill == MPT)
 		hasShadow = true;
 	else hasShadow = false;

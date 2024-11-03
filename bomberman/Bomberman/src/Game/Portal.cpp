@@ -1,6 +1,7 @@
 #include "Portal.h"
 #include "Bomberman.h"
 #include "Stage1.h"
+#include "Bomberman.h"
 #include "Enums.h"
 #include "Enemy.h"
 
@@ -25,10 +26,12 @@ Portal::~Portal()
 
 void Portal::Update()
 {
-	if (Stage1::backg->CheckGridPosition(x, y, MPT))
+	Translate(Bomberman::xdiff, 0);
+
+	if (Stage1::bGrid->CheckGridPosition(x, y, MPT))
 	{
-		BBox(new Rect(-3,-3,3,3));
-		Stage1::backg->OccupyGridPosition(x, y, PTL);
+		BBox(new Rect(-8,-8,8,8));
+		Stage1::bGrid->OccupyGridPosition(x, y, PTL);
 		visible = true;
 	}
 	

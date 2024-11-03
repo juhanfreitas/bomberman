@@ -87,7 +87,7 @@ bool Controller::Initialize()
         return false;
 
     // seleciona o nível de cooperação para o controle
-    if (FAILED(joyDev->SetCooperativeLevel(Engine::window->Id(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE)))
+    if (FAILED(joyDev->SetCooperativeLevel(Engine::window->Id(), DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
         return false;
 
     // seleciona o formato de dados

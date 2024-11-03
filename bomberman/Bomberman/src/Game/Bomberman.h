@@ -17,6 +17,7 @@
 
 #include "../Engine/Font.h"
 #include "../Engine/Game.h"
+#include "../Engine/Controller.h"
 #include "../Engine/Sprite.h"
 #include "../Engine/Scene.h"
 #include "../Engine/Timer.h"
@@ -35,26 +36,37 @@ class Bomberman : public Game
 {
 private:
     static Game * level;
-    bool paused;
+    bool gamePaused;
+    Timer ctrlInitializer;
+    int playerCount = 0;
 
 public:
+    static Controller* gamepad;
+    static Player* player1;
+    static Player* player2;
+    static Player* player3;
+    static Player* player4;
+    static Scoreboard* scoreboard;
     static TilesManager* tiles;
-    static Player * player;
+    static Timer levelTime;
+    static bool ctrlActive;
     static AudioManager * audioManager;
-    static Scoreboard * scoreboard;
     static EnemyFactory * enemyFactory;
     static bool viewBBox;
     static bool viewScene;
     static float timeLimit;
     static float screenScale;
-    static float MUSVolume;
-    static float SEVolume;
+    static list<bool> players;
+    static float xdiff;
+    static float ydiff;
 
 
-    void Init();                        // inicializa��o
-    void Update();                      // atualiza��o
-    void Draw();                        // desenho
-    void Finalize();                    // finaliza��o
+    void Init();                                // inicialização
+    void Update();                              // atualização
+    void Draw();                                // desenho
+    void Finalize();                            // finalização
+    void CheckControllers();                    // verifica a situação dos controles
+    static bool PlayerActive(int playerNum);    // verifica se determinado Player está ativo
 
     template<class T>
     static void NextLevel()
@@ -65,6 +77,15 @@ public:
         level->Init();
     }
 };
+
+
+inline bool Bomberman::PlayerActive(int playerNum) 
+{
+    auto plrIt = players.begin();
+    std::advance(plrIt, playerNum);
+    return *plrIt;
+}
+
 
 // ---------------------------------------------------------------------------------
 

@@ -4,6 +4,7 @@
 #include "Powerup.h"
 #include <iostream>
 
+
 Explosion::Explosion(float posX, float posY, ExplosionPart part)
 {
 	type = ObjTypes::EXPLOSION;
@@ -41,6 +42,7 @@ Explosion::~Explosion()
 
 void Explosion::Update()
 {
+	Translate(Bomberman::xdiff, 0);
 	anim->NextFrame();
 	if (anim->Inactive())
 		Stage1::scene->Delete();
@@ -57,6 +59,7 @@ void Explosion::OnCollision(Object * obj) {
 		Block* blk;
 		blk = static_cast<Block*>(obj);
 		blk->ChangeState(BlockState::EXPLODING);
+		//bombOrigin->playerOwner->IncreaseScore(10);
 		break;
 	}
 	case PORTAL: {
@@ -70,7 +73,7 @@ void Explosion::OnCollision(Object * obj) {
 
 Mixed* Explosion::createCollision(ExplosionPart part)
 {
-	Mixed * mixed = new Mixed();
+	Mixed* mixed = new Mixed();
 
 	switch (part)
 	{
@@ -97,6 +100,5 @@ Mixed* Explosion::createCollision(ExplosionPart part)
 		mixed->Insert(new Rect(-8, -6, 6, 6));
 		break;
 	}
-
 	return mixed;
 }

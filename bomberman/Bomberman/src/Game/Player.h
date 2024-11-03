@@ -42,9 +42,17 @@ private:
     Timer timer;                            // medidor de tempo entre quadros da anima��o
 
     list<PlayerState> stateBuffer;
+    float bored_timing;                     // tempo para ficar entediado
+    uint startX, startY;
+    bool createBomb, createBombPrev;
+    const int playerNumber;
 
     float bored_timing = 5.0f;              // tempo para ficar entediado
     float transparencyDuration = 2.0f;      // dura��o da invulnerabilidade
+    bool conOn;
+    bool crtBmb;                   bool dtnBmb;
+    bool moveUp, notmoveUp;        bool moveDn, notmoveDn;
+    bool moveRt, notmoveRt;        bool moveLt, notmoveLt;
 
     // coordenadas iniciais do player no mapa
     float startX = 40;
@@ -58,9 +66,11 @@ public:
     int bombPower;
     int lives;
     BombType bombType;
-    bool bombKick;
-    bool bombPass;
-    bool blockPass;
+    uint availableBombs;
+    uint score;             uint lives;
+    uint maxBombs;          uint bombPower;
+    bool invincible;        bool bombKick;
+    bool bombPass;          bool blockPass;
     float speed;                            // velocidade do personagem
     bool alive = true;
     int availableBombs;
@@ -68,7 +78,7 @@ public:
     // temporário até encontrar solução melhor
     Timer transparencyTimer;
 
-    Player();                               // construtor
+    Player(int plrNum);                     // construtor
     ~Player();                              // destrutor
 
     void Draw();                            // desenho do objeto

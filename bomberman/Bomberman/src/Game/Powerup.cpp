@@ -66,17 +66,18 @@ Powerup::Powerup(float x, float y, PowerUpType pType)
 
 Powerup::~Powerup()
 {
-	Stage1::backg->ClearGridPosition(x, y);
+	Stage1::bGrid->ClearGridPosition(x, y);
 	delete anim;
 }
 
-
 void Powerup::Update()
 {
-    if (Stage1::backg->CheckGridPosition(x, y, MPT))
+    Translate(Bomberman::xdiff, 0);
+
+    if (Stage1::bGrid->CheckGridPosition(x, y, MPT))
 	{
 	    BBox(new Rect( -8, -8, 8, 8));
-		Stage1::backg->OccupyGridPosition(x, y, PWR);
+		Stage1::bGrid->OccupyGridPosition(x, y, PWR);
         visible = true;
         visibleTime.Start();
 	}
@@ -90,7 +91,6 @@ void Powerup::Update()
 		Stage1::scene->Delete();
 }
 
-
 void Powerup::ExplosionState()
 {
     if (visibleTime.Elapsed(.500f))
@@ -99,7 +99,6 @@ void Powerup::ExplosionState()
 	    exploded = true;
     }
 }
-
 
 void Powerup::PowerUpActions(Player* player)
 {
@@ -153,11 +152,13 @@ void Powerup::PowerUpActions(Player* player)
             Bomberman::timeLimit += 60;
             break;
         case LIVES:
-            if (player->lives != 9)
+            if (player->lives < 9)
                 player->lives++;
             break;
         case CAKE:
             player->lives += 4;
+            if (player->lives > 9)
+                player->lives = 9;
             player->IncreaseScore(100000);
             break;
         case RANDOM:
@@ -177,6 +178,8 @@ void Powerup::PowerUpActions(Player* player)
             break;
         case ICE_CREAM:
             player->lives += 4;
+            if (player->lives > 9)
+                player->lives = 9;
             player->IncreaseScore(50000);
             break;
         }
