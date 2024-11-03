@@ -39,10 +39,8 @@ void Enemy::Draw() {
 
     // volta o inimigo para o grid caso ele ainda esteja tentando encontrar uma direção para ir
     if (!enemyTimer.Elapsed(lastCollision, 0.15f)) {
-        int line = (y + 8) / 16;
-        int column = x / 16;
-        posX = column * 16.0f + 8;
-        posY = line * 16.0f;
+        posX = lastX;
+        posY = lastY;
     }
 
     // aplica uma transparência aleatória no inimigo caso este esteja no timer de transparência
@@ -67,9 +65,7 @@ void Enemy::OnCollision(Object* obj)
     case BUILDING:
     case BOMB:
     case ENEMY: {
-        int line = (y + 8) / 16;
-        int column = x / 16;
-        MoveTo(column * 16 + 8, line * 16);
+        MoveTo(lastX + Bomberman::xdiff, lastY);
         state = ChangeDirection();
 
         lastCollision = enemyTimer.Stamp();
@@ -87,6 +83,10 @@ void Enemy::OnCollision(Object* obj)
 }
 
 void Enemy::Wander() {
+    lastX = x;
+    lastY = y;
+    float screenDelta = Bomberman::xdiff;
+    screenDelta * speed.XComponent() >= 0 ? screenDelta *= -1.0f : screenDelta;
     Translate((speed.XComponent() * gameTime) + Bomberman::xdiff, -speed.YComponent() * gameTime);
 }
 

@@ -55,6 +55,9 @@ protected:
     uint speedLevel;
     Vector speed;
 
+    float lastX;
+    float lastY;
+
     Timer enemyTimer;
     llong lastCollision;
     llong lastDamage;

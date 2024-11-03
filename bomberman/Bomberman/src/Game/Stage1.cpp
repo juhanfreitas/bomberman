@@ -292,7 +292,7 @@ void Stage1::CreateEnemies(uint enemyType, int ammount)
 {
     int count = 0;
     RandI lineDist{ 1, 8 };
-    RandI columnDist{ 1, 11 };
+    RandI columnDist{ 1, 45 };
     enemyType = EnemyTypes(enemyType);
 
     while (count < ammount) {

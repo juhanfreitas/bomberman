@@ -117,6 +117,7 @@ void Player::Die()
         stateBuffer.push_front(DYING);
         Bomberman::audioManager->Play(SE_PLAYERDEATH);
         Bomberman::audioManager->Volume(SE_PLAYERDEATH, Bomberman::SEVolume);
+        //lives -= 1;
         anim->ChangeLoop(false);
     }
 }
@@ -168,7 +169,7 @@ void Player::Update()
     
     
     // ==================== controle da fonte do input ==================== //
-    {
+    if (stateBuffer.front() != DYING) {
         conOn = Bomberman::ctrlActive;
 
         if (conOn)
@@ -211,7 +212,7 @@ void Player::Update()
 
 
     // ====================== controle da bomba ====================== //
-    {
+    if (stateBuffer.front() != DYING) {
         // cria nova bomba
         if ((window->KeyPress(VK_SPACE) && !conOn) || (conOn && crtBmb))
         {
@@ -373,7 +374,6 @@ void Player::Update()
         case DYING:
             if (anim->Inactive() && alive)
                 SoftReset();
-                lives--;
             break;
         }
     }
