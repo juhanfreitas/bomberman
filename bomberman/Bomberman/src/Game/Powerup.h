@@ -33,10 +33,7 @@ public:
 
 
 inline void Powerup::Draw()
-{
-	if (visible)
-		anim->Draw(x, y, Layer::LOWER);
-}
+{if (visible) anim->Draw(x, y, Layer::LOWER);}
 
 
 #endif _POWERUP_H_

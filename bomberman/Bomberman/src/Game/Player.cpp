@@ -80,6 +80,10 @@ void Player::Reset()
 {
     lives--;
     ClearPowerUps();
+    float prevX = Stage1::gameview.left;
+    Stage1::gameview.left = 0;
+    Stage1::gameview.right = 272;
+    Bomberman::xdiff = prevX;
     MoveTo(40, 48);
     stateBuffer.clear();
     stateBuffer.push_front(STILL);
@@ -95,45 +99,68 @@ void Player::Update()
     Bomberman::scoreboard->UpdatePower(bombPower);
     Bomberman::scoreboard->UpdateLives(lives);
 
-    bool moveUp = false;
-    bool moveRt = false;
-    bool moveDn = false;
-    bool moveLt = false;
-    bool conOn = Bomberman::ctrlActive;
-    bool dtnBmb = false;
-
-    if (conOn) 
+    Bomberman::xdiff = 0;
+    
+    float offset = (Stage1::gameview.right - Stage1::gameview.left) / 2;
+    
+    
+    // ==================== controle da fonte do input ==================== //
     {
-        bool isActive = Bomberman::PlayerActive(playerNumber);
-        if (isActive)
-        {
-            Bomberman::gamepad->XboxUpdateState(playerNumber);
-            createBomb = Bomberman::gamepad->XboxButton(ButtonB);
-            dtnBmb = Bomberman::gamepad->XboxButton(ButtonA);
+        conOn = Bomberman::ctrlActive;
 
-            moveUp = (Bomberman::gamepad->XboxButton(DpadUp));
-            moveRt = (Bomberman::gamepad->XboxButton(DpadRight));
-            moveDn = (Bomberman::gamepad->XboxButton(DpadDown));
-            moveLt = (Bomberman::gamepad->XboxButton(DpadLeft));
+        if (conOn)
+        {
+            bool isActive = Bomberman::PlayerActive(playerNumber);
+            if (isActive)
+            {
+                Bomberman::gamepad->XboxUpdateState(playerNumber);
+                createBomb = Bomberman::gamepad->XboxButton(ButtonB);
+                dtnBmb = Bomberman::gamepad->XboxButton(ButtonA);
+
+                moveUp = (Bomberman::gamepad->XboxButton(DpadUp));
+                moveRt = (Bomberman::gamepad->XboxButton(DpadRight));
+                moveDn = (Bomberman::gamepad->XboxButton(DpadDown));
+                moveLt = (Bomberman::gamepad->XboxButton(DpadLeft));
+
+                notmoveUp = !moveUp;
+                notmoveRt = !moveRt;
+                notmoveDn = !moveDn;
+                notmoveLt = !moveLt;
+            }
+            crtBmb = (createBomb && createBomb != createBombPrev);
+        }
+        else 
+        {
+            moveUp = window->KeyPress(VK_UP);
+            notmoveUp = window->KeyUp(VK_UP);
+
+            moveDn = window->KeyPress(VK_DOWN);
+            notmoveDn = window->KeyUp(VK_DOWN);
+            
+            moveLt = window->KeyPress(VK_LEFT);
+            notmoveLt = window->KeyUp(VK_LEFT);
+
+            moveRt = window->KeyPress(VK_RIGHT);
+            notmoveRt = window->KeyUp(VK_RIGHT);
         }
     }
 
 
+
     // ====================== controle da bomba ====================== //
-
-    // cria nova bomba
-    if ((window->KeyPress(VK_SPACE) && !conOn) || (conOn && (createBomb && createBomb != createBombPrev)))
     {
-        timer.Reset();
-        CreateBomb(bombType);
-    } 
+        // cria nova bomba
+        if ((window->KeyPress(VK_SPACE) && !conOn) || (conOn && crtBmb))
+        {
+            timer.Reset();
+            CreateBomb(bombType);
+        }
+
+        // denota a bomba
+        if ((window->KeyPress('D') && !conOn) || (conOn && dtnBmb))
+            DetonateBombs();
+    }
     
-    // denota a bomba
-    if ((window->KeyPress('D') && !conOn) || (conOn && dtnBmb))
-        DetonateBombs();
-
-    // =============================================================== //
-
 
     if (invincible && invcbTimer.Elapsed(10.f))
     {
@@ -143,107 +170,100 @@ void Player::Update()
     }
 
 
-    // ==================== controle da movimentação ==================== //
-
-
-    // anda para cima
-    if ((window->KeyPress(VK_UP) && !conOn) || (conOn && moveUp))
+    // ======================= controle da movimentação ======================= //
     {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKUP);
-        else
+        // anda para cima
+        if (moveUp)
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKUP);
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKUP);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKUP);
+            }
         }
-    }
-    if ((window->KeyUp(VK_UP) && !conOn) || (conOn && !moveUp))
-    {
-        stateBuffer.remove(WALKUP);
-    }
-
-
-    // ************************************************************
-
-
-    // anda para baixo
-    if ((window->KeyPress(VK_DOWN) && !conOn) || (conOn && moveDn))
-    {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKDOWN);
-        else
+        if (notmoveUp)
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKDOWN);
+            stateBuffer.remove(WALKUP);
         }
-    }
-    if ((window->KeyUp(VK_DOWN) && !conOn) || (conOn && !moveDn))
-    {
-        stateBuffer.remove(WALKDOWN);
-    }
+        // ************************************************************
 
 
-    // ************************************************************
-
-
-    // anda para esquerda
-    if ((window->KeyPress(VK_LEFT) && !conOn) || (conOn && moveLt))
-    {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKLEFT);
-        else
+        // anda para baixo
+        if (moveDn)
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKLEFT);
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKDOWN);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKDOWN);
+            }
         }
-    }
-    if ((window->KeyUp(VK_LEFT) && !conOn) || (conOn && !moveLt))
-    {
-        stateBuffer.remove(WALKLEFT);
-    }
-
-
-    // ************************************************************
-
-
-    // anda para direita
-    if ((window->KeyPress(VK_RIGHT) && !conOn) || (conOn && moveRt))
-    {
-        if (stateBuffer.size() < 3)
-            stateBuffer.push_front(WALKRIGHT);
-        else
+        if (notmoveDn)
         {
-            stateBuffer.pop_back();
-            stateBuffer.push_front(WALKRIGHT);
+            stateBuffer.remove(WALKDOWN);
         }
+        // ************************************************************
+
+
+        // anda para esquerda
+        if (moveLt)
+        {
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKLEFT);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKLEFT);
+            }
+        }
+        if (notmoveLt)
+        {
+            stateBuffer.remove(WALKLEFT);
+        }
+        // ************************************************************
+
+
+        // anda para direita
+        if (moveRt)
+        {
+            if (stateBuffer.size() < 3)
+                stateBuffer.push_front(WALKRIGHT);
+            else
+            {
+                stateBuffer.pop_back();
+                stateBuffer.push_front(WALKRIGHT);
+            }
+        }
+        if (notmoveRt)
+        {
+            stateBuffer.remove(WALKRIGHT);
+        }
+        // ************************************************************
+
+
+        // player parado
+        if (stateBuffer.empty())
+        {
+            stateBuffer.clear();
+            stateBuffer.push_front(STILL);
+        }
+        else {
+            if (stateBuffer.size() > 1)
+                stateBuffer.remove(BORED);
+        }
+
     }
-    if ((window->KeyUp(VK_RIGHT) && !conOn) || (conOn && !moveRt))
+
+
+
+    // ========================== tratamento do input ========================== //
     {
-        stateBuffer.remove(WALKRIGHT);
-    }
-
-
-    // ************************************************************
-
-
-    // player parado
-    if (stateBuffer.empty())
-    {
-        stateBuffer.clear();
-        stateBuffer.push_front(STILL);
-    }
-    else {
-        if (stateBuffer.size() > 1)
-            stateBuffer.remove(BORED);
-    }
-
-
-    // ************************************************************
-
-
-    // trata o input
-    switch (stateBuffer.front())
-    {
+        // trata o input
+        switch (stateBuffer.front())
+        {
         case STILL:
             if (timer.Elapsed(bored_timing))
             {
@@ -263,11 +283,25 @@ void Player::Update()
             break;
         case WALKLEFT:
             timer.Reset();
-            Translate(-speed * gameTime, 0);
+            if (x >= offset || Stage1::gameview.left == 0)
+                Translate(-speed * gameTime, 0);
+            else
+            {
+                Stage1::speed = speed;
+                Stage1::viewDirMove = LEFT;
+                Stage1::MoveView();
+            }
             break;
         case WALKRIGHT:
             timer.Reset();
-            Translate(speed * gameTime, 0);
+            if (x <= offset || Stage1::gameview.right == Stage1::backg->Width())
+                Translate(speed * gameTime, 0);
+            else
+            {
+                Stage1::speed = speed;
+                Stage1::viewDirMove = RIGHT;
+                Stage1::MoveView();
+            }
             break;
         case WINNING:
             timer.Reset();
@@ -277,10 +311,8 @@ void Player::Update()
             if (anim->Inactive())
                 Reset();
             break;
+        }
     }
-
-    // ================================================================== //
-
 
     createBombPrev = createBomb;
 
@@ -386,7 +418,6 @@ void Player::OnCollision(Object* obj)
     // --------------------------------------------------------------------------------------------
     }
 }
-
 
 void Player::DefaultCollision(Object* obj)
 {

@@ -21,4 +21,20 @@ using llong  = long long;
 using ullong = unsigned long long;
 using uint   = unsigned int;
 
+struct Canvas
+{
+    float width;        // largura da área do jogo
+    float height;       // altura da área do jogo
+    float centerX;      // centro da área do jogo no eixo x
+    float centerY;      // centro da área do jogo no eixo y
+};
+
+struct ViewPort
+{
+    float left;         // coordenada x1
+    float top;          // coordenada y1
+    float right;        // coordenada x2
+    float bottom;       // coordenada y2
+};
+
 #endif

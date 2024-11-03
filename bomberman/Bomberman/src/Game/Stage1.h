@@ -29,6 +29,7 @@
 #include "Player.h"
 #include "Scoreboard.h"
 #include "Portal.h"
+#include "MapGrid.h"
 
 // ------------------------------------------------------------------------------
 
@@ -37,11 +38,8 @@ class Stage1 : public Game
 private:
     Scoreboard* scoreboard = nullptr;   // placar do jogo
     Portal* portal = nullptr;           // portal do mapa atual
-
     Image* buildingImage = nullptr;
     Image* shadowImage = nullptr;
-
-    Timer timer;
 
     bool viewBBox = false;              // visualiza as bounding box na cena
     bool viewScene = true;              // visualiza os sprites em cena
@@ -49,12 +47,19 @@ private:
 
 public:
     static Scene* scene;                // cena do jogo
-    static Background* backg;                  // plano de fundo do jogo
+    static Background* backg;           // plano de fundo do jogo
+    static MapGrid* bGrid;
+    static Directions viewDirMove;
+    static ViewPort gameview;
+    static float delta;
+    static float speed;
+    static bool canMove;
 
     void Init();                        // inicialização
     void Update();                      // atualização
     void Draw();                        // desenho
     void Finalize();                    // finalização
+    static void MoveView();
     void CreateWalls();
     void CreateBlocks();
     void CreatePortal();

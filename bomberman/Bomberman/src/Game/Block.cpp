@@ -17,7 +17,7 @@ Block::Block(float x, float y)
 	anim->Add(EXPLODING, explodeseq, 7);
 
 	BBox(new Rect(-8, -8, 8, 8));
-	MoveTo(x + 8, y + 8);
+	MoveTo(x+8, y+8);
 
 }
 
@@ -29,7 +29,9 @@ Block::~Block()
 
 void Block::Update()
 {
-	if (Stage1::backg->CheckGridPosition(x, y + 16, MPT))
+	Translate(Bomberman::xdiff, 0);
+
+	if (Stage1::bGrid->CheckGridPosition(x, y + 16, MPT))
 		hasShadow = true;
 	else hasShadow = false;
 
@@ -41,12 +43,13 @@ void Block::Update()
 		hasShadow = false;
 		anim->ChangeDelay(.120f);
 		anim->ChangeLoop(false);
+		DeleteBBox();
 	}
 
 	if (anim->Inactive())
 	{
 		Bomberman::player1->IncreaseScore(10);
-		Stage1::backg->ClearGridPosition(x, y);
+		Stage1::bGrid->ClearGridPosition(x, y);
 		Stage1::scene->Delete();
 	}
 

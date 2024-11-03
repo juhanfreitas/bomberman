@@ -72,6 +72,8 @@ public:
     // retorna a bounding box do objeto
     virtual Geometry* BBox() const;
 
+    void DeleteBBox();
+
     // move o objeto por (deltaX, deltaY, deltaZ)
     virtual void Translate(float dx, float dy, float dz = 0.0f);
 
@@ -119,6 +121,9 @@ inline uint Object::Type() const
 // retorna a bounding box do objeto
 inline Geometry* Object::BBox() const
 { return bbox; }
+
+inline void Object::DeleteBBox()
+{ bbox = nullptr; }
 
 // -----------------------------------------------------------------------------
 

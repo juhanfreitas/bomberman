@@ -27,13 +27,13 @@ private:
 	const float speed = 120.f;
 	TileSet * bombs = nullptr;
 	Animation * anim = nullptr;
-	Player* playerOwner;
 
 	float fuseTime;
 	bool playerIn = true;
 	uint explosionPWR;
 
 public:
+	Player* playerOwner;
 	Timer timer;
 	BombType bombMode;
 	BombState state;

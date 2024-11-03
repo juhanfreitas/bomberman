@@ -27,8 +27,6 @@ public:
 };
 
 inline void Portal::Draw() 
-{
-	if (visible)
-		anim->Draw(x, y, Layer::LOWER);
-}
+{if (visible) anim->Draw(x, y, Layer::LOWER);}
+
 #endif // !_PORTAL_H

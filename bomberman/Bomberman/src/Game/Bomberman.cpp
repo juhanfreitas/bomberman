@@ -24,8 +24,11 @@ Player*         Bomberman::player3 = nullptr;
 Player*         Bomberman::player4 = nullptr;
 Audio*          Bomberman::audio = nullptr;
 Scoreboard*     Bomberman::scoreboard = nullptr;
+Timer           Bomberman::levelTime = Timer();
 float           Bomberman::timeLimit = 0;
 float           Bomberman::screenScale = 2.0f;
+float           Bomberman::xdiff = 0;
+float           Bomberman::ydiff = 0;
 bool            Bomberman::viewBBox = false;
 bool            Bomberman::ctrlActive = false;
 list<bool>      Bomberman::players = {false, false, false, false};
@@ -45,13 +48,12 @@ void Bomberman::Init()
 
     viewBBox = false;
 
-    timeLimit = 180.0f;
+    timeLimit = 600.0f;
 
     player1 = new Player(playerCount++);
     scoreboard = new Scoreboard();
     tiles = new TilesManager();
     gamepad = new Controller();
-
 
     CheckControllers();
     ctrlInitializer.Start();
@@ -76,13 +78,15 @@ void Bomberman::Update()
     
     if (gamePaused) 
     {
+        levelTime.Stop();
         level->OnPause();
     }
     else 
     {
+        levelTime.Stop();
+        levelTime.Start();
         level->Update();
     }
-
 }
 
 // ------------------------------------------------------------------------------

@@ -30,16 +30,7 @@
 // ------------------------------------------------------------------------------
 
 enum Sounds { VO_INTRO, MUS_MENU, SE_SELECT, MUS_STAGE1, SE_TIMER };
-//enum ObjTypes { 
-//    PLAYER,
-//    BOMB,
-//    BUILDING,
-//    BLOCK,
-//    EXPLOSION,
-//    PORTAL,
-//    POWERUPS,
-//    ENEMY
-//};
+
 
 // ------------------------------------------------------------------------------
 
@@ -60,11 +51,14 @@ public:
     static Player* player4;
     static Scoreboard* scoreboard;
     static TilesManager* tiles;
+    static Timer levelTime;
     static bool ctrlActive;
     static bool viewBBox;
     static float timeLimit;
     static float screenScale;
     static list<bool> players;
+    static float xdiff;
+    static float ydiff;
 
 
     void Init();                                // inicialização

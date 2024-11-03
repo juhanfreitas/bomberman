@@ -25,31 +25,67 @@
 
 class Game
 {
+private:
+    static Canvas world;                            // área do jogo
+
     // Membros protegidos são privados para o mundo externo mas
     // públicos para as classes derivadas, ou seja, as classes
     // derivadas de Game serão capazes de acessar estes membros.
+
 protected:
-    static Window* & window;                    // janela do jogo
-    static float   & gameTime;                  // tempo do último quadro
+    static Window*& window;                        // janela do jogo
+    static Game*& game;						    // jogo em execução
+    static float& gameTime;                      // tempo do último quadro
 
 public:
-    Game();                                     // construtor
-    virtual ~Game();                            // destrutor
-    
-    // Métodos que podem ser sobrescritos para implementar 
-    // funcionalidade específica para o jogo. Eles já possuem
-    // uma implementação padrão.
+    ViewPort viewport;                              // área visível do jogo
 
-    virtual void OnPause();                     // pausa do jogo
+    Game();                                         // construtor 
+
+    // Métodos virtuais garantem que uma chamada através de um
+    // ponteiro para a classe base, vai invocar o método da classe
+    // derivada, se ele existir, em vez de chamar sempre o método 
+    // da classe base.
+
+    virtual ~Game();                                // destrutor
+    virtual void OnPause();                         // pausa do jogo
+
+    static void Size(float width, float height);    // define o tamanho do jogo
+    static float Width();                           // retorna a largura do jogo
+    static float Height();                          // retorna a altura do jogo
+    static float CenterX();                         // retorna o centro do jogo no eixo x
+    static float CenterY();                         // retorna o centro do jogo no eixo y
 
     // Estes métodos são puramente virtuais, isto é, devem ser 
     // implementados em todas as classes derivas de Game.
 
-    virtual void Init() = 0;                    // inicialização do jogo
-    virtual void Update() = 0;                  // atualização do jogo
-    virtual void Draw() = 0;                    // desenho da cena
-    virtual void Finalize() = 0;                // finalização do jogo
+    virtual void Init() = 0;                        // inicialização do jogo
+    virtual void Update() = 0;                      // atualização do jogo
+    virtual void Draw() = 0;                        // desenho da cena
+    virtual void Finalize() = 0;                    // finalização do jogo
 };
+
+// ---------------------------------------------------------------------------------
+
+inline float Game::Width()
+{
+    return world.width;
+}
+
+inline float Game::Height()
+{
+    return world.height;
+}
+
+inline float Game::CenterX()
+{
+    return world.centerX;
+}
+
+inline float Game::CenterY()
+{
+    return world.centerY;
+}
 
 // ---------------------------------------------------------------------------------
 

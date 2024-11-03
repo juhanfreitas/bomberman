@@ -10,8 +10,14 @@
 #include <ctime>   // For time()
 
 
-Scene* Stage1::scene = nullptr;
-Background* Stage1::backg = nullptr;
+Scene*          Stage1::scene = nullptr;
+Background*     Stage1::backg = nullptr;
+Directions      Stage1::viewDirMove = UP;
+ViewPort        Stage1::gameview = { 0, 0, 272, 208 };
+MapGrid*        Stage1::bGrid = nullptr;
+float           Stage1::delta = 0;
+float           Stage1::speed = 0;
+bool            Stage1::canMove = false;
 
 // -----------------------------------------------------------------------------
 
@@ -23,26 +29,26 @@ void Stage1::Init()
     shadowImage = new Image("Resources/stage/building1_shadow.png");
 
     backg = new Background();
+    bGrid = new MapGrid(&gameview.left);
     scoreboard = new Scoreboard();
     CreateWalls();
     CreatePortal();
     CreateBlocks();
-
-    scene->Add(backg, STATIC);
+    
     scene->Add(Bomberman::player1, MOVING);
     scene->Add(Bomberman::scoreboard, STATIC);
 
-    Bomberman::audio->Play(MUS_STAGE1);
+    //Bomberman::audio->Play(MUS_STAGE1);
+    Size(backg->Width(), backg->Height());
     
-    timer.Start();
+    Bomberman::levelTime.Start();
 }
 
 // ------------------------------------------------------------------------------
 
 void Stage1::Update()
 {
-
-    Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, timer.Elapsed());
+    Bomberman::scoreboard->UpdateTimer(Bomberman::timeLimit, Bomberman::levelTime.Elapsed());
 
     // sai com o pressionar do ESC
     if (window->KeyDown(VK_ESCAPE))
@@ -58,24 +64,22 @@ void Stage1::Update()
         Bomberman::NextLevel<Home>();
 
     // toca um sinal de aviso quando o tempo est� acabando
-    if (timer.Elapsed(Bomberman::timeLimit))
+    if (Bomberman::levelTime.Elapsed(Bomberman::timeLimit))
     {
         timeUp = true;
-        timer.Reset();
+        Bomberman::levelTime.Stop();
         Bomberman::audio->Play(SE_TIMER);
     }
 
     // encerra o jogo ao encerrar o tempo
-    if (timer.Elapsed(2) && timeUp)
+    if (Bomberman::levelTime.Elapsed(2) && timeUp)
         window->Close();
-        
 
     // atualiza a cena do jogo;
     scene->Update();
 
     // detecta as colis�es na cena
     scene->CollisionDetection();
-
 }
 
 // ------------------------------------------------------------------------------
@@ -84,7 +88,10 @@ void Stage1::Draw()
 {
     
     if (viewScene)
+    {
+        backg->Draw(&gameview);
         scene->Draw();
+    }
     if (viewBBox)
         scene->DrawBBox();
 }
@@ -102,32 +109,84 @@ void Stage1::Finalize()
 
 // -------------------------------------------------------------------------------
 
+void Stage1::MoveView() 
+{
+    delta = speed * gameTime;
+    float diff;
+
+    switch (viewDirMove)
+    {
+    case UP:
+        gameview.top -= delta;
+        gameview.bottom -= delta;
+        if (gameview.top < 0)
+        {
+            diff = gameview.bottom - gameview.top;
+            gameview.top = 0;
+            gameview.bottom = diff;
+        }
+        break;
+    case DOWN:
+        gameview.top += delta;
+        gameview.bottom += delta;
+        if (gameview.top > backg->Height())
+        {
+            diff = gameview.bottom - gameview.top;
+            gameview.top = 0;
+            gameview.bottom = backg->Height();
+        }
+        break;
+    case LEFT:
+        Bomberman::xdiff = delta;
+        gameview.right -= delta;
+        gameview.left -= delta;
+        if (gameview.left <= 0)
+        {
+            diff = gameview.right - gameview.left;
+            gameview.left = 0;
+            gameview.right = diff;
+        }
+        break;
+    case RIGHT:
+        Bomberman::xdiff = delta * -1;
+        gameview.right += delta;
+        gameview.left += delta;
+        if (gameview.right >= backg->Width())
+        {
+            diff = gameview.right - gameview.left;
+            gameview.left = backg->Width() - diff;
+            gameview.right = backg->Width();
+        }
+        break;
+    }
+}
+
 void Stage1::CreateWalls()
 {
-    for (auto i = 0; i <= 12; i++)
+    for (auto i = 0; i < 13; i++)
     {
-        for (auto j = 1; j <= 15; j++)
+        for (auto j = 0; j < 47; j++)
         {
             Image* bImg = nullptr;
             Image* sImg = nullptr;
 
-            if (i != 0 && i != 12 && j != 1 && j != 15) {
+            if (i != 0 && i != 12 && j != 0 && j != 46) {
                 bImg = buildingImage;
                 sImg = shadowImage;
             }
 
-            if (backg->CheckGridPosition(i, j, WLL))
+            if (bGrid->CheckGridPosition(i, j, WLL))
             {
-                float posX = j * 16.0f;
+                float posX = j * 16.0f + 16;
                 float posY = (i * 16.0f) + 32;
                 Building* build = new Building(posX, posY, bImg, sImg);
                 scene->Add(build, STATIC);
             }
         }
     }
-    backg->OccupyGridPosition(1,2, WLL);
-    backg->OccupyGridPosition(1,3, WLL);
-    backg->OccupyGridPosition(2,2, WLL);
+    bGrid->OccupyGridPosition(1,1, WLL);
+    bGrid->OccupyGridPosition(1,2, WLL);
+    bGrid->OccupyGridPosition(2,1, WLL);
 
     CreateExtraWalls();
 }
@@ -136,37 +195,36 @@ void Stage1::CreateExtraWalls()
 {
     srand(static_cast<uint>(time(0)));
 
-    for (auto i = 0; i < 6; i++)
+    for (auto i = 0; i < 35; i++)
     {
         int numL = 4 + rand() % 8;
-        int numC = 4 + rand() % 11;
+        int numC = 4 + rand() % 42;
 
-        if (backg->CheckGridPosition(numL, numC, MPT))
+        if (bGrid->CheckGridPosition(numL, numC, MPT))
         {
-            if (numC % 2 == 0)
+            
+            if (numL % 2 != 0)
             {
-                if (numL % 2 != 0)
-                {
-                    if (!(backg->CheckGridPosition(numL, numC - 2, MPT)) || 
-                        !(backg->CheckGridPosition(numL, numC + 2, MPT)))
-                    {
-                        i--;
-                        continue;
-                    }
-                }
-
-                if (!(backg->CheckGridPosition(numL - 2, numC, MPT)) ||
-                    !(backg->CheckGridPosition(numL + 2, numC, MPT)))
+                if (!(bGrid->CheckGridPosition(numL, numC - 2, MPT)) ||
+                    !(bGrid->CheckGridPosition(numL, numC + 2, MPT)))
                 {
                     i--;
                     continue;
                 }
             }
-            float posX = numC * 16;
+
+            if (!(bGrid->CheckGridPosition(numL - 2, numC, MPT)) ||
+                !(bGrid->CheckGridPosition(numL + 2, numC, MPT)))
+            {
+                i--;
+                continue;
+            }
+            
+            float posX = numC * 16 + 16;
             float posY = (numL * 16) + 32;
             Building* build = new Building(posX, posY, buildingImage, shadowImage);
             scene->Add(build, STATIC);
-            backg->OccupyGridPosition(numL, numC, WLL);
+            bGrid->OccupyGridPosition(numL, numC, WLL);
         }
         else i--;
     }
@@ -176,28 +234,28 @@ void Stage1::CreateBlocks()
 {
     srand(static_cast<uint>(time(0)));
 
-    for (auto i = 0; i < 39; i++)
+    for (auto i = 0; i < 100; i++)
     {
         int numLine = 1 + rand() % 11;
-        int numColm = 2 + rand() % 13;
+        int numColm = 1 + rand() % 46;
 
-        if (backg->CheckGridPosition(numLine, numColm, MPT))
+        if (bGrid->CheckGridPosition(numLine, numColm, MPT))
         {
-            float posX = numColm * 16;
+            float posX = numColm * 16 + 16;
             float posY = (numLine * 16) + 32;
             
             Block* block = new Block(posX, posY);
             scene->Add(block, STATIC);
-            if (i < 4)
+            if (i < 5)
                 CreatePowerUp(posX, posY);
             
-            backg->OccupyGridPosition(numLine, numColm, FillType::BLK);
+            bGrid->OccupyGridPosition(numLine, numColm, FillType::BLK);
         }
         else i--;
     }
-    backg->ClearGridPosition(1, 2);
-    backg->ClearGridPosition(1, 3);
-    backg->ClearGridPosition(2, 2);
+    bGrid->ClearGridPosition(1, 1);
+    bGrid->ClearGridPosition(1, 2);
+    bGrid->ClearGridPosition(2, 1);
 }
 
 void Stage1::CreatePortal()
@@ -209,9 +267,9 @@ void Stage1::CreatePortal()
     for (auto i = 0; i < 1; i++)
     {
         numLine = 1 + rand() % 11;
-        numColm = 2 + rand() % 13;
+        numColm = 1 + rand() % 46;
 
-        if (backg->CheckGridPosition(numLine, numColm, MPT))
+        if (bGrid->CheckGridPosition(numLine, numColm, MPT))
         {
             float posX = numColm * 16;
             float posY = (numLine * 16) + 32;
@@ -220,7 +278,7 @@ void Stage1::CreatePortal()
 
             Block* block = new Block(posX, posY);
             scene->Add(block, STATIC);
-            backg->OccupyGridPosition(posX, posY, FillType::BLK);
+            bGrid->OccupyGridPosition(posX, posY, FillType::BLK);
         }
         else i--;
     }
@@ -228,7 +286,7 @@ void Stage1::CreatePortal()
 
 void Stage1::CreatePowerUp(float posX, float posY)
 {
-    PowerUpType type;
+    PowerUpType type = BOMBS;
     uint val = rand() % 3;
     if (val == 0)
         type = BOMBS;

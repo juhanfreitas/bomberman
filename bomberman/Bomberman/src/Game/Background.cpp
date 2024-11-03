@@ -10,16 +10,13 @@
 **********************************************************************************/
 
 #include "Background.h"
-#include <list>
 
 // ---------------------------------------------------------------------------------
 
 Background::Background()
 {
-    Background::CreateGrid();
-    MoveTo(window->CenterX(), window->CenterY(), Layer::BACK);
     backgs = * new list<Sprite*>;
-    backgs.push_back(new Sprite("Resources/stage/Stage 1.png"));
+    backgs.push_back(new Sprite("Resources/stage/Stage 1 EXTENDED.png"));
     list<Sprite*>::iterator it = backgs.begin();
     activeSprite = * it;
 }

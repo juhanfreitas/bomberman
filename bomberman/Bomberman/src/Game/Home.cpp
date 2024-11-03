@@ -57,17 +57,17 @@ void Home::Update()
     if (window->KeyDown(VK_ESCAPE))
         window->Close();
 
+    // verifica se a duração da musica ja passou e toca novamente
+    if (timer.Elapsed(21.0f)) {
+        Bomberman::audio->Play(MUS_MENU);
+        timer.Reset();
+    }
+
     // avança com pressionamento do ENTER
     if (window->KeyDown(VK_RETURN) || (controllerOn && pressedStart)) {
         Bomberman::audio->Play(SE_SELECT);
         Bomberman::audio->Stop(MUS_MENU);
         Bomberman::NextLevel<Stage1>();
-    }
-
-    // verifica se a duração da musica ja passou e toca novamente
-    if (timer.Elapsed(21.0f)) {
-        Bomberman::audio->Play(MUS_MENU);
-        timer.Reset();
     }
 }
 

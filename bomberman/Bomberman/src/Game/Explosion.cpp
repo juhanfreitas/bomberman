@@ -42,6 +42,7 @@ Explosion::~Explosion()
 
 void Explosion::Update()
 {
+	Translate(Bomberman::xdiff, 0);
 	anim->NextFrame();
 	if (anim->Inactive())
 		Stage1::scene->Delete();

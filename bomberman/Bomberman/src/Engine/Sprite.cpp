@@ -73,4 +73,31 @@ void Sprite::Draw(float x, float y, float z, float scale, float rotation, Color 
     Engine::renderer->Draw(sprite);
 }
 
+
+// ---------------------------------------------------------------------------------
+
+void Sprite::Draw(float x, float y, float z, float scale, float rotation, Color color, RECT* rect)
+{
+    // ajusta coordenadas usando a viewport
+    x -= Engine::game->viewport.left;
+    y -= Engine::game->viewport.top;
+
+    sprite.x = x;
+    sprite.y = y;
+    sprite.depth = z;
+    sprite.scale = scale;
+    sprite.rotation = rotation * XM_PI / 180.0f;
+    sprite.width = rect->right - rect->left;
+    sprite.height = rect->bottom - rect->top;
+    sprite.texCoord.x = float(rect->left) / image->Width();
+    sprite.texCoord.y = float(rect->top) / image->Height();
+    sprite.texSize.x = float(sprite.width) / image->Width();
+    sprite.texSize.y = float(sprite.height) / image->Height();
+    sprite.color = color;
+
+    // adiciona o sprite na lista de desenho
+    Engine::renderer->Draw(sprite);
+}
+
+
 // ---------------------------------------------------------------------------------

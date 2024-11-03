@@ -39,26 +39,26 @@ private:
     Animation* anim;                        // animação do personagem
     Timer timer;                            // medidor de tempo entre quadros da animação
     list<PlayerState> stateBuffer;
-    float       bored_timing;               // tempo para ficar entediado
+    float bored_timing;                     // tempo para ficar entediado
     uint startX, startY;
-    bool createBomb;
-    bool createBombPrev;
+    bool createBomb, createBombPrev;
     const int playerNumber;
+
+    bool conOn;
+    bool crtBmb;                   bool dtnBmb;
+    bool moveUp, notmoveUp;        bool moveDn, notmoveDn;
+    bool moveRt, notmoveRt;        bool moveLt, notmoveLt;
 
 public:
     list<Bomb*> bombStack;
-    uint score;
-    uint maxBombs;
-    uint bombPower;
-    uint lives;
-    BombType bombType;
     Timer invcbTimer;
-    bool invincible;
-    bool bombKick;
-    bool bombPass;
-    bool blockPass;
-    float speed;                            // velocidade do personagem
+    BombType bombType;
     uint availableBombs;
+    uint score;             uint lives;
+    uint maxBombs;          uint bombPower;
+    bool invincible;        bool bombKick;
+    bool bombPass;          bool blockPass;
+    float speed;                            // velocidade do personagem
 
     Player(int plrNum);                     // construtor
     ~Player();                              // destrutor
